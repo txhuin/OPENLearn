@@ -15,4 +15,38 @@ Base = declarative_base()
 Base.query = session.query_property
 
 
-class 
+class User(Base):
+	__tablename__ = "users"
+
+	id = Column(Integer, primary_key=True)
+	email = Column(String(64), nullable=False)
+	password = Column(String(64), nullable=False)
+
+
+
+class BookmarkedCourse(Base):
+	__tablename__ = "bookmarkedcourses"
+
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey('users.id'))
+	# course = Column
+
+
+class Course(Base):
+	__tablename__ = "courses"
+
+	course_id = Column(Integer, primary_key=True)
+
+
+
+
+
+
+
+
+def main():
+	Base.metadata.create_all(engine)
+
+
+if __name__ == "__main__":
+    main()
