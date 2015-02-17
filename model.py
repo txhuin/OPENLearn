@@ -25,12 +25,12 @@ class User(Base):
 
 
 
-
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
+
 	
 
 
@@ -47,9 +47,23 @@ class Course(Base):
 	prerequesites = Column()
 	description = Column()
 
+class Term(Base):
+	__tablename__ = "terms"
 
+	id = Column(Integer, primary_key=True)
+	course_id = Column(Integer, ForeignKey()),
+	course_link = Column(Integer, primary_key=True)
+	duration =  Column(Integer, primary_key=True)
+	startDay =  Column(Integer, primary_key=True)
+	startMonth =  Column(Integer, primary_key=True)
+	startYear =  Column(Integer, primary_key=True)		
 
+class Category(Base):
+	__tablename__ = "categories"
 
+	category_id = Column(Integer, primary_key=True)
+	category_name = Column
+	category_description = Column()
 
 
 

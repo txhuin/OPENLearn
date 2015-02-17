@@ -35,7 +35,7 @@ def get_session_information():
 		durationString,startDay")
 		r.json()
 
-		new_session = model.Session(
+		new_term = model.Term(
 			id = elements['id'],
 			course_id = elements['courseId'],
 			course_link = elements['homeLink'],
@@ -45,7 +45,7 @@ def get_session_information():
 			startYear = elements['startYear'])
 
 
-		model.session.merge(new_session)
+		model.session.merge(new_term)
 	model.session.commit()
 
 
