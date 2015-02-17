@@ -2,6 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, DateTime, String, ForeignKey
 from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
+import pickle
 
 
 COURSESDB = os.environ.get('COURSESDB')
@@ -24,18 +25,28 @@ class User(Base):
 
 
 
+
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	# course = Column
+	
 
 
 class Course(Base):
 	__tablename__ = "courses"
 
 	course_id = Column(Integer, primary_key=True)
+	short_name = Column(String(200), nullable=False)
+	category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+	language = Column(String(200))
+	instructor = Column(String(90))
+	format = Column()
+	workload = Column()
+	prerequesites = Column()
+	description = Column()
+
 
 
 
