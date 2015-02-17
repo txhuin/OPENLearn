@@ -24,22 +24,27 @@ class User(Base):
 	password = Column(String(64), nullable=False)
 
 
-
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
+	course = Column(String(500), nullable=False)
+    rating = Column(String(10))
 
-	
+
+	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
+
+	def save_course(user_email, ):
+		''' save a course for later'''
 
 
 class Course(Base):
 	__tablename__ = "courses"
 
-	course_id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True)
 	short_name = Column(String(200), nullable=False)
-	category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+	# category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 	language = Column(String(200))
 	instructor = Column(String(90))
 	format = Column()
@@ -52,7 +57,7 @@ class Term(Base):
 
 	id = Column(Integer, primary_key=True)
 	course_id = Column(Integer, ForeignKey()),
-	course_link = Column(Integer, primary_key=True)
+	course_link = Column(String(1000))
 	duration =  Column(Integer, primary_key=True)
 	startDay =  Column(Integer, primary_key=True)
 	startMonth =  Column(Integer, primary_key=True)
@@ -61,10 +66,19 @@ class Term(Base):
 class Category(Base):
 	__tablename__ = "categories"
 
-	category_id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True)
 	category_name = Column
 	category_description = Column()
 
+class CourseCategory(Base):
+	__tablename__ = "course_categories"
+	id = Column(Integer, primary_key=True)
+	category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
+	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+
+
+class University(Base):
+	__tablename__ = "universities"
 
 
 

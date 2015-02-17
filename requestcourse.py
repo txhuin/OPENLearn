@@ -3,67 +3,65 @@ import requests
 import json
 from datetime import datetime
 import time
-
+# import model
 
 def get_course():
 
-	for r in elements:
-		r = requests.get("https://api.coursera.org/api/catalog.v1/courses?includes=categories,fields=id,shortName,name,language,shortDescription,aboutTheCourse,\
+	r = requests.get("https://api.coursera.org/api/catalog.v1/courses?includes=\
+		categories,fields=id,shortName,name,language,shortDescription,aboutTheCourse,\
 		instructor")
-		r.json()
 
+	# print r
+
+	for element in r.json()['elements']:
 		new_course = model.Course(
-		id = elements['id']
-		course_shortname = elements['shortName'],
-		course_name = elements['name'],
-		course_language = elements['language'],
-		course_instructor = elements['instructor'],
-		course_format = elements['courseFormat'],
-		course_workload = elements['estimatedClassWorkload'],
-		course_prerequesites = elements['recommendedBackground'],
-		course_description = elements['shortDescription'],
-		course_categories = elements['links']['categories'])
+		id = element['id'],
+		course_shortname = element['shortName'],
+		course_name = element['name'],
+		course_language = element['language'],
+		course_instructor = element['instructor'],
+		course_format = element['courseFormat'],
+		course_workload = element['estimatedClassWorkload'],
+		course_prerequesites = element['recommendedBackground'],
+		course_description = element['shortDescription'],
+		course_categories = element['links']['categories'])
 
 
 		model.session.merge(new_course)
 	model.session.commit()
 
-def get_session_information():
+def get_term_information():
 
-	for s in elements:
-		s = requests.get("https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homelink,status,\
+	t = requests.get("https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homelink,status,\
 		durationString,startDay")
-		r.json()
 
+	for element in t.json()['elements']:
 		new_term = model.Term(
-			id = elements['id'],
-			course_id = elements['courseId'],
-			course_link = elements['homeLink'],
-			duration = elements['durationString'],
-			startDay = elements['startDay'],
-			startMonth = elements['startMonth'],
-			startYear = elements['startYear'])
+			id = element['id'],
+			course_id = element['courseId'],
+			course_link = element['homeLink'],
+			duration = element['durationString'],
+			startDay = element['startDay'],
+			startMonth = element['startMonth'],
+			startYear = element['startYear'])
 
 
 		model.session.merge(new_term)
 	model.session.commit()
 
-
 def get_category():
 
-	for c in elements:
-		c = requests.get("https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description")
-		r.json()
-
+	c = requests.get("https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description")
+	for element in c.json()['elements']:
 		new_category = model.Category(
-		category_id = elements['id'],
-		category_name = elements['name'],
-		category_description = elements['description'])
+		id = element['id'],
+		category_name = element['name'],
+		category_description = element['description'])
 
 		model.session.merge(new_category)
 	model.session.commit()
 
 
-if __name__ = '__main__':
+if __name__ == '__main__':
 	get_course()
-	get_session_information
+	# get_session_information
