@@ -5,12 +5,11 @@ from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 import pickle
 
 
-COURSESDB = os.environ.get('COURSESDB')
-engine = create_engine(COURSESDB, echo=True)
+
+engine = create_engine("sqlite:///courses.db", echo=True)
 session = scoped_session(sessionmaker(bind=engine, 
                                       autocommit=False,
                                       autoflush=False))
-
 
 Base = declarative_base()
 Base.query = session.query_property
@@ -30,27 +29,23 @@ class BookmarkedCourse(Base):
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
 	course = Column(String(500), nullable=False)
-    rating = Column(String(10))
-
 
 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
-
-	def save_course(user_email, ):
-		''' save a course for later'''
-
 
 class Course(Base):
 	__tablename__ = "courses"
 
 	id = Column(Integer, primary_key=True)
-	short_name = Column(String(200), nullable=False)
+	course_shortname = Column(String(200), nullable=False)
+	course_name = Column()
 	# category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
-	language = Column(String(200))
-	instructor = Column(String(90))
-	format = Column()
-	workload = Column()
-	prerequesites = Column()
-	description = Column()
+	course_language = Column(String(200))
+	course_instructor = Column(String(90))
+	course_format = Column()
+	course_workload = Column()
+	course_prerequesites = Column()
+	course_description = Column()
+	course_categories = Column
 
 class Term(Base):
 	__tablename__ = "terms"
@@ -75,11 +70,6 @@ class CourseCategory(Base):
 	id = Column(Integer, primary_key=True)
 	category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
 	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
-
-
-class University(Base):
-	__tablename__ = "universities"
-
 
 
 

@@ -3,16 +3,16 @@ import requests
 import json
 from datetime import datetime
 import time
-# import model
+import model
+
+courses = 'https://api.coursera.org/api/catalog.v1/courses?includes=categories,fields=shortName,name,language,instructor,courseFormat, estimatedClassWorkload,recommendedBackground,shortDescription,aboutTheCourse,instructor'
+terms = 'https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homeLink,durationString,startDay,startMonth,startYear'
+categories = 'https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description'
 
 def get_course():
 
-	r = requests.get("https://api.coursera.org/api/catalog.v1/courses?includes=\
-		categories,fields=id,shortName,name,language,shortDescription,aboutTheCourse,\
-		instructor")
-
-	# print r
-
+	r = requests.get(courses)
+	# print r.json()
 	for element in r.json()['elements']:
 		new_course = model.Course(
 		id = element['id'],
@@ -26,15 +26,13 @@ def get_course():
 		course_description = element['shortDescription'],
 		course_categories = element['links']['categories'])
 
-
 		model.session.merge(new_course)
 	model.session.commit()
 
 def get_term_information():
 
-	t = requests.get("https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homelink,status,\
-		durationString,startDay")
-
+	t = requests.get(terms)
+	# print t.json()
 	for element in t.json()['elements']:
 		new_term = model.Term(
 			id = element['id'],
@@ -45,13 +43,14 @@ def get_term_information():
 			startMonth = element['startMonth'],
 			startYear = element['startYear'])
 
-
 		model.session.merge(new_term)
 	model.session.commit()
 
 def get_category():
 
-	c = requests.get("https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description")
+	c = requests.get(categories)
+	# print c.json()
+
 	for element in c.json()['elements']:
 		new_category = model.Category(
 		id = element['id'],
@@ -61,7 +60,7 @@ def get_category():
 		model.session.merge(new_category)
 	model.session.commit()
 
-
 if __name__ == '__main__':
 	get_course()
-	# get_session_information
+	get_term_information()
+	get_category()
