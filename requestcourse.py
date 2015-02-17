@@ -8,25 +8,21 @@ import time
 def get_course():
 
 	for r in elements:
-		r = requests.get("https://api.coursera.org/api/catalog.v1/courses?includes=fields=id,shortName,name,language,shortDescription,aboutTheCourse,\
+		r = requests.get("https://api.coursera.org/api/catalog.v1/courses?includes=categories,fields=id,shortName,name,language,shortDescription,aboutTheCourse,\
 		instructor")
+		r.json()
 
-	new_course = model.Course(
+		new_course = model.Course(
 		id = elements['id']
-		course_shortname = elements['shortName']
-		course_name = elements['name']
-		course_language = elements['language']
-		course_instructor = elements['instructor']
-		course_format = elements['courseFormat']
-		course_workload = elements['estimatedClassWorkload']
-		course_prerequesites = elements['recommendedBackground']
-		course_description = elements['shortDescription']
-		course_categories = elements['links']['categories'] )
-
-
-
-
-
+		course_shortname = elements['shortName'],
+		course_name = elements['name'],
+		course_language = elements['language'],
+		course_instructor = elements['instructor'],
+		course_format = elements['courseFormat'],
+		course_workload = elements['estimatedClassWorkload'],
+		course_prerequesites = elements['recommendedBackground'],
+		course_description = elements['shortDescription'],
+		course_categories = elements['links']['categories'])
 
 
 		model.session.merge(new_course)
@@ -40,17 +36,32 @@ def get_session_information():
 		r.json()
 
 		new_session = model.Session(
-			id = 
-		course)
+			id = elements['id'],
+			course_id = elements['courseId'],
+			course_link = elements['homeLink'],
+			duration = elements['durationString'],
+			startDay = elements['startDay'],
+			startMonth = elements['startMonth'],
+			startYear = elements['startYear'])
+
+
+		model.session.merge(new_session)
+	model.session.commit()
 
 
 def get_category():
 
 	for c in elements:
-	c = requests.get("https://api.coursera.org/api/catalog.v1/categories")
-	category_id = elements['id']
+		c = requests.get("https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description")
+		r.json()
 
+		new_category = model.Category(
+		category_id = elements['id'],
+		category_name = elements['name'],
+		category_description = elements['description'])
 
+		model.session.merge(new_category)
+	model.session.commit()
 
 
 if __name__ = '__main__':
