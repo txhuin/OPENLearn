@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 import pickle
 # import json
+# import requests
 
 
 
@@ -43,7 +44,7 @@ class Course(Base):
 	course_instructor = Column(String(90), nullable=True)
 	course_format = Column(String(10000), nullable=True)
 	course_workload = Column(String(1000), nullable=True)
-	course_prerequesites = Column(String(1000), nullable=True)
+	course_prerequisites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
 	course_categories = relationship("CourseCategory", backref="course")
 	# course_categories = relationship("Category", secondary=CourseCategory, backref="courses")

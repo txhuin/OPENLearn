@@ -43,7 +43,7 @@ def get_course():
 			new_course.course_workload = element['estimatedClassWorkload']
 
 		if 'recommendedBackground' in element.keys():
-			new_course.course_prerequesites = element['recommendedBackground']
+			new_course.course_prerequisites = element['recommendedBackground']
 			
 		if 'shortDescription' in element.keys():
 			new_course.course_description = element['shortDescription']
@@ -63,7 +63,7 @@ def get_term_information():
 			course_id = element['courseId'])
 		
 		if 'durationString' in element.keys():
-			new_term.durationString = element['durationString']
+			new_term.duration = element['durationString']
 		if 'startDay' in element.keys():
 			new_term.startDay = element['startDay']
 		if 'startMonth' in element.keys():
