@@ -23,7 +23,10 @@ def get_course():
 			course_language = element['language'])
 
 		if 'categories' in element['links']:
-			new_course.course_categories = element['links']['categories']
+			for category in element['links']['categories']:
+				model.CourseCategory(
+					)
+
 
 		if 'instructor' in element.keys():
 			new_course.course_instructor = element['instructor']

@@ -16,22 +16,22 @@ Base = declarative_base()
 Base.query = session.query_property()
 
 
-# class User(Base):
-# 	__tablename__ = "users"
+class User(Base):
+	__tablename__ = "users"
 
-# 	id = Column(Integer, primary_key=True)
-# 	email = Column(String(64), nullable=False)
-# 	password = Column(String(64), nullable=False)
+	id = Column(Integer, primary_key=True)
+	email = Column(String(64), nullable=False)
+	password = Column(String(64), nullable=False)
 
 
-# class BookmarkedCourse(Base):
-# 	__tablename__ = "bookmarkedcourses"
+class BookmarkedCourse(Base):
+	__tablename__ = "bookmarkedcourses"
 
-# 	id = Column(Integer, primary_key=True)
-# 	user_id = Column(Integer, ForeignKey('users.id'))
-# 	course = Column(String(500), nullable=False)
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey('users.id'))
+	course = Column(String(500), nullable=False)
 
-# 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
+	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
 
 class Course(Base):
 	__tablename__ = "courses"
@@ -45,7 +45,7 @@ class Course(Base):
 	course_workload = Column(String(1000), nullable=True)
 	course_prerequesites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
-	course_categories = Column(PickleType)
+	course_categories = relationship("CourseCategory", backref="course")
 
 class Term(Base):
 	__tablename__ = "terms"
