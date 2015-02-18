@@ -1,8 +1,9 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, DateTime, String, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PickleType
 from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 import pickle
+# import json
 
 
 
@@ -39,30 +40,30 @@ class Course(Base):
 	course_shortname = Column(String(200), nullable=False)
 	course_name = Column(String(500), nullable=False)
 	course_language = Column(String(200))
-	course_instructor = Column(String(90))
-	# course_format = Column(String(1000))
-	# course_workload = Column(String)
-	# course_prerequesites = Column(String)
-	# course_description = Column(String)
-	# course_categories = Column
+	course_instructor = Column(String(90), nullable=True)
+	course_format = Column(String(1000), nullable=True)
+	course_workload = Column(String(1000), nullable=True)
+	course_prerequesites = Column(String(1000), nullable=True)
+	course_description = Column(String(10000), nullable=True)
+	course_categories = Column(PickleType)
 
 class Term(Base):
 	__tablename__ = "terms"
 
 	id = Column(Integer, primary_key=True)
 	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
-	course_link = Column(String(1000))
-	duration =  Column(Integer)
-	startDay =  Column(Integer)
-	startMonth =  Column(Integer)
-	startYear =  Column(Integer)		
+	course_link = Column(String(1000), nullable=True)
+	duration =  Column(Integer, nullable=True)
+	startDay =  Column(Integer, nullable=True)
+	startMonth =  Column(Integer, nullable=True)
+	startYear =  Column(Integer, nullable=True)		
 
 class Category(Base):
 	__tablename__ = "categories"
 
-	id = Column(Integer, primary_key=True)
-	category_name = Column(String(500))
-	category_description = Column(String(5000))
+	id = Column(Integer, primary_key=True, nullable=False)
+	category_name = Column(String(500), nullable=False)
+	category_description = Column(String(5000), nullable=True)
 
 class CourseCategory(Base):
 	__tablename__ = "course_categories"
