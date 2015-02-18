@@ -3,8 +3,9 @@ from flask import Flask, request, render_template, flash, session, jsonify
 import json
 import model
 import os
+from jinja2 import Template
 
-app = __Flask__(name)
+app = Flask(__name__)
 
 APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
 
@@ -14,16 +15,35 @@ def welcome():
 	"""The welcome page"""
 	return render_template("welcome.html")
 
-@app.route('/signup', methods=['POST'])
+@app.route("/signup", methods=['GET'])
+def show_signup():
+    return render_template("signup.html")
+
+
+@app.route("/signup", methods=['POST'])
 def signup():
-	user_email = request.form.get('email')
+    user_email = request.form.get('email')
     user_password = request.form.get('password')
+    user_age = request.form.get('age')
+    user_zipcode = request.form.get('zipcode')
 
     new_user = model.User(email=user_email, password=user_password)
+    if user_age:
+        new_user.age = user_age
+    if user_zipcode:
+        new_user.zipcode = user_zipcode
+    
+    model.session.add(new_user)
 
-	model.session.add(new_user)
-	model.session.commit()
+    try:
+        model.session.commit()
+    except IntegrityError:
+        flash("Email already in database. Please try again.")
+        return show_signup()
 
+    session.clear()
+    flash("Signup successful. Please log in.")
+    return show_login()
 @app.route("/login", methods=["GET"])
 def show_login():
     if session.get('user_email'):
@@ -42,8 +62,7 @@ def login():
                             model.User.password==user_password
                             ).one()
     except InvalidRequestError:
-        flash("That email or password was incorrect. " 
-            "Please check your login credentials or sign up.")
+        flash("That email or password was incorrect.")
         return render_template("login.html")
 
     session['user_email'] = user.email
@@ -53,4 +72,6 @@ def login():
     return render_template("welcome.html")
 
 
-@app.route()
+if __name__ == "__main__":
+    app.run(debug=True)
+

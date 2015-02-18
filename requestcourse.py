@@ -25,7 +25,8 @@ def get_course():
 		if 'categories' in element['links']:
 			for category in element['links']['categories']:
 				model.CourseCategory(
-					)
+					course_id = element['id'],
+					category_id = category)
 
 
 		if 'instructor' in element.keys():
@@ -75,7 +76,6 @@ def get_term_information():
 def get_category():
 
 	c = requests.get(categories)
-	print c.json()
 
 	for element in c.json()['elements']:
 		new_category = model.Category(

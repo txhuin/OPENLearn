@@ -7,7 +7,7 @@ import pickle
 
 
 
-engine = create_engine("sqlite:///courses.db", echo=True)
+engine = create_engine("sqlite:///mooc.db", echo=True)
 session = scoped_session(sessionmaker(bind=engine, 
                                       autocommit=False,
                                       autoflush=False))
@@ -45,7 +45,8 @@ class Course(Base):
 	course_workload = Column(String(1000), nullable=True)
 	course_prerequesites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
-	course_categories = relationship("CourseCategory", backref="course")
+	course_category = relationship("CourseCategory", backref="course")
+	# course_categories = relationship("Category", secondary=CourseCategory, backref="courses")
 
 class Term(Base):
 	__tablename__ = "terms"
@@ -67,11 +68,12 @@ class Category(Base):
 
 class CourseCategory(Base):
 	__tablename__ = "course_categories"
+
 	id = Column(Integer, primary_key=True)
 	category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
 	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
 
-
+	# course = relationship("Course", backref="category_assocs")
 
 def main():
 	pass
