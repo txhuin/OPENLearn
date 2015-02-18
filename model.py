@@ -41,7 +41,7 @@ class Course(Base):
 	course_name = Column(String(500), nullable=False)
 	course_language = Column(String(200))
 	course_instructor = Column(String(90), nullable=True)
-	course_format = Column(String(1000), nullable=True)
+	course_format = Column(String(10000), nullable=True)
 	course_workload = Column(String(1000), nullable=True)
 	course_prerequesites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)

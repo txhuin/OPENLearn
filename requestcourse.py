@@ -20,8 +20,10 @@ def get_course():
 			id = element['id'],
 			course_shortname = element['shortName'],
 			course_name = element['name'],
-			course_language = element['language'],
-			course_categories = element['links']['categories'])
+			course_language = element['language'])
+
+		if 'categories' in element['links']:
+			new_course.course_categories = element['links']['categories']
 
 		if 'instructor' in element.keys():
 			new_course.course_instructor = element['instructor']
