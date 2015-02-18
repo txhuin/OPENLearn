@@ -3,7 +3,9 @@ from flask import Flask, request, render_template, flash, session, jsonify
 import json
 import model
 import os
-from jinja2 import Template
+import requests
+import jinja2
+
 
 app = Flask(__name__)
 

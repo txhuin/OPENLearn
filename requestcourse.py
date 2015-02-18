@@ -24,9 +24,13 @@ def get_course():
 
 		if 'categories' in element['links']:
 			for category in element['links']['categories']:
-				model.CourseCategory(
-					course_id = element['id'],
-					category_id = category)
+				new_coursecategory = model.CourseCategory(
+					category_id = category,
+					course_id = element['id'])
+			
+				model.session.add(new_coursecategory)
+			model.session.commit()
+
 
 
 		if 'instructor' in element.keys():

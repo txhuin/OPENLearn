@@ -45,7 +45,7 @@ class Course(Base):
 	course_workload = Column(String(1000), nullable=True)
 	course_prerequesites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
-	course_category = relationship("CourseCategory", backref="course")
+	course_categories = relationship("CourseCategory", backref="course")
 	# course_categories = relationship("Category", secondary=CourseCategory, backref="courses")
 
 class Term(Base):
