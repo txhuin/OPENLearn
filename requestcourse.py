@@ -21,6 +21,9 @@ def get_course():
 			course_shortname = element['shortName'],
 			course_name = element['name'],
 			course_language = element['language'],
+
+			if 'instructor' in element.keys():
+				course_instructor = element['instructor']
 			course_instructor = element['instructor'],
 			course_format = element['courseFormat'],
 			course_workload = element['estimatedClassWorkload'],
@@ -34,21 +37,24 @@ def get_course():
 def get_term_information():
 
 	t = requests.get(terms)
-	print pp.pprint(t.json())
+	# print pp.pprint(t.json())
 	for element in t.json()['elements']:
-		if 'startDay' not in element.keys():
-			print pp.pprint(element)
-			print "This object does not have a startDay"
-			return
 
 		new_term = model.Term(
-			id = element['id'],
-			course_id = element['courseId'],
-			course_link = element['homeLink'],
-			duration = element['durationString'],
-			startDay = element['startDay'],
-			startMonth = element['startMonth'],
-			startYear = element['startYear'])
+			id = element['id'])
+			course_id = element['courseId']
+		
+		if 'durationString' in element.keys():
+			new_term.durationString = element['durationString']
+		if 'startDay' in element.keys():
+			new_term.startDay = element['startDay']
+		if 'startMonth' in element.keys():
+			new_term.startMonth = element['startMonth']
+		if 'startYear' in element.keys():
+			new_term.startYear = element['startYear']
+		if 'homeLink' in element.keys():
+			new_term.course_link = element['homeLink'] 
+
 
 		model.session.merge(new_term)
 	model.session.commit()
