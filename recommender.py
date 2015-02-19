@@ -35,7 +35,7 @@ def signup():
     except IntegrityError:
         flash("Email already in database. Please try again.")
         return show_signup()
-        
+
     session.clear()
     flash("Signup successful. Please log in.")
     return show_login()
@@ -66,6 +66,29 @@ def login():
     session['count'] = 0
     
     return render_template("welcome.html")
+
+@app.route("/changepassword")
+def show_change_password():
+    return render_template("changepassword.html", email=session['email'])
+
+@app.route("/changepassword", methods=['POST'])
+def change_password():
+    """Change user password"""
+    pass
+
+@app.route("/bookmarkedcourses")
+def show_bookmarked_courses:
+
+
+@app.route("/bookmarkforlater")
+def bookmark_course:
+    
+
+
+@app.route("/Recommend", methods=["GET"])
+def get_courses_by_criteria():
+    category = model.session.query(model.Rating)
+    category1 = category.filter(model.)
 
 
 if __name__ == "__main__":
