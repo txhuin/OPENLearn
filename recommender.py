@@ -27,6 +27,7 @@ def signup():
     user_password = request.form.get('password')
 
     new_user = model.User(email=user_email, password=user_password)
+    
     model.session.add(new_user)
 
     try:
@@ -34,10 +35,11 @@ def signup():
     except IntegrityError:
         flash("Email already in database. Please try again.")
         return show_signup()
-
+        
     session.clear()
     flash("Signup successful. Please log in.")
     return show_login()
+
 @app.route("/login", methods=["GET"])
 def show_login():
     if session.get('user_email'):
