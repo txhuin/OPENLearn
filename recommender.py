@@ -48,7 +48,6 @@ def show_login():
     #     flash("You have successfully logged out.")
     #     session.clear()
    
-
 @app.route("/login", methods=["POST"])
 def login():
     user_email = request.form.get('email')
