@@ -40,6 +40,7 @@ class Course(Base):
 	id = Column(Integer, primary_key=True)
 	course_shortname = Column(String(200), nullable=False)
 	course_name = Column(String(500), nullable=False)
+	course_icon = Column(String(1000))
 	course_language = Column(String(200))
 	course_instructor = Column(String(90), nullable=True)
 	course_format = Column(String(10000), nullable=True)

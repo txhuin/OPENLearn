@@ -7,7 +7,7 @@ import model
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-courses = 'https://api.coursera.org/api/catalog.v1/courses?includes=categories&fields=shortName,name,language,instructor,courseFormat,estimatedClassWorkload,recommendedBackground,shortDescription,aboutTheCourse,instructor'
+courses = 'https://api.coursera.org/api/catalog.v1/courses?includes=categories&fields=shortName,name,smallIcon,language,instructor,courseFormat,estimatedClassWorkload,recommendedBackground,shortDescription,aboutTheCourse,instructor'
 terms = 'https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homeLink,durationString,startDay,startMonth,startYear'
 categories = 'https://api.coursera.org/api/catalog.v1/categories?fields=id,name,description'
 
