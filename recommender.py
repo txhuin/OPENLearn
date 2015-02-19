@@ -1,5 +1,8 @@
 # This is the controller file
-from flask import Flask, request, render_template, flash, session, jsonify
+from flask import Flask, render_template, redirect, request, flash, session
+from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from sqlalchemy.sql import func
+from sqlalchemy import update
 import json
 import model
 import os
@@ -8,9 +11,7 @@ import jinja2
 
 
 app = Flask(__name__)
-
-APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
-
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 @app.route("/")
 def welcome():
@@ -24,11 +25,11 @@ def show_signup():
 @app.route("/signup", methods=['POST'])
 def signup():
     user_email = request.form.get('email')
-    user_password = request.form.get('password')
+    user_password = request.form.get('password') 
 
     new_user = model.User(email=user_email, password=user_password)
     
-    model.session.add(new_user)
+    model.session.add(new_user) 
 
     try:
         model.session.commit()
@@ -42,10 +43,11 @@ def signup():
 
 @app.route("/login", methods=["GET"])
 def show_login():
-    if session.get('user_email'):
-        flash("You have successfully logged out.")
-        session.clear()
     return render_template("login.html")
+    # if session.get('user_email'):
+    #     flash("You have successfully logged out.")
+    #     session.clear()
+   
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -67,28 +69,45 @@ def login():
     
     return render_template("welcome.html")
 
-@app.route("/changepassword")
-def show_change_password():
-    return render_template("changepassword.html", email=session['email'])
+# @app.route("/changepassword")
+# def show_change_password():
+#     """Displays the change password page"""
+#     return render_template("changepassword.html", email=session['email'])
 
-@app.route("/changepassword", methods=['POST'])
-def change_password():
-    """Change user password"""
-    pass
-
-@app.route("/bookmarkedcourses")
-def show_bookmarked_courses:
-
-
-@app.route("/bookmarkforlater")
-def bookmark_course:
+# @app.route("/changepassword", methods=['POST'])
+# def change_password():
+#     pass
+#     """Change user password"""
     
 
+# @app.route("/bookmarkcourse")
+# def bookmark_course():
+#     pass
+#     # user_id = model.session.query(User).filter_by(email=session_email).first().id
+#     # savedcourse = BookmarkedCourse.
 
-@app.route("/Recommend", methods=["GET"])
-def get_courses_by_criteria():
-    category = model.session.query(model.Rating)
-    category1 = category.filter(model.)
+#     # model.session.add()
+    
+
+# @app.route("/bookmarkedcourses")
+# def show_bookmarked_courses():
+#     pass
+#     """Show all the bookmarked courses from the database"""
+
+
+# @app.route("/randomize")
+# def randomize():
+#     pass
+# """The app generates a course based on random course generator"""
+
+
+
+# @app.route("/Recommend", methods=["GET"])
+# def get_courses_by_criteria():
+#     pass
+#     # category = model.session.query(model.Rating)
+#     # category1 = category.filter(model.)
+    
 
 
 if __name__ == "__main__":

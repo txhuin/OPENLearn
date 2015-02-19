@@ -2,7 +2,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PickleType
 from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
-import pickle
 # import json
 # import requests
 
@@ -30,7 +29,7 @@ class BookmarkedCourse(Base):
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	course = Column(String(500), nullable=False)
+	course_id = Column(String(500), nullable=False)
 
 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
 
