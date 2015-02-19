@@ -21,19 +21,12 @@ def welcome():
 def show_signup():
     return render_template("signup.html")
 
-
 @app.route("/signup", methods=['POST'])
 def signup():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-
     new_user = model.User(email=user_email, password=user_password)
-    if user_age:
-        new_user.age = user_age
-    if user_zipcode:
-        new_user.zipcode = user_zipcode
-    
     model.session.add(new_user)
 
     try:
