@@ -31,7 +31,8 @@ def get_course():
 				model.session.add(new_coursecategory)
 			model.session.commit()
 
-
+		if 'smallIcon' in element.keys():
+			new_course.course_icon = element['smallIcon']
 
 		if 'instructor' in element.keys():
 			new_course.course_instructor = element['instructor']

@@ -26,8 +26,7 @@ def show_signup():
 def signup():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
-    user_age = request.form.get('age')
-    user_zipcode = request.form.get('zipcode')
+
 
     new_user = model.User(email=user_email, password=user_password)
     if user_age:
