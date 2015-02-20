@@ -109,9 +109,14 @@ def get_courses_by_criteria():
     get_category = category.filter(model.Category.category_name==category_chosen).all()
     
     duration_chosen = request.form.get("chosenduration")
-    duration = model.session.query(model.Course)
-    get_duration = duration.filter(model.Course)
-    return render_template("recommended_courses.html", chosencategory=category_chosen)
+    durations = model.session.query(model.Term)
+    get_duration = durations.filter(model.Term.duration==duration_chosen).all()
+
+    workload_chosen = request.form.get("chosenworkload")
+    workload = model.session.query(model.Course)
+    get_course = courses.filter(model.Course.course_workload=workload_chosen)
+
+    return render_template("recommended_courses.html", chosencategory=category_chosen, durationchosen=duration_chosen, terms=durations)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -5,9 +5,9 @@
 </head>
 <body>
 	<p> Here are your courses! </p>
-	{ % for courses in courses %}
-	<h4> <a href="/recommend?duration={{ terms.duration }}">{{ terms.duration }}</a>
-
+	{ % for duration in durations %}
+	<h4>{{ terms.duration }}</h4>
+	{ % endfor %}
 </body>
 </html
 
