@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="/" id="form-submission" method="GET">
+<form action="/Recommend" id="form-submission" method="GET">
 	<h2 class="form-signin-heading">Find a course</h2>
 	<label>Duration</label> <select name="duration">
 	<option value="5weeks">Less than 5 weeks</option>
 	<option value="10weeks">Less than 10 weeks</option>
 	<option value="15weeks">Less than 15 weeks</option>
 	<option value="20weeks">Less than 20 weeks</option>
-	<button type="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
 	</select><br>
 	<label>Category</label> <select name="chosencategory" required>
 		<option value="Mathematics">Mathematics</option>
@@ -44,8 +43,8 @@
 		<option value="16to20">Maximum 11 hours per week</option>
 		<option value="16to20">Maximum 15 hours per week</option>
 		<option value="16to20">Maximum 20 hours per week</option>
-	</select>
-	<button type="button" class="btn btn-primary btn-lg active" type="submit">Submit</button>
+	</select><br>
+<button class="btn btn-primary btn-lg active" type="submit">Submit</button>
 </form>
 
 {% endblock %}

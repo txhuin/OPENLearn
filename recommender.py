@@ -106,9 +106,9 @@ def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.form.get("chosencategory")
     category = model.session.query(model.Category)
-    get_category = category.filter(model.CourseCategory.category_name==category_chosen).all()
-    # return get_category
-    return render_template("recommended_courses.html")
+    get_category = category.filter(model.Category.category_name==category_chosen).all()
+    
+    return render_template("recommended_courses.html", chosencategory=category_chosen)
 
 if __name__ == "__main__":
     app.run(debug=True)
