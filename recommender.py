@@ -44,9 +44,9 @@ def signup():
 @app.route("/login", methods=["GET"])
 def show_login():
     return render_template("login.html")
-    # if session.get('user_email'):
-    #     flash("You have successfully logged out.")
-    #     session.clear()
+    if session.get('user_email'):
+        flash("You have successfully logged out.")
+        session.clear()
    
 @app.route("/login", methods=["POST"])
 def login():
@@ -92,7 +92,7 @@ def login():
 # def show_bookmarked_courses():
 #     pass
 #     """Show all the bookmarked courses from the database"""
-
+    
 
 # @app.route("/randomize")
 # def randomize():
@@ -101,13 +101,14 @@ def login():
 
 
 
-# @app.route("/Recommend", methods=["GET"])
-# def get_courses_by_criteria():
-#     pass
-#     # category = model.session.query(model.Rating)
-#     # category1 = category.filter(model.)
-    
-
+@app.route("/Recommend", methods=["POST"])
+def get_courses_by_criteria():
+    """Queries the database based on user selections, and returns appropriate output"""
+    category_chosen = request.form.get("chosencategory")
+    category = model.session.query(model.Category)
+    get_category = category.filter(model.CourseCategory.category_name==category_chosen).all()
+    # return get_category
+    return render_template("recommended_courses.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
