@@ -101,13 +101,16 @@ def login():
 
 
 
-@app.route("/Recommend", methods=["POST"])
+@app.route("/Recommend", methods=['GET', 'POST'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.form.get("chosencategory")
     category = model.session.query(model.Category)
     get_category = category.filter(model.Category.category_name==category_chosen).all()
     
+    duration_chosen = request.form.get("chosenduration")
+    duration = model.session.query(model.Course)
+    get_duration = duration.filter(model.Course)
     return render_template("recommended_courses.html", chosencategory=category_chosen)
 
 if __name__ == "__main__":
