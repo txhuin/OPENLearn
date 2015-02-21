@@ -108,20 +108,24 @@ def get_courses_by_criteria():
     category_chosen = request.form.get("category")
     category = model.session.query(model.Category)
     get_category = category.filter(model.Category.category_name==category_chosen)
-    get_category_id = get_category.filter(model.Category.id)
-    get_all_courses = model.session.query.filter(model.CourseCategory.category_id=get_category_id).all()
-
+    # print get_category
+    # get_category_id = get_category.filter(model.Category.id)
+    # get_all_courses = model.session.query.filter(model.CourseCategory.category_id==get_category_id).all()
+    # print get_all_courses
     
-    # duration_chosen = request.form.get("chosenduration")
-    # durations = model.session.query(model.Term)
-    # get_duration = durations.filter(model.Term.duration==duration_chosen).all()
+    duration_chosen = request.form.get("chosenduration")
+    durations = model.session.query(model.Term)
+    get_duration = durations.filter(model.Term.duration==duration_chosen).all()
 
-    # workload_chosen = request.form.get("chosenworkload")
-    # workload = model.session.query(model.Course)
-    # get_course = courses.filter(model.Course.course_workload=workload_chosen)
+    workload_chosen = request.form.get("chosenworkload")
+    workload = model.session.query(model.Course)
+    get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
-    return render_template("recommended_courses.html", chosencategory=category_chosen) 
-        # durationchosen=duration_chosen, terms=durations)
+    return render_template("recommended_courses.html", chosencategory=category_chosen, 
+                                                       categories=category, 
+                                                       durations=durations,
+                                                       workloads=workload) 
+
 
 if __name__ == "__main__":
     app.run(debug=True)
