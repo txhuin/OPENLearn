@@ -86,6 +86,7 @@ def login():
 #     # savedcourse = BookmarkedCourse.
 
 #     # model.session.add()
+    # model.session.commit()
     
 
 # @app.route("/bookmarkedcourses", methods = ['GET'])
@@ -104,19 +105,23 @@ def login():
 @app.route("/Recommend", methods=['GET', 'POST'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
-    category_chosen = request.form.get("chosencategory")
+    category_chosen = request.form.get("category")
     category = model.session.query(model.Category)
-    get_category = category.filter(model.Category.category_name==category_chosen).all()
+    get_category = category.filter(model.Category.category_name==category_chosen)
+    get_category_id = get_category.filter(model.Category.id)
+    get_all_courses = model.session.query.filter(model.CourseCategory.category_id=get_category_id).all()
+
     
-    duration_chosen = request.form.get("chosenduration")
-    durations = model.session.query(model.Term)
-    get_duration = durations.filter(model.Term.duration==duration_chosen).all()
+    # duration_chosen = request.form.get("chosenduration")
+    # durations = model.session.query(model.Term)
+    # get_duration = durations.filter(model.Term.duration==duration_chosen).all()
 
-    workload_chosen = request.form.get("chosenworkload")
-    workload = model.session.query(model.Course)
-    get_course = courses.filter(model.Course.course_workload=workload_chosen)
+    # workload_chosen = request.form.get("chosenworkload")
+    # workload = model.session.query(model.Course)
+    # get_course = courses.filter(model.Course.course_workload=workload_chosen)
 
-    return render_template("recommended_courses.html", chosencategory=category_chosen, durationchosen=duration_chosen, terms=durations)
+    return render_template("recommended_courses.html", chosencategory=category_chosen) 
+        # durationchosen=duration_chosen, terms=durations)
 
 if __name__ == "__main__":
     app.run(debug=True)
