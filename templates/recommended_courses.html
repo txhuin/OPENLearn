@@ -1,11 +1,15 @@
-{ % extends 'base.html' %}
+{% extends 'base.html' %}
 <html>
 <head>
 <title> Recommended courses </title>
-</head>
-<body>
+	{% block content %}
 	<p> Here are your courses! </p>
-	<a href="/Recommend?chosenduration={{ durations.duration }}&category={{ categories.name }}&workload={{ workloads.course_workload }}"></a>
-</body>
-</html
+	<a href="/Recommend?chosenduration={{ durations.duration }}&category={{ categories.category_name }}&workload={{ workloads.course_workload }}"></a>
+	<h4>{{ categories }} has 4 sessioons. </h4>
+	<h4>{{ durations }} has 5 courses. </h4>
+	<h4>{{ workloads }} has many coures. </h4>
+
+
+	{% endblock %}
+
 

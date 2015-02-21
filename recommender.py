@@ -102,29 +102,31 @@ def login():
 
 
 
-@app.route("/Recommend", methods=['GET', 'POST'])
+@app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
-    category_chosen = request.form.get("category")
+    category_chosen = request.args.get("category")
+    print category_chosen
     category = model.session.query(model.Category)
-    get_category = category.filter(model.Category.category_name==category_chosen)
-    # print get_category
+    print category
+    get_category = category.filter(model.Category.category_name==category_chosen).first()
+    print get_category
     # get_category_id = get_category.filter(model.Category.id)
-    # get_all_courses = model.session.query.filter(model.CourseCategory.category_id==get_category_id).all()
-    # print get_all_courses
+    # get_all_courses = model.session.query.filter(model.CourseCategory.category_id==get_category_id).one()
     
-    duration_chosen = request.form.get("chosenduration")
+    
+    duration_chosen = request.args.get("duration")
     durations = model.session.query(model.Term)
     get_duration = durations.filter(model.Term.duration==duration_chosen).all()
 
-    workload_chosen = request.form.get("chosenworkload")
+    workload_chosen = request.args.get("workload")
     workload = model.session.query(model.Course)
     get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
-                                                       categories=category, 
-                                                       durations=durations,
-                                                       workloads=workload) 
+                                                       categories=category_chosen, 
+                                                       durations=duration_chosen,
+                                                       workloads=workload_chosen) 
 
 
 if __name__ == "__main__":
