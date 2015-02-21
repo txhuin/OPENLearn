@@ -88,13 +88,13 @@ def login():
 #     # model.session.add()
     
 
-# @app.route("/bookmarkedcourses")
+# @app.route("/bookmarkedcourses", methods = ['GET'])
 # def show_bookmarked_courses():
 #     pass
 #     """Show all the bookmarked courses from the database"""
     
 
-# @app.route("/randomize")
+# @app.route("/randomize", methods=['GET', 'POST'])
 # def randomize():
 #     pass
 # """The app generates a course based on random course generator"""
