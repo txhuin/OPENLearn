@@ -106,11 +106,19 @@ def login():
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.args.get("category")
-    print category_chosen
-    category = model.session.query(model.Category)
-    print category
-    get_category = category.filter(model.Category.category_name==category_chosen).first()
-    print get_category
+    # This function has to query the Courses table 
+    # print category_chosen
+    # category = model.session.query(model.Category)
+    # print category
+
+    #This gets the category's id
+    get_category = model.session.query(model.Category.id).filter(model.Category.category_name==category_chosen).first()
+    print get_category[0]
+    #Query the coursecategories table to find all courses which have the category id associated with the category chosen
+    get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
+    print get_courses_associated_with_category
+    for i in get_courses_associated_with_category
+    get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==)
     # get_category_id = get_category.filter(model.Category.id)
     # get_all_courses = model.session.query.filter(model.CourseCategory.category_id==get_category_id).one()
     
@@ -124,7 +132,7 @@ def get_courses_by_criteria():
     get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
-                                                       categories=category_chosen, 
+                                                       categories=get_courses_associated_with_category, 
                                                        durations=duration_chosen,
                                                        workloads=workload_chosen) 
 
