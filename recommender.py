@@ -135,7 +135,7 @@ def get_courses_by_criteria():
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
                                                        categories=all_courses, 
-                                                       durations=get_duration,
+                                                       durations=all_courses1,
                                                        workloads=workload_chosen) 
 
 
