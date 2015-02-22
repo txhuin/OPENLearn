@@ -120,9 +120,14 @@ def get_courses_by_criteria():
     #Duration selected 
     duration_chosen = request.args.get("duration")
     # durations = model.session.query(model.Term)
-    print duration_chosen
-    get_duration = model.session.query(model.Term.duration==duration_chosen).all()
-    print get_duration
+    # print duration_chosen
+    get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
+    # get_courses_associated_with_duration = model.session.query(model.Course.)
+    all_courses1 = []
+    for i in get_duration:
+        get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
+        all_courses1.append(get_course_name)
+    print all_courses1
 
     workload_chosen = request.args.get("workload")
     workload = model.session.query(model.Course)
@@ -130,7 +135,7 @@ def get_courses_by_criteria():
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
                                                        categories=all_courses, 
-                                                       durations=duration_chosen,
+                                                       durations=get_duration,
                                                        workloads=workload_chosen) 
 
 
