@@ -113,12 +113,15 @@ def get_courses_by_criteria():
 
     #This gets the category's id
     get_category = model.session.query(model.Category.id).filter(model.Category.category_name==category_chosen).first()
-    print get_category[0]
+    # print get_category[0]
     #Query the coursecategories table to find all courses which have the category id associated with the category chosen
     get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
-    print get_courses_associated_with_category
-    for i in get_courses_associated_with_category
-    get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==)
+    # print get_courses_associated_with_category
+    all_courses = []
+    for i in get_courses_associated_with_category:
+        get_course_name = model.session.query(model.Course.course_name, model.Course.course_icon).filter(model.Course.id==i[0]).all()
+        all_courses.append(get_course_name)
+    print all_courses
     # get_category_id = get_category.filter(model.Category.id)
     # get_all_courses = model.session.query.filter(model.CourseCategory.category_id==get_category_id).one()
     
@@ -132,7 +135,7 @@ def get_courses_by_criteria():
     get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
-                                                       categories=get_courses_associated_with_category, 
+                                                       categories=all_courses, 
                                                        durations=duration_chosen,
                                                        workloads=workload_chosen) 
 
