@@ -106,33 +106,32 @@ def login():
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.args.get("category")
-    # This function has to query the Courses table 
-    # print category_chosen
-    # category = model.session.query(model.Category)
-    # print category
-
     #This gets the category's id
     get_category = model.session.query(model.Category.id).filter(model.Category.category_name==category_chosen).first()
     #Query the coursecategories table to find all courses which have the category id associated with the category chosen
     get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
     all_courses = []
     for i in get_courses_associated_with_category:
-        get_course_name = model.session.query(model.Course.course_name, model.Course.course_icon).filter(model.Course.id==i[0]).all()
+        get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
         all_courses.append(get_course_name)
     print all_courses
     
-    duration_chosen = request.args.get("duration")
-    durations = model.session.query(model.Term)
-    get_duration = durations.filter(model.Term.duration==duration_chosen).all()
 
-    workload_chosen = request.args.get("workload")
-    workload = model.session.query(model.Course)
-    get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
+    #Duration selected 
+    duration_chosen = request.args.get("duration")
+    # durations = model.session.query(model.Term)
+
+    get_duration = model.session.query(model.Term.duration==duration_chosen).all()
+    print get_duration
+
+    # workload_chosen = request.args.get("workload")
+    # workload = model.session.query(model.Course)
+    # get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
                                                        categories=all_courses, 
-                                                       durations=duration_chosen,
-                                                       workloads=workload_chosen) 
+                                                       durations=get_duration)
+                                                       # workloads=workload_chosen) 
 
 
 if __name__ == "__main__":
