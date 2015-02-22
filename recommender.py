@@ -120,18 +120,18 @@ def get_courses_by_criteria():
     #Duration selected 
     duration_chosen = request.args.get("duration")
     # durations = model.session.query(model.Term)
-
+    print duration_chosen
     get_duration = model.session.query(model.Term.duration==duration_chosen).all()
     print get_duration
 
-    # workload_chosen = request.args.get("workload")
-    # workload = model.session.query(model.Course)
-    # get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
+    workload_chosen = request.args.get("workload")
+    workload = model.session.query(model.Course)
+    get_course = workload.filter(model.Course.course_workload==workload_chosen).all()
 
     return render_template("recommended_courses.html", chosencategory=category_chosen, 
                                                        categories=all_courses, 
-                                                       durations=get_duration)
-                                                       # workloads=workload_chosen) 
+                                                       durations=duration_chosen,
+                                                       workloads=workload_chosen) 
 
 
 if __name__ == "__main__":
