@@ -68,25 +68,29 @@ def login():
     
     return render_template("welcome.html")
 
-# @app.route("/changepassword")
-# def show_change_password():
-#     """Displays the change password page"""
-#     return render_template("changepassword.html", email=session['email'])
+@app.route('/myprofile', methods=['GET'])
+def display_user_profile():
+    return render_template("user_profile.html", email=session['email'])
 
-# @app.route("/changepassword", methods=['POST'])
-# def change_password():
-#     pass
-#     """Change user password"""
+@app.route("/changepassword", methods=['GET'])
+def show_change_password():
+    """Displays the change password page"""
+    return render_template("changepassword.html", email=session['email'])
+
+@app.route("/changepassword", methods=['POST'])
+def change_password():
+    pass
+    """Change user password"""
     
 
-# @app.route("/bookmarkcourse")
-# def bookmark_course():
-#     pass
-#     # user_id = model.session.query(User).filter_by(email=session_email).first().id
-#     # savedcourse = BookmarkedCourse.
+@app.route("/bookmarkcourse")
+def bookmark_course():
+    pass
+    # user_id = model.session.query(User).filter_by(email=session_email).first().id
+    # savedcourse = BookmarkedCourse.
 
-#     # model.session.add()
-    # model.session.commit()
+    # model.session.add()
+    model.session.commit()
     
 
 # @app.route("/bookmarkedcourses", methods = ['GET'])
