@@ -70,12 +70,12 @@ def login():
 
 @app.route('/myprofile', methods=['GET'])
 def display_user_profile():
-    return render_template("user_profile.html", email=session['email'])
+    return render_template("user_profile.html", email=session['user_email'])
 
 @app.route("/changepassword", methods=['GET'])
 def show_change_password():
     """Displays the change password page"""
-    return render_template("changepassword.html", email=session['email'])
+    return render_template("changepassword.html", email=session['user_email'])
 
 @app.route("/changepassword", methods=['POST'])
 def change_password():
@@ -86,11 +86,12 @@ def change_password():
 @app.route("/bookmarkcourse")
 def bookmark_course():
     pass
+    # pass
     # user_id = model.session.query(User).filter_by(email=session_email).first().id
     # savedcourse = BookmarkedCourse.
 
     # model.session.add()
-    model.session.commit()
+    # model.session.commit()
     
 
 # @app.route("/bookmarkedcourses", methods = ['GET'])
@@ -103,16 +104,14 @@ def bookmark_course():
 # def randomize():
 #     pass
 # """The app generates a course based on random course generator"""
-
-
-
+# 
 @app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.args.get("category")
-    #This gets the category's id
+    # #This gets the category's id
     get_category = model.session.query(model.Category.id).filter(model.Category.category_name==category_chosen).first()
-    #Query the coursecategories table to find all courses which have the category id associated with the category chosen
+    # #Query the coursecategories table to find all courses which have the category id associated with the category chosen
     get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
     all_courses = []
     for i in get_courses_associated_with_category:
@@ -133,7 +132,7 @@ def get_courses_by_criteria():
     #Sqlite Query SELECT course_workload FROM courses where course_workload LIKE '3%week';
     #Workload chosen
     workload_chosen = request.args.get("workload")
-    get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload.like('__'+workload_chosen+'%week')).all()
+    get_workload = model.session.query(model.Course.id).filter(model.Course.course_workload.like('__'+workload_chosen+'%week')).all() 
     
     return render_template("recommended_courses.html", chosencategory=category_chosen,
                                                        categories=all_courses, 
@@ -141,7 +140,7 @@ def get_courses_by_criteria():
                                                        workload=get_workload)
                                                        
                                                        
-
+#
 
 if __name__ == "__main__":
     app.run(debug=True)

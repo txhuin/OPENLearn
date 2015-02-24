@@ -39,9 +39,38 @@ def get_course():
 			
 		if 'courseFormat' in element.keys():
 			new_course.course_format = element['courseFormat']
-
+	
 		if 'estimatedClassWorkload' in element.keys():
 			new_course.course_workload = element['estimatedClassWorkload']
+
+		if 'estimatedClassWorkload' in element.keys():
+			course_workload_strip_hours = new_course.course_workload.strip('hours/week')
+			course_workload_min1_strip_whitespace = course_workload_strip_hours.strip()
+			course_workload_min2 = course_workload_min1_strip_whitespace.split('-')
+			# course_workload_min2 = list(course_workload_min1_strip_whitespace)
+			
+			
+			print '******************'
+			print '******************'
+			print '******************'
+			print '******************'
+			print course_workload_min2
+
+			print '******************'
+
+			print '******************'
+
+			print '******************'
+
+			print '******************'
+
+
+
+			# if course_workload_min2:
+			# 	new_course.course_workload_min= float(course_workload_min2[0])
+			# 	new_course.course_workload_max= float(course_workload_min2[2])
+
+			# course_workload_max = new_course.course_workload.strip()
 
 		if 'recommendedBackground' in element.keys():
 			new_course.course_prerequisites = element['recommendedBackground']

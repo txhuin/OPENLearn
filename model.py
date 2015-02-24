@@ -43,6 +43,8 @@ class Course(Base):
 	course_instructor = Column(String(90), nullable=True)
 	course_format = Column(String(10000), nullable=True)
 	course_workload = Column(String(1000), nullable=True)
+	course_workload_max = Column(Integer, nullable=True)
+	course_workload_min = Column(Integer, nullable=True)
 	course_prerequisites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
 	course_categories = relationship("CourseCategory", backref="course")
