@@ -6,6 +6,7 @@ import time
 import model
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
+import re 
 
 courses = 'https://api.coursera.org/api/catalog.v1/courses?includes=categories&fields=shortName,name,smallIcon,language,instructor,courseFormat,estimatedClassWorkload,recommendedBackground,shortDescription,aboutTheCourse,instructor'
 terms = 'https://api.coursera.org/api/catalog.v1/sessions?fields=id,courseId,homeLink,durationString,startDay,startMonth,startYear'
@@ -44,31 +45,57 @@ def get_course():
 			new_course.course_workload = element['estimatedClassWorkload']
 
 		if 'estimatedClassWorkload' in element.keys():
-			course_workload_strip_hours = new_course.course_workload.strip('hours/week')
-			course_workload_min1_strip_whitespace = course_workload_strip_hours.strip()
-			course_workload_min2 = course_workload_min1_strip_whitespace.split('-')
-			# course_workload_min2 = list(course_workload_min1_strip_whitespace)
+			if len(element['estimatedClassWorkload']) > 1:
+				course_workload_strip_hours = new_course.course_workload.strip()
+				course_workload_replace = course_workload_strip_hours.replace(" ", "")
+				course_workload_strip_whitespace = course_workload_replace.strip("abcdefghijklmnopqrstuvwxyz/")
+				print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
+				print course_workload_strip_whitespace
+				print type(course_workload_strip_whitespace)
+				print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
+				# course_workload_split = course_workload_strip_whitespace.split("-")
+				pattern = re.compile('\w', re.UNICODE)
+				remove_using_regex= ''.join(pattern.findall(course_workload_strip_whitespace))
+				# print course_workload_split
+				# print type(course_workload_split)
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				course_workload_list = filter(None, remove_using_regex)
+				split_into_two = map(int, str(course_workload_list))
+				print split_into_two
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print course_workload_list
+				# print type(course_workload_list)
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				# print '****************'
+				
+				if course_workload_list:
+					course_workload_min = float(int(split_into_two[0]))
+					new_course.course_workload_min = course_workload_min
+				else:
+					new_course.course_workload_min = 'None'
 			
-			
-			print '******************'
-			print '******************'
-			print '******************'
-			print '******************'
-			print course_workload_min2
+		# if course_workload_min2:
+		# 	if len(element['estimatedClassWorkload']) > 1:
+		# 		new_course.course_workload_min= float(course_workload_min2[0])
+		# 		new_course.course_workload_max= float(course_workload_min2[1])
 
-			print '******************'
-
-			print '******************'
-
-			print '******************'
-
-			print '******************'
-
-
-
-			# if course_workload_min2:
-			# 	new_course.course_workload_min= float(course_workload_min2[0])
-			# 	new_course.course_workload_max= float(course_workload_min2[2])
 
 			# course_workload_max = new_course.course_workload.strip()
 
