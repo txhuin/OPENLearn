@@ -48,12 +48,12 @@ def get_course():
 			if len(element['estimatedClassWorkload']) > 1:
 				course_workload_strip_hours = new_course.course_workload.strip()
 				course_workload_replace = course_workload_strip_hours.replace(" ", "")
-				course_workload_replace = course_workload_strip_hours.replace("-", ",")
+				course_workload_replace1 = course_workload_replace.replace("-", ",")
 				print '****************'
 				print '****************'
 				print '****************'
 				print '****************'
-				print course_workload_replace
+				print course_workload_replace1
 				print '****************'
 				print '****************'
 				print '****************'
@@ -61,7 +61,12 @@ def get_course():
 				print '****************'
 				# course_workload_strip_whitespace = course_workload_replace.strip("abcdefghijklmnopqrstuvwxyz/()")
 				# course_workload_strip_whitespace1 = course_workload_strip_whitespace.strip("hours/week")
-				print '****************'
+				# chars = "abcdefghijklmnopqrstuvwxyz-"
+				stripping_all_characters = ''.join(c for c in course_workload_replace if c.isdigit() or c==',')
+				# pattern = re.sub("[^0-9]", "", course_workload_replace)
+				# print pattern
+				print stripping_all_characters
+					print '****************'
 				print '****************'
 				print '****************'
 				print '****************'
@@ -71,22 +76,17 @@ def get_course():
 				print '****************'
 				print '****************'
 				print '****************'
-				# chars = "abcdefghijklmnopqrstuvwxyz-"
-				stripping_all_characters = ''.join(c for c in course_workload_replace if c.isdigit() or c==',')
-				# pattern = re.sub("[^0-9]", "", course_workload_replace)
-				# print pattern
-				print stripping_all_characters
 				# print type(course_workload_strip_whitespace1)
 				# course_workload_split = course_workload_strip_whitespace.split("-")
 				# pattern = re.compile('\w', re.UNICODE)
 				# remove_using_regex = ''.join(pattern.findall(course_workload_replace))
 				# print course_workload_split
 				# print type(course_workload_split)
-				# print '****************'
-				# print '****************'
-				# print '****************'
-				# print '****************'
-				# print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
+				print '****************'
 				course_workload_list = filter(None, stripping_all_characters)
 				# split = pattern.split("-")
 				# split_into_two = map(int, str(course_workload_list))
