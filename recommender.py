@@ -132,7 +132,7 @@ def get_courses_by_criteria():
     #Sqlite Query SELECT course_workload FROM courses where course_workload LIKE '3%week';
     #Workload chosen
     workload_chosen = request.args.get("workload")
-    get_workload = model.session.query(model.Course.id).filter(model.Course.course_workload.like('__'+workload_chosen+'%week')).all() 
+    get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max < workload_chosen).all() 
     
     return render_template("recommended_courses.html", chosencategory=category_chosen,
                                                        categories=all_courses, 
