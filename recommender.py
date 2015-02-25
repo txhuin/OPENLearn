@@ -114,10 +114,38 @@ def get_courses_by_criteria():
     # #Query the coursecategories table to find all courses which have the category id associated with the category chosen
     get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
     all_courses = []
+    all_images = []
     for i in get_courses_associated_with_category:
         get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
+        render_image = model.session.query(model.Course.course_icon).filter(model.Course.id==i[0]).all()
+        print render_image
+        print '$#(*@(!@(&!@&!(@'*5
+        print '$#(*@(!@(&!@&!(@'*5
+        all_images.extend(render_image)
         all_courses.append(get_course_name)
-    print all_courses
+    encoded = [[s.encode('utf8') for s in render_image] for render_image in all_images]
+    results = [item for sublist in encoded for item in sublist]
+    print results
+    print '$#(*@(!@(&!@&!(@'*5
+    print '$#(*@(!@(&!@&!(@'*5
+    print '$#(*@(!@(&!@&!(@'*5
+    print '$#(*@(!@(&!@&!(@'*5
+    # for i in encoded:
+
+    
+        
+        
+        
+    # list_of_strings= [i[0] for i in all_images]
+    # encoded = [[s.encode('utf8') for s in all_images] for t in resultsList]
+        # all_images.append(list_of_strings)
+    # print all_courses
+    # print '$#(*@(!@(&!@&!(@'*5
+    # print all_images
+    # print '$#(*@(!@(&!@&!(@'*5
+    # print '$#(*@(!@(&!@&!(@'*5
+
+
 
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
@@ -154,7 +182,8 @@ def get_courses_by_criteria():
     return render_template("recommended_courses.html", chosencategory=category_chosen,
                                                        categories=all_courses, 
                                                        durations=all_courses1,
-                                                       workload=get_workload)
+                                                       workload=get_workload,
+                                                       images=results)
                                     
 
 if __name__ == "__main__":

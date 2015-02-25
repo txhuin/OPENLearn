@@ -8,6 +8,9 @@
 	<h4>{{ categories }} has 4 sessioons. </h4>
 	<h4>{{ durations }} has 5 courses. </h4>
 	<p> {{ workload }} are courses which have the course workload you have specified. </p>
+	<p>{% for image in images %}
+		<a href="{{ image }}">{{ image }}</a> are courses which have the course workload you have specified. </p>
+		{% endfor %}
 	{% endblock %}
 
 
