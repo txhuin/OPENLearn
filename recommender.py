@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, flash, session
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update
+# from sqlalchemy import 
 import json
 import model
 import os
@@ -100,11 +101,15 @@ def bookmark_course():
 #     """Show all the bookmarked courses from the database"""
     
 
-# @app.route("/randomize", methods=['GET', 'POST'])
-# def randomize():
-#     pass
-# """The app generates a course based on random course generator"""
-# 
+@app.route("/randomize", methods=['GET'])
+def get_random_course():
+    random_course = model.session.query(model.Course.course_name).order_by(func.random().limit(1))
+    return render_template("randomcourses.html", randomcourses=random_course)
+
+
+    
+"""The app generates a course based on random course generator"""
+
 @app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
@@ -122,10 +127,10 @@ def get_courses_by_criteria():
         print '$#(*@(!@(&!@&!(@'*5
         print '$#(*@(!@(&!@&!(@'*5
         all_images.extend(render_image)
-        all_courses.append(get_course_name)
-    encoded = [[s.encode('utf8') for s in render_image] for render_image in all_images]
-    results = [item for sublist in encoded for item in sublist]
-    print results
+        all_courses.extend(get_course_name)
+    encoded_images = [[s.encode('utf8') for s in render_image] for render_image in all_images]
+    image_results = [item for sublist in encoded_images for item in sublist]
+    print image_results
     print '$#(*@(!@(&!@&!(@'*5
     print '$#(*@(!@(&!@&!(@'*5
     print '$#(*@(!@(&!@&!(@'*5
@@ -183,7 +188,7 @@ def get_courses_by_criteria():
                                                        categories=all_courses, 
                                                        durations=all_courses1,
                                                        workload=get_workload,
-                                                       images=results)
+                                                       images=image_results)
                                     
 
 if __name__ == "__main__":
