@@ -69,6 +69,11 @@ def login():
     
     return render_template("welcome.html")
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return render_template("logout.html")
+
 @app.route('/myprofile', methods=['GET'])
 def display_user_profile():
     return render_template("user_profile.html", email=session['user_email'])
@@ -86,13 +91,14 @@ def change_password():
 
 @app.route("/bookmarkcourse")
 def bookmark_course():
-    pass
-    # pass
-    # user_id = model.session.query(User).filter_by(email=session_email).first().id
-    # savedcourse = BookmarkedCourse.
 
-    # model.session.add()
-    # model.session.commit()
+
+    session['user_email'] = user.email
+    user_id = model.session.query(User).filter_by(email=session_email).first().id
+    # # savedcourse = BookmarkedCourse.
+
+    # # model.session.add()
+    # # model.session.commit()
     
 
 # @app.route("/bookmarkedcourses", methods = ['GET'])

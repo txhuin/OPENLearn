@@ -24,8 +24,12 @@
                     <li><a href="/Randomize">Randomize</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    {% if session.get('user_email') %}
+                    <li><a href="/login" id="login">Log Out</a></li>
+                    {% else %}
                		<li><a href="/login" id="login">Log In</a></li>
                     <li><a href="/signup">Signup</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
