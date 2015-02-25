@@ -123,13 +123,28 @@ def get_courses_by_criteria():
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
     duration_chosen = request.args.get("duration")
     print duration_chosen 
-    print '!'*20
-    get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
-    all_courses1 = []
-    for i in get_duration:
-        get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
-        all_courses1.append(get_course_name)
-    print all_courses1
+
+    if duration_chosen == "More than 20 weeks":
+        all_courses1= []
+        course1= model.session.query(model.Course.course_name).filter(model.Course.id==329).all()
+        course2 = model.session.query(model.Course.course_name).filter(model.Course.id==444).all()
+        course3 = model.session.query(model.Course.course_name).filter(model.Course.id==449).all()
+        course4 = model.session.query(model.Course.course_name).filter(model.Course.id==503).all()
+        course5 = model.session.query(model.Course.course_name).filter(model.Course.id==584).all()
+        all_courses1.append(course1)
+        all_courses1.append(course2)
+        all_courses1.append(course3)
+        all_courses1.append(course4)
+        all_courses1.append(course5)
+        print all_courses1
+        
+    else:
+        get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
+        all_courses1 = []
+        for i in get_duration:
+            get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
+            all_courses1.append(get_course_name)
+        print all_courses1
 
     #Sqlite Query SELECT course_workload FROM courses where course_workload LIKE '3%week';
     #Workload chosen
