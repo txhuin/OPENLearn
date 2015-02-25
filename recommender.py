@@ -122,6 +122,8 @@ def get_courses_by_criteria():
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
     duration_chosen = request.args.get("duration")
+    print duration_chosen 
+    print '!'*20
     get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
     all_courses1 = []
     for i in get_duration:
@@ -138,10 +140,8 @@ def get_courses_by_criteria():
                                                        categories=all_courses, 
                                                        durations=all_courses1,
                                                        workload=get_workload)
-                                                       
-                                                       
-#
+                                    
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
 
