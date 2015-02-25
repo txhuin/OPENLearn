@@ -103,8 +103,26 @@ def bookmark_course():
 
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
-    random_course = model.session.query(model.Course.course_name).order_by(func.random()).limit(1).all()
-    return render_template("randomcourse.html", randomcourses=random_course)
+    random_course = model.session.query(model.Course.course_name, model.Course.course_icon).order_by(func.random()).limit(1).one()
+    print random_course
+    print type(random_course)
+    print "@*#&@#*@*&#@&*#&@"
+    print "@*#&@#*@*&#@&*#&@"
+    print "@*#&@#*@*&#@&*#&@"
+    print "@*#&@#*@*&#@&*#&@"
+    print "@*#&@#*@*&#@&*#&@"
+    course = [i.encode("utf8") for i in random_course]
+    course_name = course[0]
+    course_img = course[1]
+   # the_course = []
+   #  encoded_random_course = [s.encode('utf8') for s in random_course] 
+   #  for item in encoded_random_course:
+   #      course = item
+
+    # render_image = model.session.query(model.Course.course_icon).filter(model.Course.course_name==random_course).all()
+    return render_template("randomcourse.html", randomcourses=course,
+                                                coursename=course_name,
+                                                courseimage=course_img)# image=render_image)
 
 
     
@@ -123,33 +141,10 @@ def get_courses_by_criteria():
     for i in get_courses_associated_with_category:
         get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
         render_image = model.session.query(model.Course.course_icon).filter(model.Course.id==i[0]).all()
-        print render_image
-        print '$#(*@(!@(&!@&!(@'*5
-        print '$#(*@(!@(&!@&!(@'*5
         all_images.extend(render_image)
         all_courses.extend(get_course_name)
     encoded_images = [[s.encode('utf8') for s in render_image] for render_image in all_images]
     image_results = [item for sublist in encoded_images for item in sublist]
-    print image_results
-    print '$#(*@(!@(&!@&!(@'*5
-    print '$#(*@(!@(&!@&!(@'*5
-    print '$#(*@(!@(&!@&!(@'*5
-    print '$#(*@(!@(&!@&!(@'*5
-    # for i in encoded:
-
-    
-        
-        
-        
-    # list_of_strings= [i[0] for i in all_images]
-    # encoded = [[s.encode('utf8') for s in all_images] for t in resultsList]
-        # all_images.append(list_of_strings)
-    # print all_courses
-    # print '$#(*@(!@(&!@&!(@'*5
-    # print all_images
-    # print '$#(*@(!@(&!@&!(@'*5
-    # print '$#(*@(!@(&!@&!(@'*5
-
 
 
     #Duration selected 
@@ -192,5 +187,5 @@ def get_courses_by_criteria():
                                     
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
 
