@@ -101,10 +101,10 @@ def bookmark_course():
 #     """Show all the bookmarked courses from the database"""
     
 
-@app.route("/randomize", methods=['GET'])
+@app.route("/Randomize", methods=['GET'])
 def get_random_course():
-    random_course = model.session.query(model.Course.course_name).order_by(func.random().limit(1))
-    return render_template("randomcourses.html", randomcourses=random_course)
+    random_course = model.session.query(model.Course.course_name).order_by(func.random()).limit(1).all()
+    return render_template("randomcourse.html", randomcourses=random_course)
 
 
     
@@ -192,5 +192,5 @@ def get_courses_by_criteria():
                                     
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
 
