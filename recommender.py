@@ -1,5 +1,5 @@
 # This is the controller file
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session, redirect
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update
@@ -11,7 +11,6 @@ import jinja2
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-
 
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
@@ -71,31 +70,18 @@ def login():
     return render_template("welcome.html")
 
 
-@app.route("/my_profile")
+@app.route("/myprofile")
 def display_my_profile():
-    if session.get('user_email'):
-        email = session.get('user_email')
-        users = model.session.query(model.User)
-        user = users.filter(model.User.email == email).one()
-        heading = "My Profile"
+    email = session.get('user_email')
+    users = model.session.query(model.User)
+    user = users.filter(model.User.email == email).one()
+    return render_template("user_profile.html", user=user)
 
-        courses = model.session.query(model.BookmarkedCourse)
-        user_courses = courses.filter(model.BookmarkedCourse.user_id == user.id).all()
-
-        return render_template("user_profile.html", user=user,
-                                                    heading=heading,
-                                                    ratings=user_ratings)
-    flash("Please log in.")
-    return show_login()
 
 @app.route("/logout")
 def logout():
     session.clear()
     return render_template("logout.html")
-
-@app.route('/myprofile', methods=['GET'])
-def display_user_profile():
-    return render_template("user_profile.html", email=session['user_email'])
 
 @app.route("/changepassword", methods=['GET'])
 def show_change_password():
@@ -107,38 +93,30 @@ def change_password():
     pass
     """Change user password"""
     
-@app.route("/bookmarkcourse")
-def bookmark_course():
-    pass
-    # user_id = model.session.query(User).filter_by(email=session['user_email']).first().id
-    # session['course']= 
-    # bookmarked_course = session
-    # s = BookmarkedCourse(user_id=user_id, recipe=saved_meal)
-    # session.add(s)
-    # session.commit()
+@app.route("/bookmarkcourse/<int:id>")   
+def bookmark_course(id):
+    user_id = session.get("user_id")
+    bookmarkedcourse = model.BookmarkedCourse(
+        user_id = user_id,
+        course_id=id)
+    
+    model.session.add(bookmarkedcourse)
+    model.session.commit()
 
-
-    # model.session.add()
-    # model.session.commit()
+    return redirect("/bookmarkedcourses")
     
 @app.route("/bookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
-    pass
-    """Show all the bookmarked courses from the database"""
-    
+    user_id = session.get("user_id")
+    saved_courses = model.session.query(model.BookmarkedCourse.course_id).filter(model.BookmarkedCourse.user_id==user_id).all()
+
+    return render_template("bookmarkedcourses.html", saved_courses=saved_courses)
 
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
-    random_course = model.session.query(model.Course.course_name, model.Course.course_icon).order_by(func.random()).limit(1).one()
-    print random_course
-    course = [i.encode("utf8") for i in random_course]
-    course_img = course[1]
-    course_name = course[0]
-
+    random_course = model.session.query(model.Course).order_by(func.random()).first()
  
-    return render_template("randomcourse.html", randomcourses=course,
-                                                coursename=course_name,
-                                                courseimage=course_img)
+    return render_template("randomcourse.html", randomcourse=random_course)
 
 
 @app.route("/Recommend", methods=['GET'])

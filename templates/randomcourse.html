@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>{{ coursename }}</p>
+<p>{{ randomcourse.id }}</p>
+<p>{{ randomcourse.course_name }}</p>
+<p><img src="{{ randomcourse.course_icon }}"</p>
 <p><img src="{{ courseimage }}"></p>
 {% if session.get('user_email') %}
 <div class="col-sm-6">
- <form action = "/bookmarkcourse">
-      <button id="starb" class="btn btn-default btn-lg">
-      <span class="glyphicon glyphicon-star">
-      </span>
-      </button>
+ <form action = "/bookmarkcourse" method="GET">
+      <a class="btn btn-primary" href="/bookmarkcourse/{{ randomcourse.id }}">Add to Cart</a>
      </form>
+{% else %}
+<p><a href="/signup">Please sign in to bookmark this course!</a></p>
 {% endif %}
 {% endblock %}
