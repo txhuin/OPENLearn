@@ -109,16 +109,17 @@ def change_password():
     
 @app.route("/bookmarkcourse")
 def bookmark_course():
-    user_id = model.session.query(User).filter_by(email=session['user_email']).first().id
-    session['course']= 
-    bookmarked_course = session
-    s = BookmarkedCourse(user_id=user_id, recipe=saved_meal)
-    session.add(s)
-    session.commit()
+    pass
+    # user_id = model.session.query(User).filter_by(email=session['user_email']).first().id
+    # session['course']= 
+    # bookmarked_course = session
+    # s = BookmarkedCourse(user_id=user_id, recipe=saved_meal)
+    # session.add(s)
+    # session.commit()
 
 
-    model.session.add()
-    model.session.commit()
+    # model.session.add()
+    # model.session.commit()
     
 @app.route("/bookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
@@ -184,17 +185,20 @@ def get_courses_by_criteria():
         all_courses1 = []
         for i in get_duration:
             get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
-            all_courses1.append(get_course_name)
-        print all_courses1
-
+            all_courses1.extend(get_course_name)
+    encoded_durations = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses1]
+    duration_results = [item for sublist in encoded_durations for item in sublist]
+    
     #Workload chosen
     workload_chosen = request.args.get("workload")
     get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max < workload_chosen).all() 
-    
+    get_workload_list = [item[0] for item in get_workload]
+    encode_workload_list = [s.encode("utf8") for s in get_workload_list]
+
     return render_template("recommended_courses.html", chosencategory=category_chosen,
                                                        categories=course_results, 
-                                                       durations=all_courses1,
-                                                       workload=get_workload,
+                                                       durations=duration_results,
+                                                       workload=encode_workload_list,
                                                        images=image_results)
                                     
 
