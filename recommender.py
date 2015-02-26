@@ -3,12 +3,14 @@ from flask import Flask, render_template, redirect, request, flash, session
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update
-# from sqlalchemy import 
 import json
 import model
 import os
 import requests
 import jinja2
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 app = Flask(__name__)
@@ -44,11 +46,11 @@ def signup():
 
 @app.route("/login", methods=["GET"])
 def show_login():
-    return render_template("login.html")
     if session.get('user_email'):
         flash("You have successfully logged out.")
         session.clear()
-   
+    return render_template("login.html")
+
 @app.route("/login", methods=["POST"])
 def login():
     user_email = request.form.get('email')
@@ -65,9 +67,26 @@ def login():
 
     session['user_email'] = user.email
     session['user_id'] = user.id
-    session['count'] = 0
     
     return render_template("welcome.html")
+
+
+@app.route("/my_profile")
+def display_my_profile():
+    if session.get('user_email'):
+        email = session.get('user_email')
+        users = model.session.query(model.User)
+        user = users.filter(model.User.email == email).one()
+        heading = "My Profile"
+
+        courses = model.session.query(model.BookmarkedCourse)
+        user_courses = courses.filter(model.BookmarkedCourse.user_id == user.id).all()
+
+        return render_template("user_profile.html", user=user,
+                                                    heading=heading,
+                                                    ratings=user_ratings)
+    flash("Please log in.")
+    return show_login()
 
 @app.route("/logout")
 def logout():
@@ -88,51 +107,47 @@ def change_password():
     pass
     """Change user password"""
     
-
 @app.route("/bookmarkcourse")
 def bookmark_course():
+    pass
+    # session['user_email'] = user.email
+    # saved_course = model.BookmarkedCourse(user_id=)
 
 
-    session['user_email'] = user.email
-    user_id = model.session.query(User).filter_by(email=session_email).first().id
-    # # savedcourse = BookmarkedCourse.
-
-    # # model.session.add()
-    # # model.session.commit()
+    model.session.add()
+    model.session.commit()
     
-
-# @app.route("/bookmarkedcourses", methods = ['GET'])
-# def show_bookmarked_courses():
-#     pass
-#     """Show all the bookmarked courses from the database"""
+@app.route("/bookmarkedcourses", methods = ['GET'])
+def show_bookmarked_courses():
+    pass
+    """Show all the bookmarked courses from the database"""
     
 
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
     random_course = model.session.query(model.Course.course_name, model.Course.course_icon).order_by(func.random()).limit(1).one()
     print random_course
-    print type(random_course)
-    print "@*#&@#*@*&#@&*#&@"
-    print "@*#&@#*@*&#@&*#&@"
-    print "@*#&@#*@*&#@&*#&@"
-    print "@*#&@#*@*&#@&*#&@"
-    print "@*#&@#*@*&#@&*#&@"
     course = [i.encode("utf8") for i in random_course]
-    course_name = course[0]
     course_img = course[1]
-   # the_course = []
-   #  encoded_random_course = [s.encode('utf8') for s in random_course] 
-   #  for item in encoded_random_course:
-   #      course = item
+    # try:
+    course_name = course[0]
+    # except UnicodeError:
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     # print 'NONE'
+    #     b = course.decode('ascii')
+    #     course_name =  b.encode('unicode_escape')
+        # print course[0]
 
-    # render_image = model.session.query(model.Course.course_icon).filter(model.Course.course_name==random_course).all()
+ 
     return render_template("randomcourse.html", randomcourses=course,
                                                 coursename=course_name,
-                                                courseimage=course_img)# image=render_image)
+                                                courseimage=course_img)
 
-
-    
-"""The app generates a course based on random course generator"""
 
 @app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
@@ -149,9 +164,10 @@ def get_courses_by_criteria():
         render_image = model.session.query(model.Course.course_icon).filter(model.Course.id==i[0]).all()
         all_images.extend(render_image)
         all_courses.extend(get_course_name)
+    encoded_courses = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses]
     encoded_images = [[s.encode('utf8') for s in render_image] for render_image in all_images]
+    course_results = [item for sublist in encoded_courses for item in sublist]
     image_results = [item for sublist in encoded_images for item in sublist]
-
 
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
@@ -180,18 +196,17 @@ def get_courses_by_criteria():
             all_courses1.append(get_course_name)
         print all_courses1
 
-    #Sqlite Query SELECT course_workload FROM courses where course_workload LIKE '3%week';
     #Workload chosen
     workload_chosen = request.args.get("workload")
     get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max < workload_chosen).all() 
     
     return render_template("recommended_courses.html", chosencategory=category_chosen,
-                                                       categories=all_courses, 
+                                                       categories=course_results, 
                                                        durations=all_courses1,
                                                        workload=get_workload,
                                                        images=image_results)
                                     
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
 

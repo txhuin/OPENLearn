@@ -29,6 +29,8 @@ class BookmarkedCourse(Base):
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
 	course_id = Column(String(500), nullable=False)
+	course_name = Column(String(500), nullable=False)
+	course_icon = Column(String(1000))
 
 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
 
