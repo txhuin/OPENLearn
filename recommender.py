@@ -109,9 +109,12 @@ def change_password():
     
 @app.route("/bookmarkcourse")
 def bookmark_course():
-    pass
-    # session['user_email'] = user.email
-    # saved_course = model.BookmarkedCourse(user_id=)
+    user_id = model.session.query(User).filter_by(email=session['user_email']).first().id
+    session['course']= 
+    bookmarked_course = session
+    s = BookmarkedCourse(user_id=user_id, recipe=saved_meal)
+    session.add(s)
+    session.commit()
 
 
     model.session.add()
@@ -129,19 +132,7 @@ def get_random_course():
     print random_course
     course = [i.encode("utf8") for i in random_course]
     course_img = course[1]
-    # try:
     course_name = course[0]
-    # except UnicodeError:
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     # print 'NONE'
-    #     b = course.decode('ascii')
-    #     course_name =  b.encode('unicode_escape')
-        # print course[0]
 
  
     return render_template("randomcourse.html", randomcourses=course,
@@ -208,5 +199,5 @@ def get_courses_by_criteria():
                                     
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
 

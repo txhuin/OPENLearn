@@ -2,4 +2,13 @@
 {% block content %}
 <p>{{ coursename }}</p>
 <p><img src="{{ courseimage }}"></p>
+{% if session.get('user_email') %}
+<div class="col-sm-6">
+ <form action = "/bookmarkcourse">
+      <button id="starb" class="btn btn-default btn-lg">
+      <span class="glyphicon glyphicon-star">
+      </span>
+      </button>
+     </form>
+{% endif %}
 {% endblock %}
