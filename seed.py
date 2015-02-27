@@ -108,7 +108,7 @@ def get_category():
 	for element in c.json()['elements']:
 		new_category = model.Category(
 			id = element['id'],
-			category_name = element['name'])
+			category_name = element['name'].strip())
 
 		if 'description' in element.keys():
 			new_category.category_description = element['description']

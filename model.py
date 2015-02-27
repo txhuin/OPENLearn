@@ -32,6 +32,7 @@ class BookmarkedCourse(Base):
 
 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
 	course = relationship("Course", backref=backref("bookmarkedcourses", order_by=id))
+	# terms = relationship("Term", backref=backref("bookmarkedcourses", order_by=id))
 
 class Course(Base):
 	__tablename__ = "courses"
@@ -49,7 +50,6 @@ class Course(Base):
 	course_prerequisites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
 	course_categories = relationship("CourseCategory", backref="course")
-	# course_categories = relationship("Category", secondary=CourseCategory, backref="courses")
 
 class Term(Base):
 	__tablename__ = "terms"
@@ -77,7 +77,7 @@ class CourseCategory(Base):
 	category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
 	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
 
-	# course = relationship("Course", backref="category_assocs")
+	course_name = relationship("Course", backref=backref("course_category_names", order_by=id))
 
 def main():
 	pass

@@ -17,15 +17,17 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 
 @app.route("/")
 def welcome():
-	"""The welcome page"""
+	"""The welcome page: This is where the user specifies preferences and submits it to get course listings."""
 	return render_template("welcome.html")
 
 @app.route("/signup", methods=['GET'])
-def show_signup():
+def display_signup():
+    """Display sign up form"""
     return render_template("signup.html")
 
 @app.route("/signup", methods=['POST'])
 def signup():
+    """Once the user submits information on the sign up form, new user is added to database"""
     user_email = request.form.get('email')
     user_password = request.form.get('password') 
 
@@ -44,7 +46,8 @@ def signup():
     return show_login()
 
 @app.route("/login", methods=["GET"])
-def show_login():
+def display_login():
+    """This is the login form."""
     if session.get('user_email'):
         flash("You have successfully logged out.")
         session.clear()
@@ -52,6 +55,7 @@ def show_login():
 
 @app.route("/login", methods=["POST"])
 def login():
+    """The user submits their login credentials and is added to the Flask session"""
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
@@ -72,6 +76,7 @@ def login():
 
 @app.route("/myprofile")
 def display_my_profile():
+    """Displays profile of the user that is logged in"""
     email = session.get('user_email')
     users = model.session.query(model.User)
     user = users.filter(model.User.email == email).one()
@@ -80,8 +85,9 @@ def display_my_profile():
 
 @app.route("/logout")
 def logout():
+    """Logs user out, and clears session. User is returned to homepage.""" 
     session.clear()
-    return render_template("logout.html")
+    return redirect("/")
 
 @app.route("/changepassword", methods=['GET'])
 def show_change_password():
@@ -95,6 +101,7 @@ def change_password():
     
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
+    """Allows user to bookmark course to view later"""
     user_id = session.get("user_id")
     bookmarkedcourse = model.BookmarkedCourse(
         user_id = user_id,
@@ -107,9 +114,10 @@ def bookmark_course(id):
     
 @app.route("/bookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
+    """Returns list of all courses that the logged in user has bookmarked"""
     user_id = session.get("user_id")
     saved_bookmarks = model.session.query(model.BookmarkedCourse).filter(model.BookmarkedCourse.user_id==user_id).all()
-    list_of_courses = [bookmark.course for bookmark in saved_bookmarks]
+    list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
 
     return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
@@ -119,31 +127,17 @@ def get_random_course():
  
     return render_template("randomcourse.html", randomcourse=random_course)
 
-
 @app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.args.get("category")
-    # #This gets the category's id
-    get_category = model.session.query(model.Category.id).filter(model.Category.category_name==category_chosen).first()
-    # #Query the coursecategories table to find all courses which have the category id associated with the category chosen
-    get_courses_associated_with_category = model.session.query(model.CourseCategory.course_id).filter(model.CourseCategory.category_id==get_category[0]).all()
-    all_courses = []
-    all_images = []
-    for i in get_courses_associated_with_category:
-        get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
-        render_image = model.session.query(model.Course.course_icon).filter(model.Course.id==i[0]).all()
-        all_images.extend(render_image)
-        all_courses.extend(get_course_name)
-    encoded_courses = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses]
-    encoded_images = [[s.encode('utf8') for s in render_image] for render_image in all_images]
-    course_results = [item for sublist in encoded_courses for item in sublist]
-    image_results = [item for sublist in encoded_images for item in sublist]
-
+    #This gets the category's category_id
+    get_category = model.session.query(model.Category).filter(model.Category.category_name==category_chosen).first()
+    get_courses_associated_with_category = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==get_category.id).all()
+    list_of_courses = [course.course_name for course in get_courses_associated_with_category]
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
     duration_chosen = request.args.get("duration")
-    print duration_chosen 
 
     if duration_chosen == "More than 20 weeks":
         all_courses1= []
@@ -174,17 +168,31 @@ def get_courses_by_criteria():
     get_workload_list = [item[0] for item in get_workload]
     encode_workload_list = [s.encode("utf8") for s in get_workload_list]
 
-    return render_template("recommended_courses.html", chosencategory=category_chosen,
-                                                       categories=course_results, 
-                                                       durations=duration_results,
+    return render_template("recommended_courses.html", category=list_of_courses, 
+                                                       duration=duration_results,
                                                        workload=encode_workload_list,
-                                                       images=image_results)
+                                                       courses=get_course_name)
+                                                       
+                                                
+                                                       
+
+
+
+#To-do:
+# Add a details option to each course rendered
+# Add rate this course functionality
+# Add course takers also enjoyed(Nearest Neighbour algorithm)
+# Prediction of rating? (Pearson coefficient)
+# Migrate to Postgresql for deployment
+# Add Facebook OAuth
+                                    
 
 @app.route('/course')
 def show_course():
     pass
-                                    
+
+
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
 

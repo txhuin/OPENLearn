@@ -1,31 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="/Recommend" id="form-submission" method="GET">
-	<h2 class="form-signin-heading">Find a course</h2>
-	<label>Duration</label><select name="duration" required>
-	<option value="1 weeks">1 weeks</option>
-	<option value="2 weeks">2 weeks</option>
-	<option value="3 weeks">3 weeks</option>
-	<option value="4 weeks">4 weeks</option>
-	<option value="5 weeks">5 weeks</option>
-	<option value="6 weeks">6 weeks</option>
-	<option value="7 weeks">7 weeks</option>
-	<option value="8 weeks">8 weeks</option>
-	<option value="9 weeks">9 weeks</option>
-	<option value="10 weeks">10 weeks</option>
-	<option value="11 weeks">11 weeks</option>
-	<option value="12 weeks">12 weeks</option>
-	<option value="13 weeks">13 weeks</option>
-	<option value="14 weeks">14 weeks</option>
-	<option value="15 weeks">15 weeks</option>
-	<option value="16 weeks">16 weeks</option>
-	<option value="17 weeks">17 weeks</option>
-	<option value="18 weeks">18 weeks</option>
-	<option value="19 weeks">19 weeks</option>
-	<option value="20 weeks">20 weeks</option>
-	<option value="More than 20 weeks">More than 20 weeks</option>
-	</select><br>
-	<label>Category</label> <select name="category" required>
+<h2>Find a course</h2>
+<form action="/Recommend" id="form-submission" method="GET" role="form">
+	<div class="form-group">
+	<label for="category"><font size="4">Category</label> <select class="form-control" id="category" name="category" required>
 		<option value="Mathematics">Mathematics</option>
 		<option value="Law">Law</option>
 		<option value="Chemistry">Chemistry</option>
@@ -38,7 +16,7 @@
 		<option value="Arts">Arts</option>
 		<option value="Engineering">Engineering</option>
 		<option value="Education">Education</option>
-		<option value="Humanities">Humanities </option>
+		<option value="Humanities">Humanities</option>
 		<option value="Medicine">Medicine</option>
 		<option value="Computer Science: Software Engineering">Computer Science: Software Engineering</option>
 		<option value="Computer Science: Systems & Security">Computer Science: Systems &#38; Security</option>
@@ -52,7 +30,30 @@
 		<option value="Teacher Professional Development">Teacher Professional Development</option>
 		<option value="Information, Tech & Design">Information, Tech &#38; Design</option>
 	</select><br>
-	<label>Workload</label><select name="workload">
+	<label for="duration"><font size="4">Duration</label><select class="form-control" id="duration" name="duration" required>
+		<option value="1 weeks">1 weeks</option>
+		<option value="2 weeks">2 weeks</option>
+		<option value="3 weeks">3 weeks</option>
+		<option value="4 weeks">4 weeks</option>
+		<option value="5 weeks">5 weeks</option>
+		<option value="6 weeks">6 weeks</option>
+		<option value="7 weeks">7 weeks</option>
+		<option value="8 weeks">8 weeks</option>
+		<option value="9 weeks">9 weeks</option>
+		<option value="10 weeks">10 weeks</option>
+		<option value="11 weeks">11 weeks</option>
+		<option value="12 weeks">12 weeks</option>
+		<option value="13 weeks">13 weeks</option>
+		<option value="14 weeks">14 weeks</option>
+		<option value="15 weeks">15 weeks</option>
+		<option value="16 weeks">16 weeks</option>
+		<option value="17 weeks">17 weeks</option>
+		<option value="18 weeks">18 weeks</option>
+		<option value="19 weeks">19 weeks</option>
+		<option value="20 weeks">20 weeks</option>
+		<option value="More than 20 weeks">More than 20 weeks</option>
+	</select><br>
+	<label for="workload">Workload</label><select class="form-control" id="workload" name="workload">
 		<option value="3">Maximum of 3 hours per week</option>
 		<option value="5">Maximum of 5 hours per week</option>
 		<option value="7">Maximum 7 hours per week</option>
@@ -61,7 +62,7 @@
 		<option value="15">Maximum 15 hours per week</option>
 		<option value="20">Maximum 20 hours per week</option>
 	</select><br>
-<button class="btn btn-primary btn-lg active" type="submit">Submit</button>
+<button class="btn btn-primary btn-lg active" type="submit">Search</button>
 </form>
 
 {% endblock %}
