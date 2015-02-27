@@ -28,9 +28,10 @@ class BookmarkedCourse(Base):
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	course_id = Column(String(500), nullable=False)
+	course_id = Column(String(500), ForeignKey('courses.id'))
 
 	user = relationship("User", backref=backref("bookmarkedcourses", order_by=id))
+	course = relationship("Course", backref=backref("bookmarkedcourses", order_by=id))
 
 class Course(Base):
 	__tablename__ = "courses"
