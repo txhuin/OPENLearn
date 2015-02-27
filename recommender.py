@@ -109,8 +109,15 @@ def bookmark_course(id):
 def show_bookmarked_courses():
     user_id = session.get("user_id")
     saved_courses = model.session.query(model.BookmarkedCourse.course_id).filter(model.BookmarkedCourse.user_id==user_id).all()
+    saved_courses_encoded = [item[0] for item in saved_courses]
+    encode_saved_list = [s.encode("utf8") for s in saved_courses_encoded]
+    print encode_saved_list
+    for i in encode_saved_list:
+        course_name = model.session.query(model.Course).filter(model.Course.id==i).first()
+        # all_saved.extend(course_name)
+    
 
-    return render_template("bookmarkedcourses.html", saved_courses=saved_courses)
+    return render_template("bookmarkedcourses.html", saved_courses=course_name)
 
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
@@ -178,8 +185,12 @@ def get_courses_by_criteria():
                                                        durations=duration_results,
                                                        workload=encode_workload_list,
                                                        images=image_results)
+
+@app.route('/course')
+def show_course():
+    pass
                                     
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
 
