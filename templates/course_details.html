@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul>
+	<li><img src="{{ course.course_icon }}"></li>
+	<li>{{ course.course_name }}</li>
+	<li>{{ course.course_description }}</li>
+	<li>{{ course.course_format }}</li>
+	<li>{{ course.course_prerequisites }}</li>
+	<li>{{ course.course_instructor }}</li>
+</ul>
+<form action = "/bookmarkcourse" method="GET">
+      <a class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
+     </form>
+{% endblock %}

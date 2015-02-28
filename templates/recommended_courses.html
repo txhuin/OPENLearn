@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
-<html>
-<head>
 <title> Recommended courses </title>
 	{% block content %}
+	<table class="table table-striped">
 	<p> Here are your courses! </p>
-	<a href="/Recommend?chosenduration={{ duration }}&category={{ category }}&workload={{ workload.course_workload }}"></a>
+	<tr><th>Course Name</th><th>Course Image</th><th>Course Workload</th><th>Course Details</th></tr>
+	<a href="/Recommend}}"></a>
 		{% for i in category %}
-			<h4>{{ i.course_name }} has 4 sessioons.</h4>
+	<tr>
+			{% if workload_chosen != '-' %}
+				{% if i.course_workload_max <= workload_chosen %}
+					<td><img src="{{ i.course_icon }}"></td> 
+					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
+					<td>{{ i.course_workload }}</td>
+					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+				{% endif %}
+			{% elif duration_chosen != '-' and workload_chosen == '-' %}
+					<td><img src="{{ i.course_icon }}"></td> 
+					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
+					<td><a href="/course/{{ i.id }}">{{ i.course_workload }}</a></td>
+					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+			{% endif %}
 		{% endfor %}
-
-		<h4>{{ duration }} has 5 courses. </h4>
-		<p> {{ workload }} are courses which have the course workload you have specified.</p>
-	{% for image in images %}
-	<p><img src="{{ image }}">are courses which have the course workload you have specified. </p>
-
-	{% endfor %}
+	</tr>
 	{% endblock %}
 
 

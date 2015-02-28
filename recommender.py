@@ -131,65 +131,88 @@ def get_random_course():
 def get_courses_by_criteria():
     """Queries the database based on user selections, and returns appropriate output"""
     category_chosen = request.args.get("category")
-    #This gets the category's category_id
-    get_category = model.session.query(model.Category).filter(model.Category.category_name==category_chosen).first()
-    get_courses_associated_with_category = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==get_category.id).all()
-    list_of_courses = [course.course_name for course in get_courses_associated_with_category]
+    duration_chosen = request.args.get("duration")
+    workload_chosen = request.args.get("workload")
+
+    if category_chosen!= None and duration_chosen == '-' and workload_chosen == '-':
+        get_category = model.session.query(model.Category).filter(model.Category.category_name==category_chosen).first()
+        get_courses_associated_with_category = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==get_category.id).all()
+        list_of_course_objects_by_category = [course.course_assoc for course in get_courses_associated_with_category]
+    
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
-    duration_chosen = request.args.get("duration")
+    elif category_chosen != None and duration_chosen == '-' and workload_chosen != '-':
+        workload_chosen = int(workload_chosen)
+        get_category = model.session.query(model.Category).filter(model.Category.category_name==category_chosen).first()
+        get_courses_associated_with_category = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==get_category.id).all()
+        list_of_course_objects_by_category = [course.course_assoc for course in get_courses_associated_with_category]
 
-    if duration_chosen == "More than 20 weeks":
-        all_courses1= []
-        course1= model.session.query(model.Course.course_name).filter(model.Course.id==329).all()
-        course2 = model.session.query(model.Course.course_name).filter(model.Course.id==444).all()
-        course3 = model.session.query(model.Course.course_name).filter(model.Course.id==449).all()
-        course4 = model.session.query(model.Course.course_name).filter(model.Course.id==503).all()
-        course5 = model.session.query(model.Course.course_name).filter(model.Course.id==584).all()
-        all_courses1.append(course1)
-        all_courses1.append(course2)
-        all_courses1.append(course3)
-        all_courses1.append(course4)
-        all_courses1.append(course5)
-        print all_courses1
+    elif category_chosen != None and workload_chosen == '-' and duration_chosen != '-':
+        # get_category = model.session.query(model.Category).filter(model.Category.category_name==category_chosen).first()
+        # get_courses_associated_with_category = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==get_category.id).all()
+        # list_of_course_objects_by_category = [course.course_assoc for course in get_courses_associated_with_category]
+        get_courses_associated_with_duration = model.session.query(model.Term).filter(model.Term.duration==duration_chosen).all()
+        list_of_course_objects_by_category = [course.course_association for course in get_courses_associated_with_duration]
+        print list_of_course_objects_by_category
+        print '(@*#@*#@*#@(*#'
+        print '(@*#@*#@*#@(*#'
+        print '(@*#@*#@*#@(*#'
+        print '(@*#@*#@*#@(*#'
+        print '(@*#@*#@*#@(*#'
+        # get_category = model.session.query(model.Term).filter(model.Term.duration==duration_chosen).all()
+        # get_courses_associated_with_duration = model.session.query(model.Course).filter(model.Course.id==get_category.course_id).all()
+        # list_of_courses_by_category = [course.course_name for course in get_courses_associated_with_duration]
+
+        # if duration_chosen == "More than 20 weeks":
+        #     all_courses1= []
+        #     course1= model.session.query(model.Course.course_name).filter(model.Course.id==329).all()
+        #     course2 = model.session.query(model.Course.course_name).filter(model.Course.id==444).all()
+        #     course3 = model.session.query(model.Course.course_name).filter(model.Course.id==449).all()
+        #     course4 = model.session.query(model.Course.course_name).filter(model.Course.id==503).all()
+        #     course5 = model.session.query(model.Course.course_name).filter(model.Course.id==584).all()
+        #     all_courses1.append(course1)
+        #     all_courses1.append(course2)
+        #     all_courses1.append(course3)
+        #     all_courses1.append(course4)
+        #     all_courses1.append(course5)
+        #     print all_courses1
+            
+        # else:
+        #     get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
+        #     all_courses1 = []
+        #     for i in get_duration:
+        #         get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
+        #         all_courses1.extend(get_course_name)
+        #     encoded_durations = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses1]
+        #     duration_results = [item for sublist in encoded_durations for item in sublist]
         
-    else:
-        get_duration = model.session.query(model.Term.course_id).filter(model.Term.duration==duration_chosen).all()
-        all_courses1 = []
-        for i in get_duration:
-            get_course_name = model.session.query(model.Course.course_name).filter(model.Course.id==i[0]).all()
-            all_courses1.extend(get_course_name)
-    encoded_durations = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses1]
-    duration_results = [item for sublist in encoded_durations for item in sublist]
-    
-    #Workload chosen
-    workload_chosen = request.args.get("workload")
-    get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max < workload_chosen).all() 
-    get_workload_list = [item[0] for item in get_workload]
-    encode_workload_list = [s.encode("utf8") for s in get_workload_list]
+    # elif workload_chosen == '-' and duration_chosen != '-':
+        
+    #     get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max <= workload_chosen).all() 
+    #     get_workload_list = [item[0] for item in get_workload]
+    #     encode_workload_list = [s.encode("utf8") for s in get_workload_list]
 
-    return render_template("recommended_courses.html", category=list_of_courses, 
-                                                       duration=duration_results,
-                                                       workload=encode_workload_list,
-                                                       courses=get_course_name)
-                                                       
+    return render_template("recommended_courses.html", category=list_of_course_objects_by_category, workload_chosen=workload_chosen)
+                                                    
+                                          
+@app.route('/course/<int:id>')
+def display_course_details(id):
+    course = model.session.query(model.Course).filter(model.Course.id==id).first()
+
+    return render_template("course_details.html", course=course)
+                                                     
                                                 
-                                                       
-
-
-
+                                                    
 #To-do:
 # Add a details option to each course rendered
+# Add Facebook OAuth login functionality
 # Add rate this course functionality
-# Add course takers also enjoyed(Nearest Neighbour algorithm)
-# Prediction of rating? (Pearson coefficient)
+# Add course takers also enjoyed (Nearest Neighbour algorithm)
+# Prediction of rating for each course? (Pearson coefficient)
 # Migrate to Postgresql for deployment
-# Add Facebook OAuth
-                                    
 
-@app.route('/course')
-def show_course():
-    pass
+
+    
 
 
 
