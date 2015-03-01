@@ -5,25 +5,32 @@
 <p><img src="{{ randomcourse.course_icon }}"</p>
 <p><img src="{{ courseimage }}"></p>
 {% if session.get('user_email') %}
-<span class="star-rating">
-  <input type="radio" name="rating" value="1"><i></i>
-  <input type="radio" name="rating" value="2"><i></i>
-  <input type="radio" name="rating" value="3"><i></i>
-  <input type="radio" name="rating" value="4"><i></i>
-  <input type="radio" name="rating" value="5"><i></i>
-</span>
-<strong class="choice">Choose a rating</strong>
-<script language="javascript" type="text/javascript">$(':radio').change(
-  function(){
-    $('.choice').text( $(this).val() + ' stars' );
-  } 
-)</script>
+<form action="/rate_course" method="GET">
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio1" required value="1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio2" value="2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="3"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="4"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="5"> 5
+                </label>
+            </div>
+            <input type='hidden' name='course_id' value='{{ randomcourse.id }}'>
+            <button type="submit" class="btn btn-default">{% if rating %}Update!{% else %}Rate!{% endif %}</button>
+        </form>
 <div class="col-sm-6">
  <form action = "/bookmarkcourse" method="GET">
       <a class="btn btn-primary" href="/bookmarkcourse/{{ randomcourse.id }}">Bookmark course</a>
      </form>
 {% else %}
 <p><a href="/signup">Please sign in to bookmark this course!</a></p>
-<link rel="stylesheet" type="text/css" href="mycustom.css">
 {% endif %}
 {% endblock %}
