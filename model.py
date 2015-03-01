@@ -50,7 +50,7 @@ class Course(Base):
 	course_prerequisites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
 	course_categories = relationship("CourseCategory", backref="course")
-	
+
 
 class Term(Base):
 	__tablename__ = "terms"
@@ -80,8 +80,19 @@ class CourseCategory(Base):
 	course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
 
 	course_assoc = relationship("Course", backref=backref("course_category_names", order_by=id))
-	
 
+class Rating(Base):
+	__tablename__ = "ratings"
+
+	id = Column(Integer, primary_key=True)
+	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	rating = Column(Integer, nullable=True)
+
+	user = relationship("User", backref=backref("ratings", order_by=id))
+	course = relationship("Course", backref=backref("ratings", order_by=id))
+
+	
 def main():
 	pass
 

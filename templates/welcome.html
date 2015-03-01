@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Find a course</h2>
+<h2>Discover your next great MOOC.</h2>
 <form action="/Recommend" id="form-submission" method="GET" role="form">
 	<div class="form-group">
 	<label for="category"><font size="4">Category</label> <select class="form-control" id="category" name="category" required>
@@ -66,5 +67,4 @@
 	</select><br>
 <button class="btn btn-primary btn-lg active" type="submit">Search</button>
 </form>
-
 {% endblock %}

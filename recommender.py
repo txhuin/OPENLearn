@@ -1,5 +1,6 @@
 # This is the controller file
 from flask import Flask, render_template, redirect, request, flash, session, redirect
+from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update
@@ -14,6 +15,18 @@ sys.setdefaultencoding("utf-8")
 
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
+
+# oauth = OAuth()
+
+# facebook = oauth.remote_app('facebook',
+#     base_url='https://graph.facebook.com/',
+#     request_token_url=None,
+#     access_token_url='/oauth/access_token',
+#     authorize_url='https://www.facebook.com/dialog/oauth',
+#     consumer_key=FACEBOOK_APP_ID,
+#     consumer_secret=FACEBOOK_APP_SECRET,
+#     request_token_params={'scope': 'email'}
+# )
 
 @app.route("/")
 def welcome():
@@ -44,6 +57,11 @@ def signup():
     session.clear()
     flash("Signup successful. Please log in.")
     return show_login()
+
+# @app.route('/login')
+# def login():
+#     return facebook.authorize(callback=url_for('oauth_authorized',
+#         next=request.args.get('next') or request.referrer or None))
 
 @app.route("/login", methods=["GET"])
 def display_login():
@@ -200,20 +218,47 @@ def display_course_details(id):
     course = model.session.query(model.Course).filter(model.Course.id==id).first()
 
     return render_template("course_details.html", course=course)
-                                                     
-                                                
+
+
+@app.route('/rate_movie', methods=['GET'])
+def rate_course():
+    rating = request.args.get("rating")
+    course_id = request.args.get("course_id")
+    user_id = request.args.get("user_id")
+
+    ratings = model.session.query(model.Rating)
+
+    old_rating = ratings.filter(
+                    model.Rating.course_id == course_id,
+                    model.Rating.user_id == user_id
+                    ).first()
+
+    if old_rating:
+        old_rating.rating = rating
+        model.session.commit()
+        flash("update successful")
+    
+    else:
+        new_rating = model.Rating(movie_id=movie_id, 
+                                  user_id=user_id,
+                                  rating=rating)
+        model.session.add(new_rating)
+        model.session.commit()
+        flash("Rating successful")
+
+    return display_course_details(id=course_id)
                                                     
+                                                                                         
 #To-do:
 # Add a details option to each course rendered
-# Add Facebook OAuth login functionality
+# Add user's ability to change password
 # Add rate this course functionality
+# Add users to database in order to implement machine learning algorithms
 # Add course takers also enjoyed (Nearest Neighbour algorithm)
+
+# Add Facebook OAuth login functionality
 # Prediction of rating for each course? (Pearson coefficient)
 # Migrate to Postgresql for deployment
-
-
-    
-
 
 
 if __name__ == "__main__":
