@@ -119,6 +119,7 @@ def change_password():
     
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
+    id = int(id)
     """Allows user to bookmark course to view later"""
     user_id = session.get("user_id")
     bookmarkedcourse = model.BookmarkedCourse(

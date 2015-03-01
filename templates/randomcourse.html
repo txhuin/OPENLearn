@@ -22,11 +22,11 @@
                 </label>
             </div>
             <input type='hidden' name='course_id' value='{{ course.id }}'>
-            <button type="submit" class="btn btn-default">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
+            <button type="submit" class="btn btn-info">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
 <div class="col-sm-6">
 <form name="bookmark" action = "/bookmarkcourse" method="GET">
-      <button type="submit" class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
+     <button type="submit" class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
      </form>
 {% else %}
 <p><a href="/signup">Please sign in to bookmark this course!</a></p>

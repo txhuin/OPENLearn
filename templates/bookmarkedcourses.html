@@ -4,9 +4,30 @@
     <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th></tr>
     {% for i in saved_courses %}    
      <tr>
-        <td>{{ i.course_name }}</td>
+        <td>{{ i.course_name }}<a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
         <td><img src="{{ i.course_icon }}"></td>
         <td>{{ i.course_description }}</td>
+        <td><form name="ratings" action="/rate_course" method="GET">
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio1" required value="1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio2" value="2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="3"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="4"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="rating" id="inlineRadio3" value="5"> 5
+                </label>
+            </div>
+            <input type='hidden' name='course_id' value='{{ i.id }}'>
+            <button type="submit" class="btn btn-info">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
+        </form></td>
     </tr>
     {% endfor %}
 </table>
