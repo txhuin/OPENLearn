@@ -31,12 +31,10 @@ facebook = oauth.remote_app('facebook',
     request_token_params={'scope': 'email'}
 )
 
-
 @facebook.tokengetter
 def get_facebook_oauth_token():
     """Retrieves Oauth token from current session"""
     return session.get('oauth_token')
-
 
 @app.route("/")
 def welcome():
@@ -81,12 +79,13 @@ def display_login():
 @app.route("/facebook_login")
 def facebook_login():
     """OAuth request to Facebook and callback function if request is successful"""
+    next_url = request.args.get('next') or url_for('welcome')
     return facebook.authorize(callback=url_for('facebook_authorized',
-        next=request.args.get('next'), _external=True))
+        next=next_url, _external=True))
 
 
 @app.route("/login", methods=["POST"])
-def login():
+def login_user():
     """The user submits their login credentials and is added to the Flask session"""
     user_email = request.form.get('email')
     user_password = request.form.get('password')
@@ -102,24 +101,37 @@ def login():
 
     session['user_email'] = user.email
     session['user_id'] = user.id
+    return redirect ('/')
 
 
-@app.route("/facebook_authorized")
+@app.route('/login/authorized')
 @facebook.authorized_handler
 def facebook_authorized(resp):
-    if resp is None or 'access_token' not in resp:
-        flash("Authentication error.")
-        return redirect('/login')
+    next_url = request.args.get('next') or url_for('welcome')
+    if resp is None:
+        flash('Authentication Error')
+        return redirect(next_url)
+    session['oauth_token'] = (resp['access_token'], '')
+    me = facebook.get('/me')
+    user = model.session.query(model.User).filter(model.User.email == me.data['email']).first()
+    flash("You have successfully logged in")
+    print ('Logged in as id=%s name=%s redirect=%s') % (me.data['id'], me.data['email'], request.args.get('next'))
+
+    session['user_email'] = me.data['email']
+    session['user_id'] = me.data['id']
+    return redirect('/')
+
+    if user is None:
+        new_user = model.User(email=me.data['email'], password="default")
+        model.session.add(new_user)
+        model.session.commit()
+        
+        session['user_email'] = me.data['email']
+        session['user_id'] = me.data['id']
     else:
-        session['user_email'] = True
-        session['oauth_token'] = (resp['access_token'], '')
-
-        model.session.add(new_user) 
-
-        session['user_email'] = user.email 
-
-        flash("You are logged in.")
-        return url_for('/') 
+        session['user_email'] = me.data['email']
+        session['user_id'] = me.data['id']
+    return redirect(next_url)
 
 
 @app.route("/myprofile")
@@ -130,6 +142,7 @@ def display_my_profile():
         users = model.session.query(model.User)
         user = users.filter(model.User.email == email).one()
         return render_template("user_profile.html", user=user)
+
     else:
         flash("Please log in to view your profile")
         return redirect("/")
@@ -138,7 +151,9 @@ def display_my_profile():
 @app.route("/logout")
 def logout():
     """Logs user out, and clears session. User is returned to homepage.""" 
+    session.pop('oauth_token')
     session.clear()
+   
     return redirect("/")
 
 @app.route("/bookmarkcourse/<int:id>")   
@@ -252,8 +267,6 @@ def rate_course():
     course_id = request.args.get("course_id")
     user_id = session.get("user_id")
 
-    print rating
-    print course_id
     ratings = model.session.query(model.Rating)
 
     old_rating = ratings.filter(

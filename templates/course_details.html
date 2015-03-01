@@ -8,9 +8,9 @@
 	<li>{{ course.course_prerequisites }}</li>
 	<li>{{ course.course_instructor }}</li>
 </ul>
-<form action = "/bookmarkcourse" method="GET">
-      <a class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
-     </form>
+<button type="button" class="btn btn-default btn-lg">
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
+    </button>
 <form action="/rate_course" method="GET">
             <div class="form-group">
                 <label class="radio-inline">
