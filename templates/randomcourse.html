@@ -25,9 +25,9 @@
             <button type="submit" class="btn btn-info">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
 <div class="col-sm-6">
-<form name="bookmark" action = "/bookmarkcourse" method="GET">
-     <button type="submit" class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
-     </form>
+<!-- <form name="bookmark" action = "/bookmarkcourse" method="GET"> -->
+    <a class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}" method="GET">Bookmark course</a>
+    <!-- </form> -->
 {% else %}
 <p><a href="/signup">Please sign in to bookmark this course!</a></p>
 {% endif %}

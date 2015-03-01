@@ -119,7 +119,6 @@ def change_password():
     
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
-    id = int(id)
     """Allows user to bookmark course to view later"""
     user_id = session.get("user_id")
     bookmarkedcourse = model.BookmarkedCourse(
@@ -177,12 +176,6 @@ def get_courses_by_criteria():
         # list_of_course_objects_by_category = [course.course_assoc for course in get_courses_associated_with_category]
         get_courses_associated_with_duration = model.session.query(model.Term).filter(model.Term.duration==duration_chosen).all()
         list_of_course_objects_by_category = [course.course_association for course in get_courses_associated_with_duration]
-        print list_of_course_objects_by_category
-        print '(@*#@*#@*#@(*#'
-        print '(@*#@*#@*#@(*#'
-        print '(@*#@*#@*#@(*#'
-        print '(@*#@*#@*#@(*#'
-        print '(@*#@*#@*#@(*#'
         # get_category = model.session.query(model.Term).filter(model.Term.duration==duration_chosen).all()
         # get_courses_associated_with_duration = model.session.query(model.Course).filter(model.Course.id==get_category.course_id).all()
         # list_of_courses_by_category = [course.course_name for course in get_courses_associated_with_duration]
@@ -228,15 +221,10 @@ def display_course_details(id):
 
 @app.route('/rate_course', methods=['GET'])
 def rate_course():
-    print "@(#@(#*#(@@#*"
-    print "@(#@(#*#(@@#*"
-    print "@(#@(#*#(@@#*"
     rating = request.args.get("rating")
     course_id = request.args.get("course_id")
     user_id = session.get("user_id")
-    print "@(#@(#*#(@@#*"
-    print "@(#@(#*#(@@#*"
-    print "@(#@(#*#(@@#*"
+
     print rating
     print course_id
     ratings = model.session.query(model.Rating)
