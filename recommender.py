@@ -56,7 +56,7 @@ def signup():
 
     session.clear()
     flash("Signup successful. Please log in.")
-    return show_login()
+    return display_login()
 
 # @app.route('/login')
 # def login():
@@ -139,11 +139,16 @@ def show_bookmarked_courses():
 
     return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
+
+@app.route("/removefrombookmarkedcourses", methods=['GET'])
+def remove_bookmarked_course():
+    pass
+
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
     random_course = model.session.query(model.Course).order_by(func.random()).first()
  
-    return render_template("randomcourse.html", randomcourse=random_course)
+    return render_template("randomcourse.html", course=random_course)
 
 @app.route("/Recommend", methods=['GET'])
 def get_courses_by_criteria():
@@ -220,12 +225,19 @@ def display_course_details(id):
     return render_template("course_details.html", course=course)
 
 
-@app.route('/rate_movie', methods=['GET'])
+@app.route('/rate_course', methods=['GET'])
 def rate_course():
+    print "@(#@(#*#(@@#*"
+    print "@(#@(#*#(@@#*"
+    print "@(#@(#*#(@@#*"
     rating = request.args.get("rating")
     course_id = request.args.get("course_id")
-    user_id = request.args.get("user_id")
-
+    user_id = session.get("user_id")
+    print "@(#@(#*#(@@#*"
+    print "@(#@(#*#(@@#*"
+    print "@(#@(#*#(@@#*"
+    print rating
+    print course_id
     ratings = model.session.query(model.Rating)
 
     old_rating = ratings.filter(
@@ -239,7 +251,7 @@ def rate_course():
         flash("update successful")
     
     else:
-        new_rating = model.Rating(movie_id=movie_id, 
+        new_rating = model.Rating(course_id=course_id, 
                                   user_id=user_id,
                                   rating=rating)
         model.session.add(new_rating)

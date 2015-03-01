@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>{{ randomcourse.id }}</p>
-<p>{{ randomcourse.course_name }}</p>
-<p><img src="{{ randomcourse.course_icon }}"</p>
-<p><img src="{{ courseimage }}"></p>
+<p>{{ course.course_name }}</p>
+<p><img src="{{ course.course_icon }}"</p>
 {% if session.get('user_email') %}
-<form action="/rate_course" method="GET">
+<form name="ratings" action="/rate_course?rating={{ course.rating }}&course_id={{ course.id }}" method="GET">
             <div class="form-group">
                 <label class="radio-inline">
                     <input type="radio" name="rating" id="inlineRadio1" required value="1"> 1
@@ -23,12 +21,12 @@
                     <input type="radio" name="rating" id="inlineRadio3" value="5"> 5
                 </label>
             </div>
-            <input type='hidden' name='course_id' value='{{ randomcourse.id }}'>
-            <button type="submit" class="btn btn-default">{% if rating %}Update!{% else %}Rate!{% endif %}</button>
+            <input type='hidden' name='course_id' value='{{ course.id }}'>
+            <button type="submit" class="btn btn-default">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
 <div class="col-sm-6">
- <form action = "/bookmarkcourse" method="GET">
-      <a class="btn btn-primary" href="/bookmarkcourse/{{ randomcourse.id }}">Bookmark course</a>
+<form name="bookmark" action = "/bookmarkcourse" method="GET">
+      <button type="submit" class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}">Bookmark course</a>
      </form>
 {% else %}
 <p><a href="/signup">Please sign in to bookmark this course!</a></p>
