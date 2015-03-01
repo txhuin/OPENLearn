@@ -34,6 +34,7 @@ facebook = oauth.remote_app('facebook',
 
 @facebook.tokengetter
 def get_facebook_oauth_token():
+    """Retrieves Oauth token from current session"""
     return session.get('oauth_token')
 
 
@@ -79,6 +80,7 @@ def display_login():
 
 @app.route("/facebook_login")
 def facebook_login():
+    """OAuth request to Facebook and callback function if request is successful"""
     return facebook.authorize(callback=url_for('facebook_authorized',
         next=request.args.get('next'), _external=True))
 
@@ -123,10 +125,14 @@ def facebook_authorized(resp):
 @app.route("/myprofile")
 def display_my_profile():
     """Displays profile of the user that is logged in"""
-    email = session.get('user_email')
-    users = model.session.query(model.User)
-    user = users.filter(model.User.email == email).one()
-    return render_template("user_profile.html", user=user)
+    if session.get('user_email'):
+        email = session.get('user_email')
+        users = model.session.query(model.User)
+        user = users.filter(model.User.email == email).one()
+        return render_template("user_profile.html", user=user)
+    else:
+        flash("Please log in to view your profile")
+        return redirect("/")
 
 
 @app.route("/logout")
@@ -151,12 +157,15 @@ def bookmark_course(id):
 @app.route("/bookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
     """Returns list of all courses that the logged in user has bookmarked"""
-    user_id = session.get("user_id")
-    saved_bookmarks = model.session.query(model.BookmarkedCourse).filter(model.BookmarkedCourse.user_id==user_id).all()
-    list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+    if session.get('user_email'):
+        user_id = session.get("user_id")
+        saved_bookmarks = model.session.query(model.BookmarkedCourse).filter(model.BookmarkedCourse.user_id==user_id).all()
+        list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+        return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
-    return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
-
+    else:
+        flash("Please log in to view your bookmarked courses.")
+        return redirect("/")
 
 @app.route("/removefrombookmarkedcourses", methods=['GET'])
 def remove_bookmarked_course():
@@ -272,6 +281,8 @@ def rate_course():
 # Add a details option to each course rendered
 # Add user's ability to change password
 # Add rate this course functionality
+
+# Sunday
 # Add users to database in order to implement machine learning algorithms
 # Add course takers also enjoyed (Nearest Neighbour algorithm)
 
