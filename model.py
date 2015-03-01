@@ -65,6 +65,7 @@ class Term(Base):
 
 	course_association = relationship("Course", backref=backref("terms", order_by=id))	
 
+
 class Category(Base):
 	__tablename__ = "categories"
 
@@ -92,6 +93,13 @@ class Rating(Base):
 	user = relationship("User", backref=backref("ratings", order_by=id))
 	course = relationship("Course", backref=backref("ratings", order_by=id))
 
+class Review(Base):
+	__tablename__ = "reviews"
+
+	id = Column(Integer, primary_key=True)
+	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	review = Column(String(10000), nullable=True)
 	
 def main():
 	pass

@@ -26,7 +26,9 @@
         </form>
 <div class="col-sm-6">
 <!-- <form name="bookmark" action = "/bookmarkcourse" method="GET"> -->
-    <a class="btn btn-primary" href="/bookmarkcourse/{{ course.id }}" method="GET">Bookmark course</a>
+    <button type="button" class="btn btn-default btn-lg">
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
+    </button>
     <!-- </form> -->
 {% else %}
 <p><a href="/signup">Please sign in to bookmark this course!</a></p>

@@ -13,12 +13,18 @@
 					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
 					<td>{{ i.course_workload }}</td>
 					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+					<td><button type="button" class="btn btn-default btn-lg">
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ i.id }}" method="GET"></a>
+    </button></td>
 				{% endif %}
 			{% elif duration_chosen != '-' and workload_chosen == '-' %}
 					<td><img src="{{ i.course_icon }}"></td> 
 					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
 					<td><a href="/course/{{ i.id }}">{{ i.course_workload }}</a></td>
 					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+					<td><button type="button" class="btn btn-default btn-lg">
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ i.id }}" method="GET"></a>
+    </button></td>
 			{% endif %}
 		{% endfor %}
 	</tr>
