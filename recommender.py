@@ -1,5 +1,5 @@
 # This is the controller file
-from flask import Flask, render_template, redirect, request, flash, session, redirect
+from flask import Flask, render_template, redirect, request, flash, session, redirect, url_for
 from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
@@ -16,17 +16,26 @@ sys.setdefaultencoding("utf-8")
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
 
-# oauth = OAuth()
+FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
+FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
 
-# facebook = oauth.remote_app('facebook',
-#     base_url='https://graph.facebook.com/',
-#     request_token_url=None,
-#     access_token_url='/oauth/access_token',
-#     authorize_url='https://www.facebook.com/dialog/oauth',
-#     consumer_key=FACEBOOK_APP_ID,
-#     consumer_secret=FACEBOOK_APP_SECRET,
-#     request_token_params={'scope': 'email'}
-# )
+oauth = OAuth()
+
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=FACEBOOK_APP_ID,
+    consumer_secret=FACEBOOK_APP_SECRET,
+    request_token_params={'scope': 'email'}
+)
+
+
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('oauth_token')
+
 
 @app.route("/")
 def welcome():
@@ -58,10 +67,6 @@ def signup():
     flash("Signup successful. Please log in.")
     return display_login()
 
-# @app.route('/login')
-# def login():
-#     return facebook.authorize(callback=url_for('oauth_authorized',
-#         next=request.args.get('next') or request.referrer or None))
 
 @app.route("/login", methods=["GET"])
 def display_login():
@@ -70,6 +75,13 @@ def display_login():
         flash("You have successfully logged out.")
         session.clear()
     return render_template("login.html")
+
+
+@app.route("/facebook_login")
+def facebook_login():
+    return facebook.authorize(callback=url_for('facebook_authorized',
+        next=request.args.get('next'), _external=True))
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -88,8 +100,24 @@ def login():
 
     session['user_email'] = user.email
     session['user_id'] = user.id
-    
-    return render_template("welcome.html")
+
+
+@app.route("/facebook_authorized")
+@facebook.authorized_handler
+def facebook_authorized(resp):
+    if resp is None or 'access_token' not in resp:
+        flash("Authentication error.")
+        return redirect('/login')
+    else:
+        session['user_email'] = True
+        session['oauth_token'] = (resp['access_token'], '')
+
+        model.session.add(new_user) 
+
+        session['user_email'] = user.email 
+
+        flash("You are logged in.")
+        return url_for('/') 
 
 
 @app.route("/myprofile")
@@ -107,16 +135,6 @@ def logout():
     session.clear()
     return redirect("/")
 
-@app.route("/changepassword", methods=['GET'])
-def show_change_password():
-    """Displays the change password page"""
-    return render_template("changepassword.html", email=session['user_email'])
-
-@app.route("/changepassword", methods=['POST'])
-def change_password():
-    pass
-    """Change user password"""
-    
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
     """Allows user to bookmark course to view later"""
