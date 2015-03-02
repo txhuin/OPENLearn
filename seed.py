@@ -5,6 +5,9 @@ from datetime import datetime
 import time
 import model
 import pprint
+import csv
+
+
 pp = pprint.PrettyPrinter(indent=4)
 import re 
 
@@ -116,7 +119,28 @@ def get_category():
 		model.session.merge(new_category)
 	model.session.commit()
 
+def seed_users():
+	with open("./seeddata/emails.csv", 'rb') as user_file:
+		reader= csv.reader(user_file, delimiter='@')
+		for row in reader:
+			new_user = model.User(email=(row[0]+'@gmail.com'), password="default")
+			model.session.add(new_user)
+		model.session.commit()
+
+
+def seed_ratings():
+	with open("./seeddata/ratings - seed_ratings.csv", 'rb') as ratings_file:
+		reader = csv.reader(ratings_file)
+		for row in reader:
+			new_rating = model.Rating(course_id=row[0], user_id=row[1], rating=row[2])
+			model.session.add(new_rating)
+		model.session.commit()
+
+
+
 if __name__ == '__main__':
 	get_course()
 	get_term_information()
 	get_category()
+	seed_users()
+	seed_ratings()

@@ -4,6 +4,7 @@ from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update
+from flask import g
 import json
 import model
 import os
@@ -120,7 +121,6 @@ def facebook_authorized(resp):
     session['user_email'] = me.data['email']
     session['user_id'] = me.data['id']
     return redirect('/')
-
     if user is None:
         new_user = model.User(email=me.data['email'], password="default")
         model.session.add(new_user)
@@ -151,10 +151,12 @@ def display_my_profile():
 @app.route("/logout")
 def logout():
     """Logs user out, and clears session. User is returned to homepage.""" 
-    session.pop('oauth_token')
+    # session.pop('user_email')
+    # session.pop('user_id')
+    session["__invalidate__"] = True
     session.clear()
-   
     return redirect("/")
+
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
@@ -245,11 +247,6 @@ def get_courses_by_criteria():
         #     encoded_durations = [[s.encode('utf8') for s in get_course_name] for get_course_name in all_courses1]
         #     duration_results = [item for sublist in encoded_durations for item in sublist]
         
-    # elif workload_chosen == '-' and duration_chosen != '-':
-        
-    #     get_workload = model.session.query(model.Course.course_name).filter(model.Course.course_workload_max <= workload_chosen).all() 
-    #     get_workload_list = [item[0] for item in get_workload]
-    #     encode_workload_list = [s.encode("utf8") for s in get_workload_list]
 
     return render_template("recommended_courses.html", category=list_of_course_objects_by_category, workload_chosen=workload_chosen)
                                                     
@@ -288,6 +285,22 @@ def rate_course():
         flash("Rating successful")
 
     return display_course_details(id=course_id)
+
+@app.after_request
+def add_header(response):
+    """
+    Deleting cookies, setting cookies to expire and setting cache time in attempt to 
+    get app to forget Facebook login credentials 
+    """
+    if "__invalidate__" in session:
+        response.delete_cookie(app.session_cookie_name)
+        response.headers['Cache-Control'] = 'public, max-age=0,no-cache, no-store'
+        response.set_cookie(session['user_email'], '', expires=0)
+    return response
+
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('error.html'), 404
                                                     
                                                                                          
 #To-do:

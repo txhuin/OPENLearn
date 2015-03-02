@@ -5,7 +5,6 @@ from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 
 
 
-
 engine = create_engine("sqlite:///mooc.db", echo=True)
 session = scoped_session(sessionmaker(bind=engine, 
                                       autocommit=False,
@@ -19,8 +18,23 @@ class User(Base):
 	__tablename__ = "users"
 
 	id = Column(Integer, primary_key=True)
-	email = Column(String(64), nullable=False)
-	password = Column(String(64), nullable=False)
+	email = Column(String(1000), nullable=False)
+	password = Column(String(1000), nullable=False)
+
+	def similarity(self,other):
+		u_ratings = {}
+		paired_ratings = []
+		for r in self.ratings:
+			u_r = u_ratings.get(r.course_id)
+			
+		for r in other.ratings:
+			if u_r:
+				paired_ratings.append( (u_r.rating, r.rating) )
+
+		if paired_ratings:
+			return correlation.pearson(paired_ratings)
+		else:
+			return 0.0
 
 
 class BookmarkedCourse(Base):
@@ -86,8 +100,8 @@ class Rating(Base):
 	__tablename__ = "ratings"
 
 	id = Column(Integer, primary_key=True)
-	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
 	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
 	rating = Column(Integer, nullable=True)
 
 	user = relationship("User", backref=backref("ratings", order_by=id))
@@ -100,6 +114,9 @@ class Review(Base):
 	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
 	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	review = Column(String(10000), nullable=True)
+
+	user = relationship("User", backref=backref("reviews", order_by=id))
+	course = relationship("Course", backref=backref("reviews", order_by=id))
 	
 def main():
 	pass
