@@ -4,7 +4,7 @@
     <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th></tr>
     {% for i in saved_courses %}    
      <tr>
-        <td>{{ i.course_name }}<a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+        <td>{{ i.course_name }}<a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
         <td><img src="{{ i.course_icon }}"></td>
         <td>{{ i.course_description }}</td>
         <td><form name="ratings" action="/rate_course" method="GET">
@@ -28,6 +28,7 @@
             <input type='hidden' name='course_id' value='{{ i.id }}'>
             <button type="submit" class="btn btn-warning">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form></td>
+        <td><a class="btn btn-primary" href='/removefrombookmarkedcourses/{{ i.id }}' method="GET">Delete</a></td>
     </tr>
     {% endfor %}
 </table>

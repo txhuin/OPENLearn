@@ -11,7 +11,9 @@ import os
 import requests
 import jinja2
 import sys
-from model import Term, Course, CourseCategory
+from model import Term, Course, CourseCategory, BookmarkedCourse
+from twilio.rest import TwilioRestClient
+from datetime import date
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -21,6 +23,10 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
+
+TWILIO_ACCOUNT_SID=os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN=os.environ.get('TWILIO_AUTH_TOKEN')
+
 
 oauth = OAuth()
 
@@ -44,7 +50,8 @@ def welcome():
     """The welcome page: This is where the user specifies preferences and submits it to get course listings."""
     categories = model.session.query(model.Category)
     terms = model.session.query(distinct(Term.duration)).filter(Term.duration >= 1, Term.duration <= 20).order_by(Term.duration)
-    return render_template("welcome.html", categories=categories, terms=terms)
+    workloads = model.session.query(model.Course)
+    return render_template("welcome.html", categories=categories, terms=terms, workloads=workloads)
 
 @app.route("/signup", methods=['GET'])
 def display_signup():
@@ -180,7 +187,7 @@ def show_bookmarked_courses():
     """Returns list of all courses that the logged in user has bookmarked"""
     if session.get('user_email'):
         user_id = session.get("user_id")
-        saved_bookmarks = model.session.query(model.BookmarkedCourse).filter(model.BookmarkedCourse.user_id==user_id).all()
+        saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id==user_id).all()
         list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
         return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
@@ -188,9 +195,14 @@ def show_bookmarked_courses():
         flash("Please log in to view your bookmarked courses.")
         return redirect("/")
 
-@app.route("/removefrombookmarkedcourses", methods=['GET'])
-def remove_bookmarked_course():
-    pass
+@app.route("/removefrombookmarkedcourses/<int:id>", methods=['GET'])
+def remove_bookmarked_course(id):
+    user_id = session.get("user_id")
+    delete_bookmark = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.course_id==id).delete()
+    saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id==user_id).all()
+    list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+
+    return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
@@ -207,8 +219,6 @@ def get_courses_by_criteria():
 
     query = Course.query.join(CourseCategory).filter(CourseCategory.category_id==category_chosen)
         
-    #Duration selected 
-    #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
     if workload_chosen != '-':
         workload_chosen = int(workload_chosen)
         query = query.filter(model.Course.course_workload_max <= workload_chosen)
@@ -221,18 +231,21 @@ def get_courses_by_criteria():
             query = query.join(Term).filter(Term.duration == duration_chosen)
 
     return render_template("recommended_courses.html", 
-        category_chosen=category_chosen, 
-        # category=query.all(), 
-        workload_chosen=workload_chosen, 
-        duration_chosen=duration_chosen, 
         list_of_courses=query.all())
                                                     
                                           
 @app.route('/course/<int:id>')
 def display_course_details(id):
-    course = model.session.query(model.Course).filter(model.Course.id==id).first()
+    course = model.session.query(Course).filter(Course.id==id).first()
+    terms = model.session.query(Term).filter(Term.course_id==id).first()
 
-    return render_template("course_details.html", course=course)
+    # message = client.messages.create(to="+12316851234", from_="+15555555555",
+    #                                  body="Hello there!",
+    #                                  media_url=['https://demo.twilio.com/owl.png', 'https://demo.twilio.com/logo.png'])
+    # today_date = str(date.today())
+
+    return render_template("course_details.html", course=course, 
+        terms=terms)
 
 
 @app.route('/rate_course', methods=['GET'])
@@ -255,13 +268,17 @@ def rate_course():
     
     else:
         new_rating = model.Rating(course_id=course_id, 
-                                  user_id=user_id,
-                                  rating=rating)
+            user_id=user_id, rating=rating)
         model.session.add(new_rating)
         model.session.commit()
+        
         flash("Rating successful")
 
     return display_course_details(id=course_id)
+
+@app.route('/add_a_review', methods=['GET'])
+def review_course():
+    pass
 
 @app.after_request
 def add_header(response):
@@ -278,8 +295,12 @@ def add_header(response):
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html'), 404
-                                                    
 
+# READ ME
+# CSS/JS
+# Postgresql deployment
+# Integration tests
+                                                  
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
