@@ -90,7 +90,12 @@ def get_term_information():
 			course_id = element['courseId'])
 		
 		if 'durationString' in element.keys():
-			new_term.duration = element['durationString']
+			new_term_value = element['durationString']
+			new_term1 = new_term_value.split()
+			if new_term1:
+				new_term_string = new_term1[0]
+				new_term.duration = int(new_term_string)
+
 		if 'startDay' in element.keys():
 			new_term.startDay = element['startDay']
 		if 'startMonth' in element.keys():
@@ -142,5 +147,5 @@ if __name__ == '__main__':
 	get_course()
 	get_term_information()
 	get_category()
-	seed_users()
-	seed_ratings()
+	# seed_users()
+	# seed_ratings()

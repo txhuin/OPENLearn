@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, request, flash, session, red
 from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
-from sqlalchemy import update
+from sqlalchemy import update, distinct
 from flask import g
 import json
 import model
@@ -11,6 +11,8 @@ import os
 import requests
 import jinja2
 import sys
+from model import Term, Course, CourseCategory
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -41,7 +43,8 @@ def get_facebook_oauth_token():
 def welcome():
     """The welcome page: This is where the user specifies preferences and submits it to get course listings."""
     categories = model.session.query(model.Category)
-    return render_template("welcome.html", categories=categories)
+    terms = model.session.query(distinct(Term.duration)).filter(Term.duration >= 1, Term.duration <= 20).order_by(Term.duration)
+    return render_template("welcome.html", categories=categories, terms=terms)
 
 @app.route("/signup", methods=['GET'])
 def display_signup():
@@ -202,9 +205,8 @@ def get_courses_by_criteria():
     duration_chosen = request.args.get("duration")
     workload_chosen = request.args.get("workload")
 
-    query = model.session.query(model.CourseCategory).filter(model.CourseCategory.category_id==category_chosen)
+    query = Course.query.join(CourseCategory).filter(CourseCategory.category_id==category_chosen)
         
-
     #Duration selected 
     #To do: Query database for courses that are more than 20 weeks longworkload_chosen+
     if workload_chosen != '-':
@@ -212,10 +214,18 @@ def get_courses_by_criteria():
         query = query.filter(model.Course.course_workload_max <= workload_chosen)
         
     if duration_chosen != '-':
-        query = query.filter(model.Term.duration == duration_chosen)
+        if duration_chosen == "more-than-20":
+            query = query.join(Term).filter(Term.duration > 20)
+        else:
+            duration_chosen = int(duration_chosen)
+            query = query.join(Term).filter(Term.duration == duration_chosen)
 
-
-    return render_template("recommended_courses.html", category_chosen=category_chosen, category=list_of_course_objects_by_category, workload_chosen=workload_chosen, duration_chosen=duration_chosen, list_of_courses=get_courses_associated_with_duration)
+    return render_template("recommended_courses.html", 
+        category_chosen=category_chosen, 
+        # category=query.all(), 
+        workload_chosen=workload_chosen, 
+        duration_chosen=duration_chosen, 
+        list_of_courses=query.all())
                                                     
                                           
 @app.route('/course/<int:id>')

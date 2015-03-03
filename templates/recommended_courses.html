@@ -1,41 +1,20 @@
 {% extends 'base.html' %}
 <title> Recommended courses </title>
 	{% block content %}
-	<!-- <table class="table table-striped">
+	<table class="table table-striped">
 	<p> Here are your courses! </p>
 	<tr><th>Course Name</th><th>Course Image</th><th>Course Workload</th><th>Course Details</th></tr>
 	<a href="/Recommend}}"></a>
-		{% for i in category %}
+		{% for c in list_of_courses %}
 	<tr>
-			{% if workload_chosen != '-' %}
-				{% if i.course_workload_max <= workload_chosen %}
-					<td><img src="{{ i.course_icon }}"></td> 
-					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
-					<td>{{ i.course_workload }}</td>
-					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
+					<td><img src="{{ c.course_icon }}"></td> 
+					<td><a href="/course/{{ c.id }}">{{ c.course_name }}</a></td>
+					<td>{{ c.course_workload }}</td>
+					<td><a class="btn btn-primary" href="/course/{{ c.id }}">Details</a></td>
 					<td><button type="button" class="btn btn-default btn-lg">
-    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ i.id }}" method="GET"></a>
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ c.id }}" method="GET"></a>
     </button></td>
-				{% endif %}
-			{% elif duration_chosen != '-' and workload_chosen == '-' %}
-					<td><img src="{{ i.course_icon }}"></td> 
-					<td><h4>{{ i.duration }}</h4></td> 
-					<td><a href="/course/{{ i.id }}">{{ i.course_name }}</a></td>
-					<td>{{ i.course_workload }}</td>
-					<td><a class="btn btn-primary" href="/course/{{ i.id }}">Details</a></td>
-					<td><button type="button" class="btn btn-default btn-lg">
-    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ i.id }}" method="GET"></a>
-    </button></td>
-    		{% elif duration_chosen != '-' and workload_chosen == '-' %}
-
-
-			{% endif %}
-		<!{% endfor %} -->
-			{% for i in list_of_courses %}
-					<td>{{ i.course_name }}</td>
-			{% endfor %}
-
-
-	{% endblock %}
-
-
+    </tr>
+    {% endfor %}
+    </table>
+    {% endblock %}  
