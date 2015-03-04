@@ -11,7 +11,7 @@ import os
 import requests
 import jinja2
 import sys
-from model import Term, Course, CourseCategory, BookmarkedCourse
+from model import Term, Course, CourseCategory, BookmarkedCourse, Category
 from twilio.rest import TwilioRestClient
 from datetime import date
 
@@ -23,9 +23,6 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
-
-TWILIO_ACCOUNT_SID=os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN=os.environ.get('TWILIO_AUTH_TOKEN')
 
 
 oauth = OAuth()
@@ -217,6 +214,8 @@ def get_courses_by_criteria():
     duration_chosen = request.args.get("duration")
     workload_chosen = request.args.get("workload")
 
+    blue = model.session.query(Category).filter(Category.id==category_chosen).first()
+
     query = Course.query.join(CourseCategory).filter(CourseCategory.category_id==category_chosen)
         
     if workload_chosen != '-':
@@ -231,7 +230,7 @@ def get_courses_by_criteria():
             query = query.join(Term).filter(Term.duration == duration_chosen)
 
     return render_template("recommended_courses.html", 
-        list_of_courses=query.all())
+        list_of_courses=query.all(), duration_chosen=duration_chosen, workload_chosen=workload_chosen, cat=blue)
                                                     
                                           
 @app.route('/course/<int:id>')

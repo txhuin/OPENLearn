@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 <title> Recommended courses </title>
 	{% block content %}
-	<table class="table table-striped">
 	<p> Here are your courses! </p>
+	<h4>Your search results for courses in the <font color="orange">{{ cat.category_name }}</font> category, with a maximum workload of <font color="orange">{{ workload_chosen }} hours per week</font>, and a length of <font color="orange">{{ duration_chosen }} weeks</font></h4>
+	<table class="table table-striped">
 	<tr><th>Course Name</th><th>Course Image</th><th>Course Workload</th><th>Course Details</th></tr>
 	<a href="/Recommend}}"></a>
 		{% for c in list_of_courses %}
