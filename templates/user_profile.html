@@ -2,7 +2,6 @@
 {% block content %}
 {% if session.get('user_email') %}
 	<h4>{{ user.email }}'s Profile</h4>
-	<h4><a href="/changepassword">Change password</a></h4>
 	<h4><a href="/bookmarkedcourses">My Bookmarked Courses</a></h4>
 {% else %}
 	<h4>Please log in to view your profile!</h4>

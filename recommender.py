@@ -13,6 +13,7 @@ import jinja2
 import sys
 from model import Term, Course, CourseCategory, BookmarkedCourse, Category
 from twilio.rest import TwilioRestClient
+import twilio.twiml 
 from datetime import date
 
 reload(sys)
@@ -23,6 +24,9 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
+
+TWILIO_ACCOUNT_SID=os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN=os.environ.get('TWILIO_AUTH_TOKEN')
 
 
 oauth = OAuth()
@@ -201,6 +205,7 @@ def remove_bookmarked_course(id):
 
     return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
+
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
     random_course = model.session.query(model.Course).order_by(func.random()).first()
@@ -238,11 +243,6 @@ def display_course_details(id):
     course = model.session.query(Course).filter(Course.id==id).first()
     terms = model.session.query(Term).filter(Term.course_id==id).first()
 
-    # message = client.messages.create(to="+12316851234", from_="+15555555555",
-    #                                  body="Hello there!",
-    #                                  media_url=['https://demo.twilio.com/owl.png', 'https://demo.twilio.com/logo.png'])
-    # today_date = str(date.today())
-
     return render_template("course_details.html", course=course, 
         terms=terms)
 
@@ -275,9 +275,26 @@ def rate_course():
 
     return display_course_details(id=course_id)
 
-@app.route('/add_a_review', methods=['GET'])
-def review_course():
-    pass
+@app.route('/writereview/<int:id>', methods=['GET'])
+def display_review_form(id):
+
+    course=model.session.query(Course).filter(Course.id==id).first()
+
+    return render_template("review_form.html", course=course)
+
+@app.route('/submitreview/<int:id>', methods=['GET'])
+def submit_review(id):
+    review = request.args.get("review")
+    course_id = int(id)
+    user_id = session.get("user_id")
+
+    new_review = model.Review(course_id=course_id, user_id=user_id, review=review)
+    model.session.add(new_review)
+    model.session.commit()
+
+
+    return render_template("user_profile.html")
+
 
 @app.after_request
 def add_header(response):
@@ -295,12 +312,13 @@ def add_header(response):
 def not_found(error):
     return render_template('error.html'), 404
 
+
+
 # READ ME
 # CSS/JS
-# Postgresql deployment
+# Postgres deployment
 # Integration tests
                                                   
-
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
 

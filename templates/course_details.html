@@ -8,6 +8,8 @@
 	<li>{{ course.course_prerequisites }}</li>
 	<li>{{ course.course_instructor }}</li>
     <li>{{ course.course_prerequisites }}</li>
+    <li>{{ course.review }}</li>
+
 </ul>
 <button type="button" class="btn btn-default btn-lg">
     <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
@@ -33,5 +35,16 @@
             <input type='hidden' name='course_id' value='{{ course.id }}'>
             <button type="submit" class="btn btn-default">{% if rating %} {{ rating }} Update!{% else %}Rate!{% endif %}</button>
         </form>
+    <div class="rating">
+      <span class="glyphicon glyphicon-star-empty" id="star1" style="color:#BBD41C"></span>
+      <span class="glyphicon glyphicon-star-empty" id="star2" style="color:#BBD41C"></span>
+      <span class="glyphicon glyphicon-star-empty" id="star3" style="color:#BBD41C"></span>
+      <span class="glyphicon glyphicon-star-empty" id="star4" style="color:#BBD41C"></span>
+      <span class="glyphicon glyphicon-star-empty" id="star5" style="color:#BBD41C"></span>
+    </div>
+     <button type="submit" class="btn btn-default"><a href="/Recommend">Rate</a></button>
+     <div class="review-button">
+        <button type="submit" class="btn btn-default"><a href="/writereview/{{ course.id }}" method="GET">Write a review</a></button></div>
+
 
 {% endblock %}
