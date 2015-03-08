@@ -13,7 +13,7 @@ I loved the ease of access, the convenience, and the format of the course. I
 
 
 
-Technology stack  
+## Technology stack  
 Python  
 Flask  
 Sqlite3  
