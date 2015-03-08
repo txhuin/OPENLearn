@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<ul>
-	<li><img src="{{ course.course_icon }}"></li>
-	<li>{{ course.course_name }}</li>
-	<li>{{ course.course_description }}</li>
-	<li>{{ course.course_format }}</li>
-	<li>{{ course.course_prerequisites }}</li>
-	<li>{{ course.course_instructor }}</li>
-    <li>{{ course.course_prerequisites }}</li>
-    <li>{{ course.review }}</li>
+    
+	<img src="{{ course.course_icon }}">
+	<div class="coursename" style="width:800px; margin:0 auto;"><h4>{{ course.course_name }}</h4></div>
+	<h3>{{ course.course_description }}</h3>
+	<h3>{{ course.course_format }}</h3>
+	<h3>{{ course.course_prerequisites }}</h3>
+	<h3>{{ course.course_instructor }}</h3>
+    <h3>{{ course.course_prerequisites }}</h3>
+    <h3>{{ course.review }}</h3>
 
-</ul>
 <button type="button" class="btn btn-default btn-lg">
     <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
     </button>
@@ -49,17 +48,18 @@
         <button type="submit" class="btn btn-default">
             <a href="/writereview/{{ course.id }}" method="GET">Write a review</a></button>
     </div>
-
+<div class="whatpeoplesay">
     <h4>What People are Saying<h4>
         {% if review %}
         
         {% for i in review %}<br>
         <div>
-            <div class="reviews" style="background-color:rgba(80,179,170,0.9)">"{{ i.review }}" -User# {{ i.user_id }} </div><br>
+            <div class="reviews">"{{ i.review }}" -User# {{ i.user_id }} </div><br>
        
             {% endfor %}
         </div>
         {% endif %}
+</div>
     
 
 

@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>{{ course.course_name }}</p>
-<p><img src="{{ course.course_icon }}"</p>
+
+<div class="bookmarkbutton"  style="width:1000px; margin:0 auto;">
+    <button type="button" class="btn btn-default btn-lg">
+    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
+    </button>
+</div>
+<div class="randomcoursename" style="width:800px; margin:0 auto;">
+    <h3>{{ course.course_name }}</h3>
+</div><br/><br/><br/>
+<div class="courseimage" style="width:800px; margin:0 auto;">
+    <img src="{{ course.course_icon }}">
+</div><br/><br/><br/>
 {% if session.get('user_email') %}
 <form name="ratings" action="/rate_course?rating={{ course.rating }}&course_id={{ course.id }}" method="GET">
-            <div class="form-group">
+            <div class="form-group" style="width:800px; margin:0 auto;">
                 <label class="radio-inline">
                     <input type="radio" name="rating" id="inlineRadio1" required value="1"> 1
                 </label>
@@ -20,16 +30,12 @@
                 <label class="radio-inline">
                     <input type="radio" name="rating" id="inlineRadio3" value="5"> 5
                 </label>
-            </div>
             <input type='hidden' name='course_id' value='{{ course.id }}'>
             <button type="submit" class="btn btn-info">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
-<div class="col-sm-6">
-    <button type="button" class="btn btn-default btn-lg">
-    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
-    </button>
-</div>
+        </div>
+
 {% else %}
-<p><a href="/signup">Please sign in to bookmark this course!</a></p>
+<h3><a href="/signup">Please sign in to bookmark this course!</h3></p>
 {% endif %}
 {% endblock %}
