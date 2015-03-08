@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <ul>
 	<li><img src="{{ course.course_icon }}"></li>
 	<li>{{ course.course_name }}</li>
@@ -42,9 +43,24 @@
       <span class="glyphicon glyphicon-star-empty" id="star4" style="color:#BBD41C"></span>
       <span class="glyphicon glyphicon-star-empty" id="star5" style="color:#BBD41C"></span>
     </div>
-     <button type="submit" class="btn btn-default"><a href="/Recommend">Rate</a></button>
-     <div class="review-button">
-        <button type="submit" class="btn btn-default"><a href="/writereview/{{ course.id }}" method="GET">Write a review</a></button></div>
+    <button type="submit" class="btn btn-default"><a href="/Recommend"`>Rate</a></button>
+
+    <div class="review-button">
+        <button type="submit" class="btn btn-default">
+            <a href="/writereview/{{ course.id }}" method="GET">Write a review</a></button>
+    </div>
+
+    <h4>What People are Saying<h4>
+        {% if review %}
+        
+        {% for i in review %}<br>
+        <div>
+            <div class="reviews" style="background-color:rgba(80,179,170,0.9)">"{{ i.review }}" -User# {{ i.user_id }} </div><br>
+       
+            {% endfor %}
+        </div>
+        {% endif %}
+    
 
 
 {% endblock %}

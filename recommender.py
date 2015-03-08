@@ -11,7 +11,7 @@ import os
 import requests
 import jinja2
 import sys
-from model import Term, Course, CourseCategory, BookmarkedCourse, Category
+from model import Term, Course, CourseCategory, BookmarkedCourse, Category, User, Review
 from twilio.rest import TwilioRestClient
 import twilio.twiml 
 from datetime import date
@@ -103,10 +103,10 @@ def login_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-    users = model.session.query(model.User)
+    users = model.session.query(User)
     try:
-        user = users.filter(model.User.email==user_email,
-                            model.User.password==user_password
+        user = users.filter(User.email==user_email,
+                            User.password==user_password
                             ).one()
     except InvalidRequestError:
         flash("That email or password was incorrect.")
@@ -126,7 +126,7 @@ def facebook_authorized(resp):
         return redirect(next_url)
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
-    user = model.session.query(model.User).filter(model.User.email == me.data['email']).first()
+    user = model.session.query(User).filter(User.email == me.data['email']).first()
     flash("You have successfully logged in")
     print ('Logged in as id=%s name=%s redirect=%s') % (me.data['id'], me.data['email'], request.args.get('next'))
 
@@ -151,8 +151,8 @@ def display_my_profile():
     """Displays profile of the user that is logged in"""
     if session.get('user_email'):
         email = session.get('user_email')
-        users = model.session.query(model.User)
-        user = users.filter(model.User.email == email).one()
+        users = model.session.query(User)
+        user = users.filter(User.email == email).one()
         return render_template("user_profile.html", user=user)
 
     else:
@@ -173,15 +173,18 @@ def logout():
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
     """Allows user to bookmark course to view later"""
-    user_id = session.get("user_id")
-    bookmarkedcourse = model.BookmarkedCourse(
-        user_id = user_id,
-        course_id=id)
-    
-    model.session.add(bookmarkedcourse)
-    model.session.commit()
+    if session.get('user_email'):
+        user_id = session.get("user_id")
+        bookmarkedcourse = model.BookmarkedCourse(user_id = user_id, course_id=id)
+        model.session.add(bookmarkedcourse)
+        model.session.commit()
+        flash("Course successfully added")
+        return redirect("/bookmarkedcourses")
 
-    return redirect("/bookmarkedcourses")
+    else:
+        flash("You need to log in to do that")
+        return redirect("/")
+
     
 @app.route("/bookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
@@ -205,10 +208,9 @@ def remove_bookmarked_course(id):
 
     return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
-
 @app.route("/Randomize", methods=['GET'])
 def get_random_course():
-    random_course = model.session.query(model.Course).order_by(func.random()).first()
+    random_course = model.session.query(Course).order_by(func.random()).first()
  
     return render_template("randomcourse.html", course=random_course)
 
@@ -242,9 +244,10 @@ def get_courses_by_criteria():
 def display_course_details(id):
     course = model.session.query(Course).filter(Course.id==id).first()
     terms = model.session.query(Term).filter(Term.course_id==id).first()
+    review = model.session.query(Review).filter(Review.course_id==id)
 
     return render_template("course_details.html", course=course, 
-        terms=terms)
+        terms=terms, review=review.all())
 
 
 @app.route('/rate_course', methods=['GET'])
@@ -277,10 +280,29 @@ def rate_course():
 
 @app.route('/writereview/<int:id>', methods=['GET'])
 def display_review_form(id):
+    if session.get('user_email'):
+        course_id = int(id)
+        user_id = session.get("user_id")
 
-    course=model.session.query(Course).filter(Course.id==id).first()
+        course = model.session.query(Course).filter(Course.id==id).first()
+        reviews = model.session.query(model.Review)
+        
 
-    return render_template("review_form.html", course=course)
+        old_review = reviews.filter(
+                    model.Review.course_id == course_id,
+                    model.Review.user_id == user_id
+                    ).first()
+
+        if old_review:
+                review = old_review.review 
+                return render_template("review_form.html", course=course, review=review)
+
+        else:
+            return render_template("review_form.html", course=course)
+
+    else:
+        flash("You need to log in to do that")
+        return redirect('/')
 
 @app.route('/submitreview/<int:id>', methods=['GET'])
 def submit_review(id):
@@ -292,9 +314,7 @@ def submit_review(id):
     model.session.add(new_review)
     model.session.commit()
 
-
-    return render_template("user_profile.html")
-
+    return redirect("/")
 
 @app.after_request
 def add_header(response):
@@ -311,7 +331,6 @@ def add_header(response):
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html'), 404
-
 
 
 # READ ME

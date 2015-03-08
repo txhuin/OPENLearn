@@ -21,21 +21,6 @@ class User(Base):
 	email = Column(String(1000), nullable=False)
 	password = Column(String(1000), nullable=False)
 
-	def similarity(self,other):
-		u_ratings = {}
-		paired_ratings = []
-		for r in self.ratings:
-			u_r = u_ratings.get(r.course_id)
-			
-		for r in other.ratings:
-			if u_r:
-				paired_ratings.append( (u_r.rating, r.rating) )
-
-		if paired_ratings:
-			return correlation.pearson(paired_ratings)
-		else:
-			return 0.0
-
 
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
