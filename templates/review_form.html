@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if review %}
+	{{ review }}
+	<button type="submit" class="btn btn-default">Update review</button>
+{% else %}
+	<div class="container">
+  	<h2>Leave a review for "{{ course.course_name }}" </h2>
+  	<p>Please write your review below.</p>
+  	<form action="/submitreview/{{ course.id }}" method="GET" role="form">
+    <div class="form-group">
+      <label for="comment">Review:</label><br>
+      		 <textarea class="form-control" name="review" rows="5" cols="40" id="comment" value="review"></textarea>
+    </div>
+      <button type="submit" class="btn btn-default">Write a review</button>
+  </form>
+</div>
+{% endif %}
+
+{% endblock %}
+
