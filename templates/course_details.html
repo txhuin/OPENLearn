@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    
-	<img src="{{ course.course_icon }}">
-	<div class="coursename" style="width:800px; margin:0 auto;"><h4>{{ course.course_name }}</h4></div>
-    	<h3>{{ course.course_description }}</h3>
-    	<h3>{{ course.course_format }}</h3>
-    	<h3>{{ course.course_prerequisites }}</h3>
-    	<h3>{{ course.course_instructor }}</h3>
-        <h3>{{ course.course_prerequisites }}</h3>
-        <h3>{{ course.review }}</h3>
-
-<button type="button" class="btn btn-default btn-lg">
+	<img src="{{ course.course_icon }}"><button type="button" class="btn btn-default btn-lg">
     <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
-    </button>
-        <form action="/rate_course" method="GET">
+    </button><form action="/rate_course" method="GET">
             <div class="stars">
-            <input type="radio" name="star" class="star-1" id="star-1" />
+            <input type="radio" name="star" class="star-1" id="star-1" value="1" />
             <label class="star-1" for="star-1">1</label>
-            <input type="radio" name="star" class="star-2" id="star-2" />
+            <input type="radio" name="star" class="star-2" id="star-2" value="2"/>
             <label class="star-2" for="star-2">2</label>
-            <input type="radio" name="star" class="star-3" id="star-3" />
+            <input type="radio" name="star" class="star-3" id="star-3" value="3" />
             <label class="star-3" for="star-3">3</label>
-            <input type="radio" name="star" class="star-4" id="star-4" />
+            <input type="radio" name="star" class="star-4" id="star-4" value="4"/>
             <label class="star-4" for="star-4">4</label>
-            <input type="radio" name="star" class="star-5" id="star-5" />
+            <input type="radio" name="star" class="star-5" id="star-5" value="5"/>
             <label class="star-5" for="star-5">5</label>
             <span></span>
             </div>
             <input type='hidden' name='course_id' value='{{ course.id }}'>
             <button type="submit" class="btn btn-default">{% if rating %} {{ rating }} Update!{% else %}Rate!{% endif %}</button>
         </form>
+	<div class="coursename" style="width:800px; margin:0 auto;">
+        {% if rating %}
+        <h4>{{ course.course_name }} has {{ course.ratings|length }} ratings.<br>
+        The average rating is {{ '%0.2f' % ((course.ratings|sum(attribute='rating')) / (course.ratings|length)) }}.</h4></div>
+        {% else %}
+        <h4> This course does not have any ratings at the moment. </h4>
+        {% endif %}
+    	<h3><i>Course Description:</i> {{ course.course_description }}</h3>
+    	<h3><i>Course Format:</i> {{ course.course_format }}</h3>
+    	<h3><i>Course Prerequisites:</i> {{ course.course_prerequisites }}</h3>
+    	<h3><i>Course Instructor:</i> {{ course.course_instructor }}</h3>
 
     <div class="review-button">
         <button type="submit" class="btn btn-default">
@@ -39,7 +39,7 @@
 <div class="whatpeoplesay">
     <h4>What People are Saying<h4>
         {% if review %}
-        
+
         {% for i in review %}<br>
         <div>
             <div class="reviews">"{{ i.review }}" -User# {{ i.user_id }} </div><br>

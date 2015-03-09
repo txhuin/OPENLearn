@@ -281,7 +281,7 @@ def display_course_details(id):
 
 @app.route('/rate_course', methods=['GET'])
 def rate_course():
-    rating = request.args.get("rating")
+    rating = request.args.get("star")
     course_id = request.args.get("course_id")
     user_id = session.get("user_id")
 
