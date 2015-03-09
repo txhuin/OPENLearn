@@ -142,7 +142,6 @@ def seed_ratings():
 		model.session.commit()
 
 
-
 if __name__ == '__main__':
 	get_course()
 	get_term_information()

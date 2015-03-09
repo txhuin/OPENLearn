@@ -11,9 +11,9 @@ import os
 import requests
 import jinja2
 import sys
-from model import Term, Course, CourseCategory, BookmarkedCourse, Category, User, Review
+from model import Term, Course, CourseCategory, BookmarkedCourse, Category, User, Review, Rating
 from twilio.rest import TwilioRestClient
-import twilio.twiml 
+import twilio.twiml
 from datetime import date
 
 reload(sys)
@@ -105,8 +105,8 @@ def login_user():
 
     users = model.session.query(User)
     try:
-        user = users.filter(User.email==user_email,
-                            User.password==user_password
+        user = users.filter(User.email == user_email,
+                            User.password == user_password
                             ).one()
     except InvalidRequestError:
         flash("That email or password was incorrect.")
@@ -153,7 +153,12 @@ def display_my_profile():
         email = session.get('user_email')
         users = model.session.query(User)
         user = users.filter(User.email == email).one()
-        return render_template("user_profile.html", user=user)
+        heading = "My Profile"
+
+        bookmarks = model.session.query(BookmarkedCourse)
+        user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
+
+        return render_template("user_profile.html", user=user, heading=heading)
 
     else:
         flash("Please log in to view your profile")
@@ -169,6 +174,30 @@ def logout():
     session.clear()
     return redirect("/")
 
+@app.route("/all_users")
+def show_all_users():
+    users = model.session.query(model.User)
+    user_list = users.filter(model.User.email.isnot(None)).all()
+    return render_template("all_users.html", users=user_list)
+
+@app.route("/user_profile", methods=["GET"])
+def show_user_profile():
+    email = request.args.get("email")   
+    users = model.session.query(User)
+    user = users.filter(User.email == email).one()
+    heading = "%s's Profile" % (email)
+
+    ratings = model.session.query(Rating)
+    user_ratings = ratings.filter(Rating.user_id == user.id).all()
+
+    bookmarks = model.session.query(BookmarkedCourse)
+    user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
+
+
+    return render_template("user_profile.html", user=user, 
+                                                heading=heading,
+                                                ratings=user_ratings,
+                                                bookmarks=user_bookmarks)
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
@@ -191,7 +220,7 @@ def show_bookmarked_courses():
     """Returns list of all courses that the logged in user has bookmarked"""
     if session.get('user_email'):
         user_id = session.get("user_id")
-        saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id==user_id).all()
+        saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id == user_id).all()
         list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
         return render_template("bookmarkedcourses.html", saved_courses=list_of_courses)
 
@@ -221,9 +250,9 @@ def get_courses_by_criteria():
     duration_chosen = request.args.get("duration")
     workload_chosen = request.args.get("workload")
 
-    blue = model.session.query(Category).filter(Category.id==category_chosen).first()
+    blue = model.session.query(Category).filter(Category.id == category_chosen).first()
 
-    query = Course.query.join(CourseCategory).filter(CourseCategory.category_id==category_chosen)
+    query = Course.query.join(CourseCategory).filter(CourseCategory.category_id == category_chosen)
         
     if workload_chosen != '-':
         workload_chosen = int(workload_chosen)
@@ -242,9 +271,9 @@ def get_courses_by_criteria():
                                           
 @app.route('/course/<int:id>')
 def display_course_details(id):
-    course = model.session.query(Course).filter(Course.id==id).first()
-    terms = model.session.query(Term).filter(Term.course_id==id).first()
-    review = model.session.query(Review).filter(Review.course_id==id)
+    course = model.session.query(Course).filter(Course.id == id).first()
+    terms = model.session.query(Term).filter(Term.course_id == id).first()
+    review = model.session.query(Review).filter(Review.course_id == id)
 
     return render_template("course_details.html", course=course, 
         terms=terms, review=review.all())
@@ -284,7 +313,7 @@ def display_review_form(id):
         course_id = int(id)
         user_id = session.get("user_id")
 
-        course = model.session.query(Course).filter(Course.id==id).first()
+        course = model.session.query(Course).filter(Course.id == id).first()
         reviews = model.session.query(model.Review)
         
 
@@ -316,6 +345,52 @@ def submit_review(id):
 
     return redirect("/")
 
+@app.route('/updatereview/<int:id>', methods=['GET'])
+def update_review(id):
+
+    review = request.args.get("review")
+    course_id = int(id)
+    user_id = session.get("user_id")
+    delete_bookmark = model.session.query(Review).filter(Review.course_id, Review.user_id == course_id, user_id).delete()
+
+# @app.route('/follow/<nickname>')
+# @login_required
+# def follow(nickname):
+#     user = User.query.filter_by(nickname=nickname).first()
+#     if user is None:
+#         flash('User %s not found.' % nickname)
+#         return redirect(url_for('index'))
+#     if user == g.user:
+#         flash('You can\'t follow yourself!')
+#         return redirect(url_for('user', nickname=nickname))
+#     u = g.user.follow(user)
+#     if u is None:
+#         flash('Cannot follow ' + nickname + '.')
+#         return redirect(url_for('user', nickname=nickname))
+#     db.session.add(u)
+#     db.session.commit()
+#     flash('You are now following ' + nickname + '!')
+#     return redirect(url_for('user', nickname=nickname))
+
+# @app.route('/unfollow/<nickname>')
+# @login_required
+# def unfollow(nickname):
+#     user = User.query.filter_by(nickname=nickname).first()
+#     if user is None:
+#         flash('User %s not found.' % nickname)
+#         return redirect(url_for('index'))
+#     if user == g.user:
+#         flash('You can\'t unfollow yourself!')
+#         return redirect(url_for('user', nickname=nickname))
+#     u = g.user.unfollow(user)
+#     if u is None:
+#         flash('Cannot unfollow ' + nickname + '.')
+#         return redirect(url_for('user', nickname=nickname))
+#     db.session.add(u)
+#     db.session.commit()
+#     flash('You have stopped following ' + nickname + '.')
+#     return redirect(url_for('user', nickname=nickname))
+
 @app.after_request
 def add_header(response):
     """
@@ -340,4 +415,3 @@ def not_found(error):
                                                   
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
-

@@ -13,7 +13,7 @@ I loved the ease of access, the convenience, and the format of the course. I
 
 
 
-## Technology stack  
+## Technology Stack  
 Python  
 Flask  
 Sqlite3  
@@ -21,4 +21,7 @@ SqlAlchemy
 HTML  
 CSS  
 Bootstrap
+
+## Technical Challenges
+
 

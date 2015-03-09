@@ -2,8 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PickleType
 from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
-
-
+from hashlib import md5
 
 engine = create_engine("sqlite:///mooc.db", echo=True)
 session = scoped_session(sessionmaker(bind=engine, 
@@ -19,7 +18,13 @@ class User(Base):
 
 	id = Column(Integer, primary_key=True)
 	email = Column(String(1000), nullable=False)
+	# nickname = Column(String(64), index=True, unique=True)
 	password = Column(String(1000), nullable=False)
+	# about_me = Column(String(140))
+	# last_seen = Column(DateTime)
+
+	def avatar(self, size):
+		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
 
 class BookmarkedCourse(Base):
@@ -102,6 +107,17 @@ class Review(Base):
 
 	user = relationship("User", backref=backref("reviews", order_by=id))
 	course = relationship("Course", backref=backref("reviews", order_by=id))
+
+class Group(Base):
+	__tablename__ = "groups"
+
+	id = Column(Integer, primary_key=True)
+	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	group_name = Column(String(10000), nullable=False)
+
+	user = relationship("User", backref=backref("groups", order_by=id))
+	course = relationship("Course", backref=backref("groups", order_by=id))
 	
 def main():
 	pass
