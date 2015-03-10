@@ -7,7 +7,7 @@
         <td>{{ i.course_name }}<a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
         <td><img src="{{ i.course_icon }}"></td>
         <td>{{ i.course_description }}</td>
-        <td><form name="ratings" action="/rate_course" method="GET">
+        <td><form name="ratings" action="/rate_course?rating={{ i.rating }}&course_id={{ i.id }}" method="GET">
             <div class="stars">
             <input type="radio" name="star" class="star-1" id="star-1" value="1" />
             <label class="star-1" for="star-1">1</label>

@@ -9,31 +9,28 @@
 <div class="randomcoursename" style="width:800px; margin:0 auto;">
     <h3>{{ course.course_name }}</h3>
 </div><br/><br/><br/>
+
 <div class="courseimage" style="width:800px; margin:0 auto;">
     <img src="{{ course.course_icon }}">
 </div><br/><br/><br/>
 {% if session.get('user_email') %}
 <form name="ratings" action="/rate_course?rating={{ course.rating }}&course_id={{ course.id }}" method="GET">
-            <div class="form-group" style="width:800px; margin:0 auto;">
-                <label class="radio-inline">
-                    <input type="radio" name="rating" id="inlineRadio1" required value="1"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="rating" id="inlineRadio2" value="2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="rating" id="inlineRadio3" value="3"> 3
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="rating" id="inlineRadio3" value="4"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="rating" id="inlineRadio3" value="5"> 5
-                </label>
+            <div class="stars">
+            <input type="radio" name="star" class="star-1" id="star-1" value="1" />
+            <label class="star-1" for="star-1">1</label>
+            <input type="radio" name="star" class="star-2" id="star-2" value="2"/>
+            <label class="star-2" for="star-2">2</label>
+            <input type="radio" name="star" class="star-3" id="star-3" value="3" />
+            <label class="star-3" for="star-3">3</label>
+            <input type="radio" name="star" class="star-4" id="star-4" value="4"/>
+            <label class="star-4" for="star-4">4</label>
+            <input type="radio" name="star" class="star-5" id="star-5" value="5"/>
+            <label class="star-5" for="star-5">5</label>
+            <span></span>
+            </div>
             <input type='hidden' name='course_id' value='{{ course.id }}'>
             <button type="submit" class="btn btn-info">{% if rating %}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
-        </div>
 
 {% else %}
 <h3><a href="/signup">Please sign in to bookmark this course!</h3></p>

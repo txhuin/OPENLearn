@@ -63,9 +63,10 @@ def display_signup():
 def signup():
     """Once the user submits information on the sign up form, new user is added to database"""
     user_email = request.form.get('email')
-    user_password = request.form.get('password') 
+    user_password = request.form.get('password')
+    user_nickname = request.form.get('nickname')
 
-    new_user = model.User(email=user_email, password=user_password)
+    new_user = model.User(email=user_email, password=user_password, nickname=user_nickname)
     
     model.session.add(new_user) 
 
@@ -343,6 +344,7 @@ def submit_review(id):
     model.session.add(new_review)
     model.session.commit()
 
+    flash("Review successfully added.")
     return redirect("/")
 
 @app.route('/updatereview/<int:id>', methods=['GET'])
@@ -353,43 +355,23 @@ def update_review(id):
     user_id = session.get("user_id")
     delete_bookmark = model.session.query(Review).filter(Review.course_id, Review.user_id == course_id, user_id).delete()
 
-# @app.route('/follow/<nickname>')
-# @login_required
-# def follow(nickname):
-#     user = User.query.filter_by(nickname=nickname).first()
-#     if user is None:
-#         flash('User %s not found.' % nickname)
-#         return redirect(url_for('index'))
-#     if user == g.user:
-#         flash('You can\'t follow yourself!')
-#         return redirect(url_for('user', nickname=nickname))
-#     u = g.user.follow(user)
-#     if u is None:
-#         flash('Cannot follow ' + nickname + '.')
-#         return redirect(url_for('user', nickname=nickname))
-#     db.session.add(u)
-#     db.session.commit()
-#     flash('You are now following ' + nickname + '!')
-#     return redirect(url_for('user', nickname=nickname))
+@app.route('/aboutme', methods=['POST'])
+def about_me():
+    if session.get('user_email'):
+        about_me = request.form["aboutme"]
+        user_id = session.get("user_id")
+        # user_email = session.get("user_email")
+        # user_nickname = session.get("nickname")
 
-# @app.route('/unfollow/<nickname>')
-# @login_required
-# def unfollow(nickname):
-#     user = User.query.filter_by(nickname=nickname).first()
-#     if user is None:
-#         flash('User %s not found.' % nickname)
-#         return redirect(url_for('index'))
-#     if user == g.user:
-#         flash('You can\'t unfollow yourself!')
-#         return redirect(url_for('user', nickname=nickname))
-#     u = g.user.unfollow(user)
-#     if u is None:
-#         flash('Cannot unfollow ' + nickname + '.')
-#         return redirect(url_for('user', nickname=nickname))
-#     db.session.add(u)
-#     db.session.commit()
-#     flash('You have stopped following ' + nickname + '.')
-#     return redirect(url_for('user', nickname=nickname))
+        print about_me
+        print '*'*100
+
+        # new_summary = model.User.update(id=user_id, about_me=about_me)
+        model.session.query(User).filter(User.id == user_id).update({'about_me': about_me})
+        model.session.commit()
+
+        return redirect('/myprofile')
+
 
 @app.after_request
 def add_header(response):

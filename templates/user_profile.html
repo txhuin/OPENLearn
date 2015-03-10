@@ -1,10 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-{% if session.get('user_email') %}
-	<h4>{{ user.email }}'s Profile</h4>
+	{% if session.get('user_email') %}
+	<h4>{{ user.nickname }}'s Profile</h4>
 	<img src="{{ user.avatar(128) }}">
+	
+		{% if user.about_me %}
+		<h3> About Me </h3>
+  		{{ user.about_me }}
+
+		{% else %}
+		<form action="/aboutme" method="POST" role="form">
+    	<div class="form-group">
+      	<label for="comment">About me:</label><br>
+      		 <textarea class="form-control" name="aboutme" rows="5" cols="40" id="comment"></textarea>
+    	</div>
+      	<button type="submit" class="btn btn-default">Submit</button>
+  		</form>
+		{% endif %}
 	<h4><a href="/bookmarkedcourses">My Bookmarked Courses</a></h4>
-{% else %}
-	<h4>Please log in to view your profile!</h4>
-{% endif %}
+
+	{% else %}
+		<h4>Please log in to view your profile!</h4>
+	{% endif %}
 {% endblock %}

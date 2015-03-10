@@ -17,11 +17,11 @@ class User(Base):
 	__tablename__ = "users"
 
 	id = Column(Integer, primary_key=True)
-	email = Column(String(1000), nullable=False)
-	# nickname = Column(String(64), index=True, unique=True)
+	email = Column(String(1000), nullable=False, unique=True)
+	nickname = Column(String(64), nullable=True, unique=True)
 	password = Column(String(1000), nullable=False)
-	# about_me = Column(String(140))
-	# last_seen = Column(DateTime)
+	about_me = Column(String(600), nullable=True)
+	last_seen = Column(DateTime)
 
 	def avatar(self, size):
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
