@@ -3,23 +3,26 @@
 
 	<img src="{{ course.course_icon }}"><button type="button" class="btn btn-default btn-lg">
     <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
-    </button><form action="/rate_course" method="GET">
-            <div class="stars">
-            <input type="radio" name="star" class="star-1" id="star-1" value="1" />
-            <label class="star-1" for="star-1">1</label>
-            <input type="radio" name="star" class="star-2" id="star-2" value="2"/>
-            <label class="star-2" for="star-2">2</label>
-            <input type="radio" name="star" class="star-3" id="star-3" value="3" />
-            <label class="star-3" for="star-3">3</label>
-            <input type="radio" name="star" class="star-4" id="star-4" value="4"/>
-            <label class="star-4" for="star-4">4</label>
-            <input type="radio" name="star" class="star-5" id="star-5" value="5"/>
-            <label class="star-5" for="star-5">5</label>
-            <span></span>
-            </div>
-            <input type='hidden' name='course_id' value='{{ course.id }}'>
-            <button type="submit" class="btn btn-default">{% if rating %} {{ rating }} Update!{% else %}Rate!{% endif %}</button>
+    </button>
+        <form name="ratings" action="/rate_course" method="GET">
+        <span class="star-rating">
+        <input type="radio" name="rating" value="1"><i></i>
+        <input type="radio" name="rating" value="2"><i></i>
+        <input type="radio" name="rating" value="3"><i></i>
+        <input type="radio" name="rating" value="4"><i></i>
+        <input type="radio" name="rating" value="5"><i></i>
+        </span>
+        <input type='hidden' name='course_id' value='{{ course.id }}'>
+        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
+        </td>
+        <script>
+            $(':radio').change(
+              function(){
+                $('.choice').text( this.value + ' stars' );
+              } 
+            )
+        </script>
 	<div class="coursename" style="width:800px; margin:0 auto;">
         {% if rating %}
         <h4>{{ course.course_name }} has {{ course.ratings|length }} ratings.<br>
@@ -48,7 +51,5 @@
         </div>
         {% endif %}
 </div>
-    
-
 
 {% endblock %}

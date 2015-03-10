@@ -13,6 +13,11 @@ Base = declarative_base()
 Base.query = session.query_property()
 
 
+followers = Table('followers', Base.metadata,
+    Column('follower_id', Integer, ForeignKey('users.id')),
+    Column('followed_id', Integer, ForeignKey('users.id'))
+)
+
 class User(Base):
 	__tablename__ = "users"
 
@@ -22,10 +27,26 @@ class User(Base):
 	password = Column(String(1000), nullable=False)
 	about_me = Column(String(600), nullable=True)
 	last_seen = Column(DateTime)
+	followed = relationship('User',
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=backref('followers', lazy='dynamic'),
+                               lazy='dynamic')
 
 	def avatar(self, size):
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
+
+	def follow(self, user):
+    		if not self.is_following(user):
+        		self.followed.append(user)
+        		return self
+
+	def unfollow(self, user):
+    		if self.is_following(user):
+    			self.followed.remove(user)
+    			return self
 
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"

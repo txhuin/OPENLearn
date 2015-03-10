@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% block style %}
-    <title>All Users</title>
-{% endblock %}
 {% block content %}
     <h1>All Users</h1>
     {% for user in users %}
-    <h4>User <a href="/user_profile?email={{ user.email }}">{{ user.email }}</a> has {{ user.ratings|length }} rating(s) {{ bookmarks }}.</h4>
+    <h4><img src="{{ user.avatar(128) }}"> <a href="/user_profile?nickname={{ user.nickname }}">{{ user.nickname }}</a> has {{ user.ratings|length }} rating(s) {{ bookmarks }}.</h4>
     {% endfor %}
 {% endblock %}
