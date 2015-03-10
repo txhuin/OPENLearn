@@ -56,7 +56,9 @@ def welcome():
 
 @app.route('/search')
 def search():
-    pass
+    query = request.args.get("query")
+    course = model.session.query(Course).filter(Course.course_name)
+    if query in course:
 
 
 @app.route("/signup", methods=['GET'])
@@ -206,15 +208,19 @@ def show_user_profile():
                                                 bookmarks=user_bookmarks)
 
 
-@app.route('/follow/<nickname>')
-def follow(nickname):
+@app.route('/addfriend/<nickname>')
+def send_friend_request(nickname):
     user = User.query.filter_by(nickname=nickname).first()
     if user is None:
         flash('User %s not found.' % nickname)
-        return redirect(url_for('index'))
-    if user == session.get('user_email'):
-        flash('You can\'t follow yourself!')
+        return redirect('/')
+    elif user == session.get('user_email'):
+        flash('You can\'t friend yourself!')
         return redirect(url_for('user', nickname=nickname))
+    else: 
+
+
+
     u = g.user.follow(user)
     if u is None:
         flash('Cannot follow ' + nickname + '.')
@@ -225,23 +231,23 @@ def follow(nickname):
     return redirect(url_for('user', nickname=nickname))
 
 
-@app.route('/unfollow/<nickname>')
-def unfollow(nickname):
-    user = User.query.filter_by(nickname=nickname).first()
-    if user is None:
-        flash('User %s not found.' % nickname)
-        return redirect(url_for('index'))
-    if user == g.user:
-        flash('You can\'t unfollow yourself!')
-        return redirect(url_for('user', nickname=nickname))
-    u = g.user.unfollow(user)
-    if u is None:
-        flash('Cannot unfollow ' + nickname + '.')
-        return redirect(url_for('user', nickname=nickname))
-    db.session.add(u)
-    db.session.commit()
-    flash('You have stopped following ' + nickname + '.')
-    return redirect(url_for('user', nickname=nickname))
+# @app.route('/unfollow/<nickname>')
+# def unfollow(nickname):
+#     user = User.query.filter_by(nickname=nickname).first()
+#     if user is None:
+#         flash('User %s not found.' % nickname)
+#         return redirect(url_for('index'))
+#     if user == g.user:
+#         flash('You can\'t unfollow yourself!')
+#         return redirect(url_for('user', nickname=nickname))
+#     u = g.user.unfollow(user)
+#     if u is None:
+#         flash('Cannot unfollow ' + nickname + '.')
+#         return redirect(url_for('user', nickname=nickname))
+#     db.session.add(u)
+#     db.session.commit()
+#     flash('You have stopped following ' + nickname + '.')
+#     return redirect(url_for('user', nickname=nickname))
 
 
 @app.route("/bookmarkcourse/<int:id>")   
@@ -322,6 +328,10 @@ def display_course_details(id):
 
     return render_template("course_details.html", course=course, 
         terms=terms, review=review.all())
+
+@app.route('send_friend_request/<nickname>')
+def send_request(nickname):
+    pass
 
 
 @app.route('/rate_course', methods=['GET'])

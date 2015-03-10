@@ -13,9 +13,11 @@ Base = declarative_base()
 Base.query = session.query_property()
 
 
-followers = Table('followers', Base.metadata,
-    Column('follower_id', Integer, ForeignKey('users.id')),
-    Column('followed_id', Integer, ForeignKey('users.id'))
+friendships = Table("friendships", Base.metadata,
+	Column('id', Integer, primary_key=True),
+    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
+    Column('friend_id', Integer, ForeignKey('users.id'), primary_key=True),
+    Column('request_status', Boolean)
 )
 
 class User(Base):
@@ -27,26 +29,16 @@ class User(Base):
 	password = Column(String(1000), nullable=False)
 	about_me = Column(String(600), nullable=True)
 	last_seen = Column(DateTime)
-	followed = relationship('User',
-                               secondary=followers,
-                               primaryjoin=(followers.c.follower_id == id),
-                               secondaryjoin=(followers.c.followed_id == id),
-                               backref=backref('followers', lazy='dynamic'),
-                               lazy='dynamic')
+	friends = relationship('User',
+                               secondary=friendships,
+                               primaryjoin=id== friendships.c.user_id,
+                               secondaryjoin=id==friendships.c.friend_id,
+                               backref="users"
+    )
 
 	def avatar(self, size):
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
-
-	def follow(self, user):
-    		if not self.is_following(user):
-        		self.followed.append(user)
-        		return self
-
-	def unfollow(self, user):
-    		if self.is_following(user):
-    			self.followed.remove(user)
-    			return self
 
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
@@ -75,6 +67,7 @@ class Course(Base):
 	course_prerequisites = Column(String(1000), nullable=True)
 	course_description = Column(String(10000), nullable=True)
 	course_categories = relationship("CourseCategory", backref="course")
+
 
 
 class Term(Base):
