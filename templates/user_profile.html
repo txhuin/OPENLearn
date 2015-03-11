@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-    $("button").click(function(){
-        $("#demotext").load("{{ user.friends }}");
-    });
-});
-</script>
+
 	{% if session.get('user_email') %}
 	<div class="usernick"><h4>{{ user.nickname }}'s Profile</h4></div>
 		<img src="{{ user.avatar(128) }}"><br>
@@ -19,6 +12,7 @@ $(document).ready(function(){
 		{% if user.about_me %}
 		<h3> About Me </h3>
   		{{ user.about_me }}
+  		{{ friend.request_status }}
 
 		{% else %}
 		<form action="/aboutme" method="POST" role="form">
@@ -30,7 +24,7 @@ $(document).ready(function(){
   		</form>
 		{% endif %}
 	<h4><a href="/bookmarkedcourses">My Bookmarked Courses</a></h4>
-
+		
 	{% else %}
 		<h4>Please log in to view your profile!</h4>
 	{% endif %}

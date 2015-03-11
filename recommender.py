@@ -167,9 +167,11 @@ def display_my_profile():
 
         bookmarks = model.session.query(BookmarkedCourse)
         user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
-        # query_friendships = model.session.query(User).filter(friendships.user_id == user.id)
-        print user.friends
-        return render_template("user_profile.html", user=user, heading=heading, friends=user)
+      
+        friends = model.session.query(model.friendships)
+        friend1 = friends.filter(model.friendships.c.user_id == user.id).first()
+
+        return render_template("user_profile.html", user=user, heading=heading, friend=friend1)
 
     else:
         flash("Please log in to view your profile")
@@ -203,33 +205,36 @@ def show_user_profile():
 
     bookmarks = model.session.query(BookmarkedCourse)
     user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
+    friendships = model.session.query(model.friendships).filter(model.friendships.c.user_id == user.id).first()
 
-    query_friendships = model.session.query(friendships).filter(friendships.user_id == query_user.id)
+    print friendships
+    print '*' * 10
+
 
 
     return render_template("user_profile.html", user=user, 
                                                 heading=heading,
                                                 ratings=user_ratings,
                                                 bookmarks=user_bookmarks,
-                                                friends=query_friendships)
+                                                friend=friendships)
 
 
 @app.route('/send_friend_request/<nickname>', methods=['GET'])
 def send_friend_request(nickname):
     user = User.query.filter_by(nickname=nickname).first()
 
-    print user.nickname 
-    print "*" * 10
-    print session.get('user_nickname')
-    
     if user is None:
         flash('User %s not found.' % nickname)
         return redirect('/')
+
     elif user.nickname == session.get('user_nickname'):
         flash('You can\'t friend yourself!')
         return redirect("/")
+
     else: 
-        user.request_status = True
+        new_friendship = model.friendships(user_id=session.get("user_id"), friend_id=user.id, request_status=True)
+        model.session.add(new_friendship) 
+        flash("Friend request sent")
         return redirect("/")
 
 

@@ -12,13 +12,9 @@ session = scoped_session(sessionmaker(bind=engine,
 Base = declarative_base()
 Base.query = session.query_property()
 
-
-friendships = Table("friendships", Base.metadata,
-	Column('id', Integer, primary_key=True),
-    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('friend_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('request_status', Boolean)
-)
+# Friendships are many to many, self-referential relationships. 
+# A user can have many friends. A user can also be a friend.
+# 
 
 class User(Base):
 	__tablename__ = "users"
@@ -29,16 +25,22 @@ class User(Base):
 	password = Column(String(1000), nullable=False)
 	about_me = Column(String(600), nullable=True)
 	last_seen = Column(DateTime)
-	friends = relationship('User',
-                               secondary=friendships,
-                               primaryjoin=id== friendships.c.user_id,
-                               secondaryjoin=id==friendships.c.friend_id,
-                               backref="users"
-    )
+
+	friendships = relationship('Friendship',primaryjoin='User.id==Friendship.user_id', lazy='dynamic')
 
 	def avatar(self, size):
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
+class Friendship(Base):
+	__tablename__ = "friendships"
+
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	friend_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	pending = Column(Boolean, default=True)
+
+	user = relationship('User', foreign_keys='Friendship.user_id', primaryjoin='Friendship.user_id==User.id')
+	friend = relationship('User', foreign_keys='Friendship.friend_id', primaryjoin='Friendship.friend_id==User.id')
 
 class BookmarkedCourse(Base):
 	__tablename__ = "bookmarkedcourses"
