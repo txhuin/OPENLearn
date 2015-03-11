@@ -59,6 +59,7 @@ def search():
     query = request.args.get("query")
     course = model.session.query(Course).filter(Course.course_name)
     if query in course:
+        pass
 
 
 @app.route("/signup", methods=['GET'])
@@ -122,6 +123,7 @@ def login_user():
 
     session['user_email'] = user.email
     session['user_id'] = user.id
+    session['user_nickname'] = user.nickname
     return redirect ('/')
 
 
@@ -165,8 +167,9 @@ def display_my_profile():
 
         bookmarks = model.session.query(BookmarkedCourse)
         user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
-
-        return render_template("user_profile.html", user=user, heading=heading)
+        # query_friendships = model.session.query(User).filter(friendships.user_id == user.id)
+        print user.friends
+        return render_template("user_profile.html", user=user, heading=heading, friends=user)
 
     else:
         flash("Please log in to view your profile")
@@ -201,54 +204,49 @@ def show_user_profile():
     bookmarks = model.session.query(BookmarkedCourse)
     user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
 
+    query_friendships = model.session.query(friendships).filter(friendships.user_id == query_user.id)
+
 
     return render_template("user_profile.html", user=user, 
                                                 heading=heading,
                                                 ratings=user_ratings,
-                                                bookmarks=user_bookmarks)
+                                                bookmarks=user_bookmarks,
+                                                friends=query_friendships)
 
 
-@app.route('/addfriend/<nickname>')
+@app.route('/send_friend_request/<nickname>', methods=['GET'])
 def send_friend_request(nickname):
     user = User.query.filter_by(nickname=nickname).first()
+
+    print user.nickname 
+    print "*" * 10
+    print session.get('user_nickname')
+    
     if user is None:
         flash('User %s not found.' % nickname)
         return redirect('/')
-    elif user == session.get('user_email'):
+    elif user.nickname == session.get('user_nickname'):
         flash('You can\'t friend yourself!')
-        return redirect(url_for('user', nickname=nickname))
+        return redirect("/")
     else: 
+        user.request_status = True
+        return redirect("/")
 
 
-
-    u = g.user.follow(user)
-    if u is None:
-        flash('Cannot follow ' + nickname + '.')
-        return redirect(url_for('user', nickname=nickname))
-    db.session.add(u)
-    db.session.commit()
-    flash('You are now following ' + nickname + '!')
-    return redirect(url_for('user', nickname=nickname))
+@app.route('/accept_friend_request')
+def accept_friend_request():
+    pass
+    # user = session.get('user_email')
+    # friend = request.forn.get('nickname')
 
 
-# @app.route('/unfollow/<nickname>')
-# def unfollow(nickname):
-#     user = User.query.filter_by(nickname=nickname).first()
-#     if user is None:
-#         flash('User %s not found.' % nickname)
-#         return redirect(url_for('index'))
-#     if user == g.user:
-#         flash('You can\'t unfollow yourself!')
-#         return redirect(url_for('user', nickname=nickname))
-#     u = g.user.unfollow(user)
-#     if u is None:
-#         flash('Cannot unfollow ' + nickname + '.')
-#         return redirect(url_for('user', nickname=nickname))
-#     db.session.add(u)
-#     db.session.commit()
-#     flash('You have stopped following ' + nickname + '.')
-#     return redirect(url_for('user', nickname=nickname))
+@app.route('/friends')
+def list_of_friends():
+    user = session.get('user_email')
+    query_user = model.session.query(User).filter(User.email == user)
+    query_friendships = model.session.query(friendships).filter(friendships.user_id == query_user.id)
 
+    return render_template("user_profile.html", friends=query_friendships)
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
@@ -328,10 +326,6 @@ def display_course_details(id):
 
     return render_template("course_details.html", course=course, 
         terms=terms, review=review.all())
-
-@app.route('send_friend_request/<nickname>')
-def send_request(nickname):
-    pass
 
 
 @app.route('/rate_course', methods=['GET'])
