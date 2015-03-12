@@ -236,19 +236,19 @@ def send_friend_request(nickname):
             model.session.commit()
             flash("Friend request send to %s" % nickname) 
             return redirect("/")
+
         else:
             flash("You already have a friendship with this person.")
             return redirect("/")
 
 
-@app.route('/accept_friend_request')
-def accept_friend_request():
-    user = model.Friendship(user_id=session.get('user_id'), friend_id=user.id)
+@app.route('/friend_requests')
+def friend_request():
+    query_database = model.session.query(model.Friendship)
+    query_user = query_database.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.pending == True).all()
+    query_user1 = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.pending == True).all()
 
-
-
-    # user = session.get('user_email')
-    # friend = request.forn.get('nickname')
+    return render_template("friend_requests.html", user_friend_requests=query_user, friend_requests_for_user=query_user1)
 
 
 @app.route('/friends')
@@ -258,6 +258,16 @@ def list_of_friends():
     
 
     return render_template("user_profile.html")
+
+@app.route('/accept_request/<nickname>')
+def accept_request(nickname):
+    pass
+    # query_database = model.session.query(model.Friendship)
+    # query_user = query_database.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.pending == True).all()
+    # query_user1 = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.pending == True).all()
+
+
+    # return render_template("user_profile.html")
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
@@ -444,6 +454,7 @@ def not_found(error):
 
 
 # READ ME
+# Screenshots
 # CSS/JS
 # Postgres deployment
 # Integration tests

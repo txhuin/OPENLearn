@@ -4,15 +4,14 @@
 	{% if session.get('user_email') %}
 	<div class="usernick"><h4>{{ user.nickname }}'s Profile</h4></div>
 		<img src="{{ user.avatar(128) }}"><br>
-		
-		<a class="btn" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
+		<a class="btn btn-default" href="/friend_requests">Friend Requests</a>
+		<a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
 		<div class="demotext">Demo text</div>
 		<button>Friends</button>
 		<div id="friends"></div>
 		{% if user.about_me %}
 		<h3> About Me </h3>
   		{{ user.about_me }}
-  		{{ friend.request_status }}
 
 		{% else %}
 		<form action="/aboutme" method="POST" role="form">
