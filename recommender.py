@@ -253,21 +253,21 @@ def friend_request():
 
 @app.route('/friends')
 def list_of_friends():
-    user = session.get('user_email')
-    query_user = model.session.query(User).filter(User.email == user)
-    
+    query_database = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False).all()
 
-    return render_template("user_profile.html")
+    return render_template("friends.html", friends=query_database)
 
-@app.route('/accept_request/<nickname>')
-def accept_request(nickname):
-    pass
-    # query_database = model.session.query(model.Friendship)
-    # query_user = query_database.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.pending == True).all()
-    # query_user1 = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.pending == True).all()
+@app.route('/accept_request/<int:friend_id>')
+def accept_request(friend_id):
+    # user = User.query.filter_by(id=user_id).first()
+    query_database = model.session.query(model.Friendship)
+    friendships = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.user_id == friend_id)
+    first_f = friendships.first()
 
 
-    # return render_template("user_profile.html")
+    new_friendship =friendships.update({'pending': False})
+
+    return redirect ("/friends")
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
