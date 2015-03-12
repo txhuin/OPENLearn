@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, request, flash, session, red
 from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
-from sqlalchemy import update, distinct
+from sqlalchemy import update, distinct, or_
 from flask import g
 import json
 import model
@@ -168,10 +168,9 @@ def display_my_profile():
         bookmarks = model.session.query(BookmarkedCourse)
         user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
       
-        friends = model.session.query(model.friendships)
-        friend1 = friends.filter(model.friendships.c.user_id == user.id).first()
+        
 
-        return render_template("user_profile.html", user=user, heading=heading, friend=friend1)
+        return render_template("user_profile.html", user=user, heading=heading)
 
     else:
         flash("Please log in to view your profile")
@@ -205,18 +204,13 @@ def show_user_profile():
 
     bookmarks = model.session.query(BookmarkedCourse)
     user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
-    friendships = model.session.query(model.friendships).filter(model.friendships.c.user_id == user.id).first()
-
-    print friendships
-    print '*' * 10
-
-
+ 
 
     return render_template("user_profile.html", user=user, 
                                                 heading=heading,
                                                 ratings=user_ratings,
                                                 bookmarks=user_bookmarks,
-                                                friend=friendships)
+                                            )
 
 
 @app.route('/send_friend_request/<nickname>', methods=['GET'])
@@ -232,15 +226,27 @@ def send_friend_request(nickname):
         return redirect("/")
 
     else: 
-        new_friendship = model.friendships(user_id=session.get("user_id"), friend_id=user.id, request_status=True)
-        model.session.add(new_friendship) 
-        flash("Friend request sent")
-        return redirect("/")
+        friend_request = model.session.query(model.Friendship)
+        user_as_sender_request = friend_request.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.friend_id == user.id).first()
+        friend_as_sender_request = friend_request.filter(model.Friendship.user_id == user.id, model.Friendship.friend_id == session.get('user_id')).first()
+
+        if user_as_sender_request == None and friend_as_sender_request == None:
+            new_friendship = model.Friendship(user_id=session.get('user_id'), friend_id=user.id)
+            model.session.add(new_friendship)
+            model.session.commit()
+            flash("Friend request send to %s" % nickname) 
+            return redirect("/")
+        else:
+            flash("You already have a friendship with this person.")
+            return redirect("/")
 
 
 @app.route('/accept_friend_request')
 def accept_friend_request():
-    pass
+    user = model.Friendship(user_id=session.get('user_id'), friend_id=user.id)
+
+
+
     # user = session.get('user_email')
     # friend = request.forn.get('nickname')
 
@@ -249,9 +255,9 @@ def accept_friend_request():
 def list_of_friends():
     user = session.get('user_email')
     query_user = model.session.query(User).filter(User.email == user)
-    query_friendships = model.session.query(friendships).filter(friendships.user_id == query_user.id)
+    
 
-    return render_template("user_profile.html", friends=query_friendships)
+    return render_template("user_profile.html")
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):

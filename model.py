@@ -14,8 +14,6 @@ Base.query = session.query_property()
 
 # Friendships are many to many, self-referential relationships. 
 # A user can have many friends. A user can also be a friend.
-# 
-
 class User(Base):
 	__tablename__ = "users"
 
@@ -26,7 +24,11 @@ class User(Base):
 	about_me = Column(String(600), nullable=True)
 	last_seen = Column(DateTime)
 
-	friendships = relationship('Friendship',primaryjoin='User.id==Friendship.user_id', lazy='dynamic')
+	# this will be where user did the friending
+	friendships1 = relationship('Friendship',primaryjoin='User.id==Friendship.user_id', lazy='dynamic')
+
+	# this will be where user was the recipient of the friending
+	friendships2 = relationship('Friendship',primaryjoin='User.id==Friendship.friend_id', lazy='dynamic')
 
 	def avatar(self, size):
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
@@ -34,9 +36,9 @@ class User(Base):
 class Friendship(Base):
 	__tablename__ = "friendships"
 
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	friend_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	user_id = Column(Integer, ForeignKey("users.id"))
+	friend_id = Column(Integer, ForeignKey("users.id"))
 	pending = Column(Boolean, default=True)
 
 	user = relationship('User', foreign_keys='Friendship.user_id', primaryjoin='Friendship.user_id==User.id')
