@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PickleType
 from sqlalchemy import create_engine, Boolean, Table, Text
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 from hashlib import md5
+import urllib, hashlib
 
 engine = create_engine("sqlite:///mooc.db", echo=True)
 session = scoped_session(sessionmaker(bind=engine, 
@@ -31,7 +32,11 @@ class User(Base):
 	friendships2 = relationship('Friendship',primaryjoin='User.id==Friendship.friend_id', lazy='dynamic')
 
 	def avatar(self, size):
-		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
+		default = "identicon"
+		gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(self.email.lower()).hexdigest() + "?"
+		gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+		return gravatar_url
+
 
 class Friendship(Base):
 	__tablename__ = "friendships"
