@@ -23,7 +23,6 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
 
-
 oauth = OAuth()
 
 facebook = oauth.remote_app('facebook',
@@ -249,10 +248,6 @@ def friend_request():
 
 @app.route('/friends')
 def list_of_friends():
-    # SELECT user_id from friendships where friend id is the currently logged in user 
-    # and pending is False 
-    # SELECt user.id, user.nickname, user.avatar from users, 
-    # where user is the user_id found in friendships
     query_friendship = model.session.query(model.Friendship.user_id).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False )
     query_user_as_sender = model.session.query(model.Friendship.friend_id).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False )
     list_of_friends = []
@@ -304,7 +299,7 @@ def bookmark_course(id):
 
     
 @app.route("/mybookmarkedcourses", methods = ['GET'])
-def show_bookmarked_courses():
+def show_own_bookmarked_courses():
     """Returns list of all courses that the logged in user has bookmarked"""
     if session.get('user_email'):
         user_id = session.get("user_id")
@@ -316,7 +311,13 @@ def show_bookmarked_courses():
         flash("Please log in to view your bookmarked courses.")
         return redirect("/")
 
-@app.route("/mybookmarkedcourses", methods = ['GET'])
+@app.route("/othersbookmarkedcourses/<int:id>", methods=['GET'])
+def show_other_users_bookmarked_courses(id):
+    user =  model.session.query(User).filter(User.id == id).first()
+    saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id == id).all()
+    list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+
+    return render_template("otherbookmarkedcourses.html", saved_courses=list_of_courses, user=user)
 
 
 @app.route("/removefrombookmarkedcourses/<int:id>", methods=['GET'])
