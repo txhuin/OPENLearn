@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<h4> Your Friends </h4>
-{% for i in friends %}
- {{ i.nickname }}<br>
- {{ i.avatar }}<br>
-{% endfor %}
-
+	<h4> Your Friends </h4>
+	{% for i in friends %}
+ 		{{ i.nickname }}<br>
+ 		{{ i.avatar }}<br>
+	{% endfor %}
 
 {% endblock %}

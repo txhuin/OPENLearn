@@ -170,7 +170,7 @@ def display_my_profile():
       
         
 
-        return render_template("user_profile.html", user=user, heading=heading)
+        return render_template("myprofile.html", user=user, heading=heading)
 
     else:
         flash("Please log in to view your profile")
@@ -235,7 +235,7 @@ def send_friend_request(nickname):
             model.session.add(new_friendship)
             model.session.commit()
             flash("Friend request send to %s" % nickname) 
-            return redirect("/")
+            return redirect("/user_profile")
 
         else:
             flash("You already have a friendship with this person.")
@@ -247,19 +247,18 @@ def friend_request():
     query_database = model.session.query(model.Friendship)
     query_user = query_database.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.pending == True).all()
     query_user1 = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.pending == True).all()
+    # friend_object = model.session.query(User).filter(User.id == i.user_id).all()
 
     return render_template("friend_requests.html", user_friend_requests=query_user, friend_requests_for_user=query_user1)
 
 
 @app.route('/friends')
 def list_of_friends():
-    query_database = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False).all()
-    query_friends_list = [i for i in query_database]
-    friend_object = model.session.query(User).filter(User.id == i.user_id)
-
+    query_database = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False).first()
+    friend_object = model.session.query(User).filter(User.id == query_database.user_id).all()
     print friend_object
     print "*" * 20
-    # query users to get nickname and avatar of friends
+
     return render_template("friends.html", friends=friend_object)
 
 @app.route('/accept_request/<int:friend_id>')
@@ -450,6 +449,12 @@ def about_me():
 
         return redirect('/myprofile')
 
+@app.route('/edit', methods=['POST'])
+def edit_about_me():
+        model.session.query(User).filter(User.id == user_id).update({'about_me': about_me})
+        model.session.commit()
+
+        return redirect('/myprofile')
 
 @app.after_request
 def add_header(response):

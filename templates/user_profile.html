@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-
 	{% if session.get('user_email') %}
 	<div class="usernick"><h4>{{ user.nickname }}'s Profile</h4></div>
 		<img src="{{ user.avatar(128) }}"><br>
-		<a class="btn btn-default" href="/friend_requests">Friend Requests</a>
 		<a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
-		<div class="demotext">Demo text</div>
 		<a class="btn btn-default" href="/friends">Friends</a>
 		<div id="friends"></div>
 		{% if user.about_me %}
@@ -14,15 +11,8 @@
   		{{ user.about_me }}
 
 		{% else %}
-		<form action="/aboutme" method="POST" role="form">
-    	<div class="form-group">
-      	<label for="comment">About me:</label><br>
-      		 <textarea class="form-control" name="aboutme" rows="5" cols="40" id="comment"></textarea>
-    	</div>
-      	<button type="submit" class="btn btn-default">Submit</button>
-  		</form>
 		{% endif %}
-	<h4><a href="/bookmarkedcourses">My Bookmarked Courses</a></h4>
+	<h4><a href="/bookmarkedcourses">{{ user.nickname }}'s Bookmarked Courses</a></h4>
 		
 	{% else %}
 		<h4>Please log in to view your profile!</h4>

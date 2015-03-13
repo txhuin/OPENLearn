@@ -6,6 +6,7 @@ import time
 import model
 import pprint
 import csv
+from HTMLParser import HTMLParser
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -75,6 +76,22 @@ def get_course():
 			
 		if 'shortDescription' in element.keys():
 			new_course.course_description = element['shortDescription']
+
+
+
+		class MLStripper(HTMLParser):
+		    def __init__(self):
+		        self.reset()
+		        self.fed = []
+		    def handle_data(self, d):
+		        self.fed.append(d)
+		    def get_data(self):
+		        return ''.join(self.fed)
+
+		def strip_tags(html):
+		    s = MLStripper()
+		    s.feed(html)
+		    return s.get_data()
 			
 
 		model.session.merge(new_course)
