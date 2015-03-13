@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<h2> Your Bookmarked Courses </h2>
 <table class="table table-striped">
     <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th></tr>
     {% for i in saved_courses %}    
-     <tr>
-        <td>{{ i.course_name }}<a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
-        <td><img src="{{ i.course_icon }}"></td>
-        <td>{{ i.course_description }}</td>
-        <td>  
+    <tr>
+        <td width="20%">{{ i.course_name }}<br><a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
+        <td width="20%"><div class="image"><img src="{{ i.course_icon }}"></div></td>
+        <td width="300%">{{ i.course_description }}{{ i.course_format }}</td>
+        <td width="10%">  
         <form name="ratings" action="/rate_course?rating={{ i.rating }}&course_id={{ i.id }}" method="GET" id="{{ i.id }}">
         <span class="star-rating">
         <input type="radio" name="rating" value="1"><i></i>

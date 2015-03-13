@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	{% if session.get('user_email') %}
-	<div class="usernick"><h4>{{ user.nickname }}'s Profile</h4></div>
+	<div class="usernick"><h2>{{ user.nickname }}'s Profile</h2></div>
 		<img src="{{ user.avatar(128) }}"><br>
 		<a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
 		<a class="btn btn-default" href="/friends">Friends</a>
@@ -15,6 +15,6 @@
 	<h4><a href="/bookmarkedcourses">{{ user.nickname }}'s Bookmarked Courses</a></h4>
 		
 	{% else %}
-		<h4>Please log in to view your profile!</h4>
+		<h4>Please log in to view this profile!</h4>
 	{% endif %}
 {% endblock %}

@@ -12,8 +12,6 @@ import requests
 import jinja2
 import sys
 from model import Term, Course, CourseCategory, BookmarkedCourse, Category, User, Review, Rating
-from twilio.rest import TwilioRestClient
-import twilio.twiml
 from datetime import date
 
 reload(sys)
@@ -24,9 +22,6 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
-
-TWILIO_ACCOUNT_SID=os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN=os.environ.get('TWILIO_AUTH_TOKEN')
 
 
 oauth = OAuth()
@@ -449,12 +444,13 @@ def about_me():
 
         return redirect('/myprofile')
 
-@app.route('/edit', methods=['POST'])
+@app.route('/edit', methods=['GET'])
 def edit_about_me():
-        model.session.query(User).filter(User.id == user_id).update({'about_me': about_me})
-        model.session.commit()
+    user_id = session.get("user_id")
+    user = model.session.query(User).filter(User.id == user_id).update({'about_me': '' })
+    model.session.commit()
 
-        return redirect('/myprofile')
+    return redirect('/myprofile')   
 
 @app.after_request
 def add_header(response):
