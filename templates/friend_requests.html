@@ -5,7 +5,7 @@
 {% if friend_requests_for_user %}
 <h4> You have {{ friend_requests_for_user|length }} friend requests </h4>
 {% for i in friend_requests_for_user %}
-	{{ i.user_id }} <a class="btn btn-default" href="/accept_request/{{ i.user_id }}">Accept</a><a class="btn btn-default" href="/deny_request">Deny</a>
+	{{ i.user_id }} <a class="btn btn-default" href="/accept_request/{{ i.user_id }}">Accept</a><a class="btn btn-default" href="/deny_request/{{ i.user_id }}">Deny</a>
 {% endfor %}
 {% endif %}
 

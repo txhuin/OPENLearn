@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-
-	<img src="{{ course.course_icon }}"><button type="button" class="btn btn-default btn-lg">
+	<div class="col-md-8"><img src="{{ course.course_icon }}"></div>
+        <button type="button" class="btn btn-default btn-lg">
     <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
     </button>
-        <form name="ratings" action="/rate_course" method="GET">
+        <div class="col-md-4"><form name="ratings" action="/rate_course" method="GET">
         <span class="star-rating">
         <input type="radio" name="rating" value="1"><i></i>
         <input type="radio" name="rating" value="2"><i></i>
@@ -13,9 +13,8 @@
         <input type="radio" name="rating" value="5"><i></i>
         </span>
         <input type='hidden' name='course_id' value='{{ course.id }}'>
-        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
-        </form>
-        </td>
+        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update! {% else %} Rate this MOOC {% endif %}</button>
+        </form></div>
         <script>
             $(':radio').change(
               function(){

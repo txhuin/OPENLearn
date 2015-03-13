@@ -54,12 +54,12 @@ def welcome():
     workloads = model.session.query(model.Course)
     return render_template("welcome.html", categories=categories, terms=terms, workloads=workloads)
 
-@app.route('/search')
-def search():
-    query = request.args.get("query")
-    course = model.session.query(Course).filter(Course.course_name)
-    if query in course:
-        pass
+# @app.route('/search')
+# def search():
+#     query = request.args.get("query")
+#     course = model.session.query(Course).filter(Course.course_name)
+#     if query in course:
+#         pass
 
 
 @app.route("/signup", methods=['GET'])
@@ -254,8 +254,13 @@ def friend_request():
 @app.route('/friends')
 def list_of_friends():
     query_database = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False).all()
+    query_friends_list = [i for i in query_database]
+    friend_object = model.session.query(User).filter(User.id == i.user_id)
 
-    return render_template("friends.html", friends=query_database)
+    print friend_object
+    print "*" * 20
+    # query users to get nickname and avatar of friends
+    return render_template("friends.html", friends=friend_object)
 
 @app.route('/accept_request/<int:friend_id>')
 def accept_request(friend_id):
@@ -264,10 +269,20 @@ def accept_request(friend_id):
     friendships = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.user_id == friend_id)
     first_f = friendships.first()
 
-
     new_friendship =friendships.update({'pending': False})
 
     return redirect ("/friends")
+
+@app.route('/deny_request/<int:friend_id>')
+def deny_request(friend_id):
+    query_database = model.session.query(model.Friendship)
+    friendships = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.user_id == friend_id)
+    first_f = friendships.first()
+
+    delete_friend_request = friendships.delete()
+
+    return redirect('/')
+
 
 @app.route("/bookmarkcourse/<int:id>")   
 def bookmark_course(id):
