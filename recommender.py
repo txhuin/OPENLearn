@@ -230,7 +230,7 @@ def send_friend_request(nickname):
             model.session.add(new_friendship)
             model.session.commit()
             flash("Friend request send to %s" % nickname) 
-            return redirect("/user_profile")
+            return redirect("/")
 
         else:
             flash("You already have a friendship with this person.")
@@ -249,16 +249,25 @@ def friend_request():
 
 @app.route('/friends')
 def list_of_friends():
-    query_database = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False).first()
-    friend_object = model.session.query(User).filter(User.id == query_database.user_id).all()
-    print friend_object
-    print "*" * 20
+    # SELECT user_id from friendships where friend id is the currently logged in user 
+    # and pending is False 
+    # SELECt user.id, user.nickname, user.avatar from users, 
+    # where user is the user_id found in friendships
+    query_friendship = model.session.query(model.Friendship.user_id).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False )
+    query_user_as_sender = model.session.query(model.Friendship.friend_id).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False )
+    list_of_friends = []
+    list_of_friends.extend(query_friendship)
+    list_of_friends.extend(query_user_as_sender)
+    list_of_friends1 = [i[0] for i in list_of_friends]
+    list_of_user_objects = []
+    for i in list_of_friends1:
+        user = model.session.query(User).filter(User.id == i).all()
+        list_of_user_objects.extend(user)
 
-    return render_template("friends.html", friends=friend_object)
+    return render_template("friends.html", friends=list_of_user_objects)
 
 @app.route('/accept_request/<int:friend_id>')
 def accept_request(friend_id):
-    # user = User.query.filter_by(id=user_id).first()
     query_database = model.session.query(model.Friendship)
     friendships = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.user_id == friend_id)
     first_f = friendships.first()
@@ -294,7 +303,7 @@ def bookmark_course(id):
         return redirect("/")
 
     
-@app.route("/bookmarkedcourses", methods = ['GET'])
+@app.route("/mybookmarkedcourses", methods = ['GET'])
 def show_bookmarked_courses():
     """Returns list of all courses that the logged in user has bookmarked"""
     if session.get('user_email'):
@@ -306,6 +315,9 @@ def show_bookmarked_courses():
     else:
         flash("Please log in to view your bookmarked courses.")
         return redirect("/")
+
+@app.route("/mybookmarkedcourses", methods = ['GET'])
+
 
 @app.route("/removefrombookmarkedcourses/<int:id>", methods=['GET'])
 def remove_bookmarked_course(id):

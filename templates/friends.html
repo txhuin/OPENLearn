@@ -2,8 +2,7 @@
 {% block content %}
 	<h4> Your Friends </h4>
 	{% for i in friends %}
- 		{{ i.nickname }}<br>
- 		{{ i.avatar }}<br>
+		{{ i.nickname  }}<br>
+		{{ i.avatar(i) }}<br>
 	{% endfor %}
-
 {% endblock %}
