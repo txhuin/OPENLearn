@@ -313,12 +313,20 @@ def show_own_bookmarked_courses():
 
 @app.route("/othersbookmarkedcourses/<int:id>", methods=['GET'])
 def show_other_users_bookmarked_courses(id):
-    user =  model.session.query(User).filter(User.id == id).first()
-    saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id == id).all()
-    list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+    # if a user and another user are friends allow user to view the other user's bookmarked courses. 
+    query_friendship = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False, model.Friendship.user_id == id ).first()
+    query_user_as_sender = model.session.query(model.Friendship).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False, model.Friendship.friend_id == id ).first()
 
-    return render_template("otherbookmarkedcourses.html", saved_courses=list_of_courses, user=user)
+    if query_friendship != None or query_user_as_sender != None:
+        user =  model.session.query(User).filter(User.id == id).first()
+        saved_bookmarks = model.session.query(BookmarkedCourse).filter(BookmarkedCourse.user_id == id).all()
+        list_of_courses = [bookmark.course for bookmark in saved_bookmarks] 
+        return render_template("otherbookmarkedcourses.html", saved_courses=list_of_courses, user=user)
 
+    else:
+        flash("You are not this user's friend. Send them a friend request in order to view their bookmarked courses.")
+        return redirect('/')
+    
 
 @app.route("/removefrombookmarkedcourses/<int:id>", methods=['GET'])
 def remove_bookmarked_course(id):

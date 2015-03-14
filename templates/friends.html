@@ -2,7 +2,7 @@
 {% block content %}
 	<h4> Your Friends </h4>
 	{% for i in friends %}
-		<h4>{{ i.nickname  }}</h4>
+		<h4><a href="/user_profile?nickname={{ i.nickname }}">{{ i.nickname  }}</a></h4>
 		<img src="{{ i.avatar(128) }}">
 	{% endfor %}
 {% endblock %}

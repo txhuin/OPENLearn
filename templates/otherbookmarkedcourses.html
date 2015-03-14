@@ -9,27 +9,7 @@
         <td width="20%">{{ i.course_name }}<br><a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
         <td width="20%"><div class="image"><img src="{{ i.course_icon }}"></div></td>
         <td width="300%">{{ i.course_description }}{{ i.course_format }}</td>
-        <td width="10%">  
-        <form name="ratings" action="/rate_course?rating={{ i.rating }}&course_id={{ i.id }}" method="GET" id="{{ i.id }}">
-        <span class="star-rating">
-        <input type="radio" name="rating" value="1"><i></i>
-        <input type="radio" name="rating" value="2"><i></i>
-        <input type="radio" name="rating" value="3"><i></i>
-        <input type="radio" name="rating" value="4"><i></i>
-        <input type="radio" name="rating" value="5"><i></i>
-        <input type='hidden' name='course_id' value='{{ i.id }}'>
-        </span>
-        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
-        </form>
-        </td>
-        <script>
-            $(':radio').change(
-              function(){
-                $('.choice').text( this.value + ' stars' );
-              } 
-            )
-        </script>
-
+        <td width="10%">  </td>
     </tr>
     {% endfor %}
 </table>
