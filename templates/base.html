@@ -7,7 +7,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
-	<nav class="navbar navbar-inverse">
+    <div class="row" id="nav">
+	<nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -24,7 +25,7 @@
                     <li><a href="/Randomize">Randomize</a></li>
                     <li><a href="/all_users">All Users</a></li>
                 </ul>   
-                <a class="navbar-brand" href="/">MOOCbase</a>
+                <a class="navbar-brand" href="/">Openlearning</a>
                 <ul class="nav navbar-nav navbar-right">
                     {% if session.get('user_email') %}
                     <li><a href="/logout" onclick="return FB.logout();">Log Out</a></li>
@@ -42,6 +43,7 @@
             </div>
         </div>
     </nav>
+</div>
 <div class="container">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
