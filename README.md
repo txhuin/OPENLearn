@@ -1,16 +1,12 @@
-# MOOCcommender
+# OPENLearn
 
-My webapp attempts to solve the problem of creating a platform independent of exploring the ecosystem of Massive Open Online Courses, or MOOCs.
-The database includes courses from Coursera's API and Udacity's API. Users can search for courses by category, by the length of a particular session, and by the amount of time they are able to dedicate to the coursework.
+OPENLearn is a platform that offers users the ability to explore the plethora of Massive Open Online Courses.  The database includes courses from Coursera's API. The decision to user Coursera's API was made as it offers over 900 courses spanning a diverse range of subjects. 
 
-Users can explore details of each course such as the course format, the course description, and the prerequisites. If they are interested in a course, they can bookmark it, in order to view it later. They are then provided an external link to the course provider in order to enroll in the course, should they wish. 
+On OPENLearn, users can filter for courses by category, by session length, and by the number of hours they are willing to dedicate to coursework. Via the search results, users can explore details of each course such as the course format, the course description, and the prerequisites. They are provided an external link to join the course. 
 
-If they are unsure of what course they want to take, they can also hit the Randomize tab to get the app to retrieve and recommend a random course for them. 
+If users are interested in a course, but perhaps aren't interested in joining it right away, they can bookmark it, for later viewing. 
 
-My interest in programming and computer science was spurred by the courses available online. 
-I began learning to program in Python through Udacity's CS 101, Introduction to Programming. 
-I loved the ease of access, the convenience, and the format of the course. I 
-
+A fun feature of the app is the Randomize tab. If users are unsure of what course they want to take, they can also hit the Randomize button resulting in a suggestion for a random course. 
 
 
 ## Technology Stack  
@@ -22,6 +18,12 @@ HTML
 CSS  
 Bootstrap
 
+## Features
+
+
 ## Technical Challenges
+
+
+
 
 

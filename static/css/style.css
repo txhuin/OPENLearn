@@ -3,6 +3,17 @@
 * {
   box-sizing: border-box;
 }
+.c-hero-message h1 {
+  font-size: 48px;
+  font-color: #00000;
+  line-height: 1.1em;
+  position: relative;
+  top: 15px;
+  height: 100%;
+  max-width: 20em;
+  text-shadow: 0 0 12px rgba(0,0,0,0.5),0 0 32px rgba(0,0,0,0.25),0 1px rgba(0,0,0,0.75);
+  font-family: 'enriqueta-min-bold',sans-serif;
+}
 
 #homepage {
   background-image: url('http://blog.en.strategie.gouv.fr/wp-content/uploads/2015/02/iStock_000026682036_Large.jpg?auto-format&blur=25)');
@@ -12,16 +23,9 @@
   -webkit-filter: blur(5px);
   height: 800px;
   left: 0;
-  position: fixed;
+  position: absolute;
   right: 0;
   z-index: 1;
-}
-
-#discover {
-  position: absolute; 
-  top: 100px; 
-  left: 0; 
-  width: 100%;
 }
 
 #formsubmission {
@@ -78,10 +82,6 @@ img {
     -ms-transform:scale(1.25); /* IE 9 */
     -o-transform:scale(1.25); /* Opera */
      transform:scale(1.25);
-}
-
-.btn:hover {
-  background-color: #122338;
 }
 
 #randomcoursename {

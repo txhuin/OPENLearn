@@ -48,13 +48,6 @@ def welcome():
     workloads = model.session.query(model.Course)
     return render_template("welcome.html", categories=categories, terms=terms, workloads=workloads)
 
-@app.route('/search')
-def search():
-    query = request.args.get("query")
-    course = model.session.query(Course).filter(Course.course_name.like('%query%'))
-    if query in course:
-        pass
-
 
 @app.route("/signup", methods=['GET'])
 def display_signup():
@@ -162,8 +155,6 @@ def display_my_profile():
         bookmarks = model.session.query(BookmarkedCourse)
         user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
       
-        
-
         return render_template("myprofile.html", user=user, heading=heading)
 
     else:
