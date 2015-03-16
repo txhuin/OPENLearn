@@ -1,39 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="c-hero-message"><h1>Discover your next great online course</h1></div>
-<div class="background-image" id="homepage"></div>
-<div class="searchform" id="formsubmission">
-<form action="/Recommend" id="form-submission" method="GET" role="form">
-	<div class="col-sm-8">
-  <div class="form-group">
-	<label for="category"><font size="4">Category</label> <select class="form-control" id="category" name="category" required>
-	  {% for cat in categories %}
-		<option value="{{ cat.id }}">{{ cat.category_name }}</option>
-	  {% endfor %}
-	</select><br>
-	<label for="duration"><font size="4">Duration</label><select class="form-control" id="duration" name="duration">
-		<option value="-">-</option>
-		{% for i in terms %}
-		<option value="{{ i[0] }}">{{ i[0] }} weeks</option>
-		{% endfor %}
-		<option value="more-than-20">More than 20 weeks</option>
-	</select><br>
-	<label for="workload">Workload</label><select class="form-control" id="workload" name="workload">
-		<option value="-">-</option>
-		<option value="3">Maximum of 3 hours per week</option>
-		<option value="5">Maximum of 5 hours per week</option>
-		<option value="7">Maximum 7 hours per week</option>
-		<option value="9">Maximum 9 hours per week</option>
-		<option value="11">Maximum 11 hours per week</option>
-		<option value="15">Maximum 15 hours per week</option>
-		<option value="20">Maximum 20 hours per week</option>
-	</select><br>
-<button class="btn btn-primary btn-lg active" type="submit">Search</button>
+<div class="row">
+  <div id="homepage">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+  <div class="c-hero-message">
+    <h1>Discover your next great online course</h1>
+  </div>
+    <div class="searchform" id="formsubmission">
+        <form action="/Recommend" id="form-submission" method="GET" role="form">
+        <div class="form-group">
+      	<label for="category"><font size="4">Category</label> <select class="form-control" id="category" name="category" required>
+      	  {% for cat in categories %}
+      		<option value="{{ cat.id }}">{{ cat.category_name }}</option>
+      	  {% endfor %}
+      	</select><br>
+      	<label for="duration"><font size="4">Duration</label><select class="form-control" id="duration" name="duration">
+      		<option value="-">-</option>
+      		{% for i in terms %}
+      		<option value="{{ i[0] }}">{{ i[0] }} weeks</option>
+      		{% endfor %}
+      		<option value="more-than-20">More than 20 weeks</option>
+      	</select><br>
+    	<label for="workload">Workload</label><select class="form-control" id="workload" name="workload">
+    		<option value="-">-</option>
+    		<option value="3">Maximum of 3 hours per week</option>
+    		<option value="5">Maximum of 5 hours per week</option>
+    		<option value="7">Maximum 7 hours per week</option>
+    		<option value="9">Maximum 9 hours per week</option>
+    		<option value="11">Maximum 11 hours per week</option>
+    		<option value="15">Maximum 15 hours per week</option>
+    		<option value="20">Maximum 20 hours per week</option>
+    	</select><br>
+    <button class="btn btn-primary btn-lg active" type="submit">Search</button>
+    </div>
+    </div>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
 </div>
 </div>
-</form>
 </div>
-
 
 {% endblock %}

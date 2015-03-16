@@ -1,12 +1,15 @@
 {% extends "base.html" %}
-    <title>Log in</title>
+
 {% block content %}
+<div class="col-sm-4">
 <form action="/login" class="form-signin" method="POST">
     <h2 class="form-signin-heading">Login</h2><br>
-    <h4>Email</h4>
-    <input type="email" name="email" class="form-control" placeholder="Email Address" required><br>
-    <h4>Password</h4>
-    <input type="password" name="password" class="form-control" placeholder="Password" required><br>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+    		<label for="email">Email</label>
+    		<input type="email" name="email" class="form-control"placeholder="Email Address" required><br>    		
+    		<label for="password">Password</label>
+    		<input type="password" name="password" class="form-control" placeholder="Password" required><br>
+    		<button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+ 		<br>
 </form>
+</div>
 {% endblock %}

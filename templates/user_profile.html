@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 	{% if session.get('user_email') %}
-	<div class="usernick"><h2>{{ user.nickname }}'s Profile</h2></div>
-		<img src="{{ user.avatar(128) }}"><br>
-		<a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
+	<div class="row">
+		<div class=".col-md-8">
+			<div class="usernick">
+				<h2>{{ user.nickname }}'s Profile</h2>
+			</div></div>
+	</div>
+		<div class="profilepicture"><img src="{{ user.avatar(128) }}"></div></div><br>
+		<div class=".col-md-3"><a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a></div>
 		<a class="btn btn-default" href="/friends">Friends</a>
 		<div id="friends"></div>
 		{% if user.about_me %}

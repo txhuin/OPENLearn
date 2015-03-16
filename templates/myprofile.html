@@ -3,7 +3,7 @@
 
 	{% if session.get('user_email') %}
 	<div class="usernick"><h2>{{ user.nickname }}'s Profile</h2></div>
-		<img src="{{ user.avatar(128) }}"><br>
+		<div class="profilepicture"><img src="{{ user.avatar(128) }}"><br></div>
 		<a class="btn btn-default" href="/friend_requests">Friend Requests</a>
 		<a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a>
 		<a class="btn btn-default" href="/friends">Friends</a>
