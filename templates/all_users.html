@@ -3,7 +3,7 @@
     <h1>All Users</h1>
     {% for user in users %}
     <div class="col-md-1">
-    	<h4><img src="{{ user.avatar(128) }}"> <a href="/user_profile?nickname={{ user.nickname }}">{{ user.nickname }}</a>
+    	<img src="{{ user.avatar(128) }}"> <a href="/user_profile?nickname={{ user.nickname }}"><h4>{{ user.nickname }}</h4></a>
     </div> 
     {% endfor %}
 {% endblock %}

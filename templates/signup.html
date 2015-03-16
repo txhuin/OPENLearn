@@ -1,7 +1,8 @@
 {% extends "base.html" %}
     <title>Sign Up</title>
 {% block content %}
-
+<div id="homepage"></div>
+<div class="searchform" id="formsubmission">
 <div class="signupform">
 	<form action="/signup" class="form-signin" method="POST">
     	<h2 class="form-signin-heading">Please Sign Up</h2><br>
@@ -10,10 +11,11 @@
     	<h4>Password</h4>
     	<input type="password" name="password" class="form-control" placeholder="Password" required /><br/>
     	<h4>Nickname</h4>
-    	<input type="nickname" name="nickname" class="form-control" placeholder="Nickname" required />
+    	<input type="nickname" name="nickname" class="form-control" placeholder="Nickname" required /><br>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
 </form>
 </div> 
+</div>
 
 {% endblock %}

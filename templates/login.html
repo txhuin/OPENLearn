@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-
 {% block content %}
+ <div id="homepage"></div>
 <div class="col-sm-4">
+	<div class="searchform" id="formsubmission">
 <form action="/login" class="form-signin" method="POST">
     <h2 class="form-signin-heading">Login</h2><br>
     		<label for="email">Email</label>
@@ -11,5 +12,6 @@
     		<button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
  		<br>
 </form>
+</div>
 </div>
 {% endblock %}
