@@ -6,17 +6,22 @@
 			<h2>{{ user.nickname }}'s Profile</h2>	
 		</div>
 	</div>
-		<div class="profilepicture"><img src="{{ user.avatar(128) }}"></div></div><br>
-		<div class=".col-md-3"><a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a></div>
-		<a class="btn btn-default" href="/friends">Friends</a>
-		<div id="friends"></div>
+	<div class="profilepicdiv">
+		<div class="profilepicture">
+			<img src="{{ user.avatar(128) }}">
+		</div>
+	</div>
+	</div><br>
+	<a class="btn btn-success" href="/send_friend_request/{{user.nickname}}"> <span class="glyphicon glyphicon-send"></span> Send Friend Request</a>
 		{% if user.about_me %}
 		<h3> About Me </h3>
   		{{ user.about_me }}
 
 		{% else %}
 		{% endif %}
-	<h4><a href="/othersbookmarkedcourses/{{ user.id }}">{{ user.nickname }}'s Bookmarked Courses</a></h4>
+		<h4>
+				
+	<h4><a class="btn btn-default" href="/othersbookmarkedcourses/{{ user.id }}"><span class="glyphicon glyphicon-heart"></span> {{ user.nickname }}'s Bookmarked Courses</a></h4>
 		
 	{% else %}
 		<h4>Please log in to view this profile!</h4>

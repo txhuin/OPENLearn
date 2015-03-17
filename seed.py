@@ -7,6 +7,8 @@ import model
 import pprint
 import csv
 from HTMLParser import HTMLParser
+import xml.etree.ElementTree
+import re
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -43,7 +45,11 @@ def get_course():
 			new_course.course_instructor = element['instructor']
 			
 		if 'courseFormat' in element.keys():
-			new_course.course_format = element['courseFormat']
+			courseformat1 = element['courseFormat']
+			remove_tag = re.compile(r'<[^>]+>')
+			coursedescription2 = remove_tag.sub('', courseformat1)
+			new_course.course_format = coursedescription2
+
 	
 		if 'estimatedClassWorkload' in element.keys():
 			new_course.course_workload = element['estimatedClassWorkload']
@@ -72,27 +78,16 @@ def get_course():
 					new_course.course_workload_max = course_workload_max
 
 		if 'recommendedBackground' in element.keys():
-			new_course.course_prerequisites = element['recommendedBackground']
+			recback = element['recommendedBackground']
+			remove_tag = re.compile(r'<[^>]+>')
+			recback1 = remove_tag.sub('', recback)
+			new_course.course_prerequisites = recback1
 			
 		if 'shortDescription' in element.keys():
-			new_course.course_description = element['shortDescription']
-
-
-
-		class MLStripper(HTMLParser):
-		    def __init__(self):
-		        self.reset()
-		        self.fed = []
-		    def handle_data(self, d):
-		        self.fed.append(d)
-		    def get_data(self):
-		        return ''.join(self.fed)
-
-		def strip_tags(html):
-		    s = MLStripper()
-		    s.feed(html)
-		    return s.get_data()
-			
+			course_description1 = element['shortDescription']
+			remove_tag = re.compile(r'<[^>]+>')
+			coursedescription2 = remove_tag.sub('', course_description1)
+			new_course.course_description = coursedescription2
 
 		model.session.merge(new_course)
 	model.session.commit()

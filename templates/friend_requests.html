@@ -2,17 +2,19 @@
 {% block content %}
 
 
-{% if friend_requests_for_user %}
-<h4> You have {{ friend_requests_for_user|length }} friend requests </h4>
-{% for i in friend_requests_for_user %}
-	{{ i.user_id }} 
+<div class="friendslist">
+{% if friendslist %}
+<h1> You have {{ friendslist|length }} friend requests </h1><br>
+	{% for i in friendslist %}
+		<img src="{{ i.avatar(200) }}"><h2>{{ i.nickname }}</h2>
 	<a class="btn btn-default" href="/accept_request/{{ i.user_id }}">
 		<span class="glyphicons glyphicons-user-add"></span>  Accept</a>
 	<a class="btn btn-default" href="/deny_request/{{ i.user_id }}">
-		<span class="glyphicons glyphicons-user-add"></span> Deny</a>
-{% endfor %}
+		<span class="glyphicons glyphicons-user-add"></span> Deny</a><br><br>
+	{% endfor %}
+{% else %}
+	<h4> You have no friend requests at this time </h4>
 {% endif %}
-
-
+</div>
 
 {% endblock %}

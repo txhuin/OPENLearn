@@ -39,13 +39,12 @@
                		<li><a href="/login" id="login">Log In</a></li>
                     <li><a href="/signup">Signup</a></li>
                     <li><a href="/facebook_login"><img style="width:80%;" src="static/images/facebook_login.png"></a>
-            </div>
                     {% endif %}
-                </ul>
+                 </ul>
             </div>
-        </div>
-
+            </div>
 </div>
+</nav>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
@@ -58,7 +57,6 @@
     {% block body %}{% endblock %}
 {% endblock %}
 {% block content %} {% endblock %}
-</div>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </body>

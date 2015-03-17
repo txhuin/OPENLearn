@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2> Your Bookmarked Courses </h2>
+<h2> Your Bookmarked Courses </h2><br>
 <table class="table table-striped">
     <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th><th>Rate</th></tr>
     {% for i in saved_courses %}    
     <tr>
-        <td width="20%">{{ i.course_name }}<br><a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
+        <td width="20%">{{ i.course_name }}<br><br><a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
         <td width="20%"><div class="image"><img src="{{ i.course_icon }}"></div></td>
         <td width="300%">{{ i.course_description }}{{ i.course_format }}</td>
         <td width="10%">  
@@ -17,7 +17,7 @@
         <input type="radio" name="rating" value="4"><i></i>
         <input type="radio" name="rating" value="5"><i></i>
         <input type='hidden' name='course_id' value='{{ i.id }}'>
-        </span>
+        </span><br><br>
         <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
         </form>
         </td>
@@ -35,5 +35,4 @@
     </tr>
     {% endfor %}
 </table>
-
 {% endblock %}

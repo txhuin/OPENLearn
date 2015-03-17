@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>All Users</h1>
+<div class="container">
+    <h1 align="center">All Users</h1><br>
     {% for user in users %}
-    <div class="col-md-1">
-    	<img src="{{ user.avatar(128) }}"> <a href="/user_profile?nickname={{ user.nickname }}"><h4>{{ user.nickname }}</h4></a>
-    </div> 
+    <div class="col-md-2">
+    	<img src="{{ user.avatar(200) }}"> <a href="/user_profile?nickname={{ user.nickname }}"><h4>{{ user.nickname }}</h4></a>
+    </div>
     {% endfor %}
+</div>
 {% endblock %}

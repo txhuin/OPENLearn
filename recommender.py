@@ -232,9 +232,12 @@ def friend_request():
     query_database = model.session.query(model.Friendship)
     query_user = query_database.filter(model.Friendship.user_id == session.get('user_id'), model.Friendship.pending == True).all()
     query_user1 = query_database.filter(model.Friendship.friend_id == session.get('user_id'), model.Friendship.pending == True).all()
-    # friend_object = model.session.query(User).filter(User.id == i.user_id).all()
+    friendslist = []
+    for i in query_user1:
+        friend_object = model.session.query(User).filter(User.id == i.user_id).all()
+        friendslist.extend(friend_object)
 
-    return render_template("friend_requests.html", user_friend_requests=query_user, friend_requests_for_user=query_user1)
+    return render_template("friend_requests.html", user_friend_requests=query_user, friend_requests_for_user=query_user1, friendslist=friendslist)
 
 
 @app.route('/friends')

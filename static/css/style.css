@@ -15,17 +15,35 @@
   font-family: 'Open Sans', sans-serif;;
 }
 
+/* Friends list */
+.friendslist {
+  padding-left: 50px;
+}
+
 /* User avatars on profile pages */
 .profilepicture {
   padding: 40px 40px; 
   background: #E0B7E8;
   width: 200px;
   border-radius: 5px;
-
+  margin-left:50px;
 }
 
-.secondcolumn{
+.secondcolumn {
   padding-top: 70px;
+  padding-left: 50px;
+}
+
+.secondcolumn a {
+  display: inline-block;
+}
+
+#aboutme {
+  padding-top: 20px;
+}
+
+.usernick {
+  padding-left: 50px;
 }
 
 #randomize {
@@ -64,6 +82,7 @@
   position: absolute;
   right: 0;
   z-index: 1;
+  margin-top: -19px;
 }
 
 /* Form which allows you to filter for courses */
