@@ -8,10 +8,20 @@
 			</div>
 			<div class="profilepicture">
 				<img src="{{ user.avatar(128) }}"><br>
+			</div><br>
+			<div class="allbuttonsonmyprofile" id="allbuttonsonmyprofile">
+				<a class="btn btn-info btn-lg" href="/friend_requests">
+					<span class="glyphicon glyphicon-envelope"></span>   Friend Requests</a>
+				<a class="btn btn-success btn-lg" href="/send_friend_request/{{user.nickname}}">
+					<span class="glyphicon glyphicon-send"></span>  Send Friend Request</a><br><br>
+				<a class="btn btn-primary btn-lg" href="/friends">
+					<span class="glyphicon glyphicon-user"></span>  Friends</a> 
+				<a class="btn btn-warning btn-lg" href="/mybookmarkedcourses">
+					<span class="glyphicon glyphicon-heart"></span>   My Bookmarked Courses</a>
 			</div>
 		</div>
-		<h1> About Me </h1>
 		<div class="col-md-4">
+			<h1> About Me </h1>
 			{% if user.about_me %}
 			{{ user.about_me }}<br><br><a class="btn btn-default" href="/edit" method="POST">Edit</a>
 			{% else %}
@@ -24,19 +34,7 @@
 			</form>
 		</div>
 	</div>
-</div>
 			{% endif %}
-		<div class="col-md-4">
-		<div class= "secondcolumn">
-			<a class="btn btn-info btn-lg" href="/friend_requests">
-				<span class="glyphicon glyphicon-envelope"></span>   Friend Requests</a><br><br>
-			<a class="btn btn-success btn-lg" href="/send_friend_request/{{user.nickname}}">
-				<span class="glyphicon glyphicon-send"></span>  Send Friend Request</a><br><br>
-			<a class="btn btn-primary btn-lg" href="/friends">
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>  Friends</a><br><br>
-			<h4><a class="btn btn-warning btn-lg" href="/mybookmarkedcourses">
-				<span class="glyphicon glyphicon-heart"></span>  My Bookmarked Courses</a></h4>
-		</div>
 	{% else %}
 		<h4>Please log in to view your profile!</h4>
 	{% endif %}

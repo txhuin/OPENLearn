@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row">
-	   <div class="col-md-2"><img src="{{ course.course_icon }}"></div>
-       <div class="col-md-8"><h2>{{ course.course_name }}</h2></div>
-        <div class="col-md-2"></div>
+	   <div class="col-md-6" id="coursedetailsicon"><img src="{{ course.course_icon }}"></div>
+       <div class="col-md-6" id="coursedetailsname"><h1>{{ course.course_name }}</h1></div>
     </div>
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2" id="ratingstarform">
             <form name="ratings" action="/rate_course" method="GET">
                 <span class="star-rating">
                 <input type="radio" name="rating" value="1"><i></i>
@@ -16,7 +15,7 @@
                 <input type="radio" name="rating" value="5"><i></i>
                 </span>
                 <input type='hidden' name='course_id' value='{{ course.id }}'>
-                <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update! {% else %} Rate this MOOC {% endif %}</button>
+                <button type="submit" class="btn btn-warning btn-lg">{% if rating %} You have rated this course {{ rating }}Update! {% else %} Rate this MOOC {% endif %}</button><br><br>
                 </form>
                 <script>
                     $(':radio').change(
@@ -25,14 +24,15 @@
                       } 
                     )
                 </script>
-            <button type="button" class="btn btn-default btn-lg">
-            <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
-            </button>
-            <a class="btn btn-default" href="http://www.coursera.org/course/{{ course.course_shortname }}" target="_blank"> Join this course </a><br>
+            <button type="button" class="btn btn-default">
+            <a class="glyphicon glyphicon-heart-empty" id="heartempty" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
+            </button><br><br>
+            <a class="btn btn-info btn-lg" href="http://www.coursera.org/course/{{ course.course_shortname }}" target="_blank"> Join this course </a><br><br>
 
         <div class="review-button">
-        <button type="submit" class="btn btn-default">
-            <a href="/writereview/{{ course.id }}" method="GET">Write a review</a></button>
+        <button type="submit" class="btn btn-primary btn-lg">
+            <a href="/writereview/{{ course.id }}" method="GET">Write a review</a>
+        </button>
         </div>
         </div>
 	<div class="col-md-10" id="coursedetails">
