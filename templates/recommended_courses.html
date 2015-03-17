@@ -4,7 +4,6 @@
 	<h2 class="searchresults">Your search results for courses in the <font color="orange">{{ cat.category_name }}</font> category, with a maximum<br><br> workload of <font color="orange">{{ workload_chosen }} hours per week</font>, and a length of <font color="orange">{{ duration_chosen }} weeks</font></h2><br>
 
 
-
 	<table class="table table-striped">
 		<tr><th>Course</th><th>Course Name</th><th></th><th>Course Workload</th><th>Course Details</th></tr>
 		{% for c in list_of_courses %}
@@ -12,10 +11,15 @@
     		<td><div class="image"><img src="{{ c.course_icon }}"></div></td>
 			<td><div class="courseresultsname"><a href="/course/{{ c.id }}">{{ c.course_name }}</a></div></td>        
 			<td><button type="button" class="btn btn-default btn-lg">
-   					<a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ c.id }}" method="GET"></a></button></td>
+   					<a class="glyphicon glyphicon-heart-empty" id="heartempty" href="/bookmarkcourse/{{ c.id }}" method="GET"></a></button></td>
 			<td><div class="courseworkload">{{ c.course_workload }}</div></td>
 			<td><a class="btn btn-primary" href="/course/{{ c.id }}">Course Overview</a></td>
     	</tr>
+    	<script>
+    	$('#heartempty').hover(
+       function(){ $(this).addClass('glyphicon glyphicon-heart-empty') },
+       function(){ $(this).removeClass('glyphicon glyphicon-heart') }
+		</script>
     	{% endfor %}
     </table>
   	{% endblock %}  

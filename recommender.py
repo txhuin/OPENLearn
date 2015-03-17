@@ -282,7 +282,7 @@ def bookmark_course(id):
         model.session.add(bookmarkedcourse)
         model.session.commit()
         flash("Course successfully added")
-        return redirect("/bookmarkedcourses")
+        return redirect("/mybookmarkedcourses")
 
     else:
         flash("You need to log in to do that")
@@ -481,12 +481,6 @@ def add_header(response):
 def not_found(error):
     return render_template('error.html'), 404
 
-
-# READ ME
-# Screenshots
-# CSS/JS
-# Postgres deployment
-# Integration tests
                                                   
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

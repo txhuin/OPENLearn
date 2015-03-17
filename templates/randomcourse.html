@@ -1,42 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div id="homepage"></div>
-<div class="randomize">
-<div class="bookmarkbutton"  style="width:1000px; margin:0 auto;">
-    <button type="button" class="btn btn-default btn-lg">
-    <a class="glyphicon glyphicon-bookmark" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
-    </button>
-</div>
-<div class="randomcoursename" style="width:800px; margin:0 auto;">
-    <h3>{{ course.course_name }}</h3>
-</div><br/><br/><br/>
-
-<div class="courseimage" style="width:800px; margin:0 auto;">
-    <img src="{{ course.course_icon }}">
-</div><br/><br/><br/>
-{% if session.get('user_email') %}
- <form name="ratings" action="/rate_course" method="GET">
-        <span class="star-rating">
-        <input type="radio" name="rating" value="1"><i></i>
-        <input type="radio" name="rating" value="2"><i></i>
-        <input type="radio" name="rating" value="3"><i></i>
-        <input type="radio" name="rating" value="4"><i></i>
-        <input type="radio" name="rating" value="5"><i></i>
-        </span>
-        <input type='hidden' name='course_id' value='{{ course.id }}'>
-        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
-        </form>
-        </td>
-        <script>
-            $(':radio').change(
-              function(){
-                $('.choice').text( this.value + ' stars' );
-              } 
-            )
-        </script>
-{% else %}
-<h3><a href="/signup" style="width:800px; margin:0 auto;">Please sign in to bookmark this course!</h3></p>
+<div id="homepage"></id>
+    <div class="row">
+            <div id="randomize">
+                <div class="bookmarkbutton">
+                    <button type="button" class="btn btn-default btn-lg">
+                    <a class="glyphicon glyphicon-heart-empty" href="/bookmarkcourse/{{ course.id }}" method="GET"></a>
+                </button>
+                </div>
+                <a class="btn btn-primary" href="/course/{{ course.id }}">Course Overview</a>
+                <div class="randomcoursename">
+                    <h3>{{ course.course_name }}</h3>
+                </div><br/><br/><br/>
+                <div class="courseimage">
+                    <img src="{{ course.course_icon }}">
+                </div><br/><br/><br/>
+                {% if session.get('user_email') %}
+                 <form name="ratings" action="/rate_course" method="GET">
+                        <span class="star-rating">
+                        <input type="radio" name="rating" value="1"><i></i>
+                        <input type="radio" name="rating" value="2"><i></i>
+                        <input type="radio" name="rating" value="3"><i></i>
+                        <input type="radio" name="rating" value="4"><i></i>
+                        <input type="radio" name="rating" value="5"><i></i>
+                        </span>
+                        <input type='hidden' name='course_id' value='{{ course.id }}'>
+                        <button type="submit" class="btn btn-warning">{% if rating %} You have rated this course {{ rating }}Update!{% else %}Rate this MOOC{% endif %}</button>
+                        </form>
+                        </td>
+                        <script>
+                            $(':radio').change(
+                              function(){
+                                $('.choice').text( this.value + ' stars' );
+                              } 
+                            )
+                        </script>
+                {% else %}
+                    <h3><a href="/signup">Please sign in to bookmark this course!</h3></p>
+            </div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

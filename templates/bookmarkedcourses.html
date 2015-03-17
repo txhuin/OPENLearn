@@ -2,7 +2,7 @@
 {% block content %}
 <h2> Your Bookmarked Courses </h2>
 <table class="table table-striped">
-    <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th></tr>
+    <tr><th>Course Name</th><th>Course Image</th><th>Course Description</th><th>Rate</th></tr>
     {% for i in saved_courses %}    
     <tr>
         <td width="20%">{{ i.course_name }}<br><a class="btn btn-primary" href="/course/{{ i.id }}">Course Overview</a></td>
@@ -28,6 +28,9 @@
               } 
             )
         </script>
+        <td><button type="button" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button></td>
 
     </tr>
     {% endfor %}

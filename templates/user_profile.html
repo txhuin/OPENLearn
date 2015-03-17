@@ -2,10 +2,9 @@
 {% block content %}
 	{% if session.get('user_email') %}
 	<div class="row">
-		<div class=".col-md-8">
-			<div class="usernick">
-				<h2>{{ user.nickname }}'s Profile</h2>
-			</div></div>
+		<div class="col-md-4">
+			<h2>{{ user.nickname }}'s Profile</h2>	
+		</div>
 	</div>
 		<div class="profilepicture"><img src="{{ user.avatar(128) }}"></div></div><br>
 		<div class=".col-md-3"><a class="btn btn-default" href="/send_friend_request/{{user.nickname}}">Send Friend Request</a></div>

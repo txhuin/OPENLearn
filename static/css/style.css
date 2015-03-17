@@ -5,7 +5,7 @@
 }
 
 /* Discover your next great course */
-.c-hero-message h1 {
+.headline h1 {
   font-size: 55px;
   color: #000;
   line-height: 1.1em;
@@ -17,13 +17,18 @@
 
 /* User avatars on profile pages */
 .profilepicture {
-  padding: 40px 10px; 
-  background: #64F5D6;
-  width: 300px;
+  padding: 40px 40px; 
+  background: #E0B7E8;
+  width: 200px;
   border-radius: 5px;
 
 }
-.randomize {
+
+.secondcolumn{
+  padding-top: 70px;
+}
+
+#randomize {
   background: rgba(255, 255, 255, 0.35);
   border-radius: 10px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
@@ -31,8 +36,8 @@
   top: 100px;
   left: 0;
   position: fixed;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 300px;
+  margin-right: 300px;
   right: 0;
   z-index: 2;
   padding: 30px;
@@ -44,10 +49,11 @@
   text-align: center;
 
 }
-#allusers {
-  padding-left: 100px;
-  padding-right: 100px;
-}
+
+.glyphicon-heart-empty:hover {
+    -webkit-box-shadow: 0 0 40px red;
+  }
+
 
 #homepage {
   background-image: url('/static/images/studentsblurwhite.jpg');
