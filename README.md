@@ -23,7 +23,7 @@ JavaScript
 ## Features
 Querying for Courses: Visitors to the site are immediately greeted with a form that allows some complex querying to take place. Visitors 
 
-![Alt text](/static/images/homepage.jpg?raw=true "Homepage") 
+![Alt text](/static/images/Homepage.jpg?raw=true "Homepage") 
 
 Login: Users can sign up and log in natively, but also have the option of logging in via Facebook. Facebook OAuth was integrated to achieve this. 
 
