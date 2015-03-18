@@ -204,11 +204,11 @@ def send_friend_request(nickname):
 
     if user is None:
         flash('User %s not found.' % nickname)
-        return redirect('/')
+        return redirect("/myprofile")
 
     elif user.nickname == session.get('user_nickname'):
         flash('You can\'t friend yourself!')
-        return redirect("/")
+        return redirect("/myprofile")
 
     else: 
         friend_request = model.session.query(model.Friendship)
@@ -220,11 +220,11 @@ def send_friend_request(nickname):
             model.session.add(new_friendship)
             model.session.commit()
             flash("Friend request send to %s" % nickname) 
-            return redirect("/")
+            return redirect("/myprofile")
 
         else:
             flash("You already have a friendship with this person.")
-            return redirect("/")
+            return redirect("/myprofile")
 
 
 @app.route('/friend_requests')
@@ -439,7 +439,7 @@ def submit_review(id):
     model.session.commit()
 
     flash("Review successfully added.")
-    return redirect("/")
+    return redirect("/mybookmarkedcourses")
 
 @app.route('/updatereview/<int:id>', methods=['GET'])
 def update_review(id):
