@@ -131,19 +131,6 @@ class Review(Base):
 	user = relationship("User", backref=backref("reviews", order_by=id))
 	course = relationship("Course", backref=backref("reviews", order_by=id))
 
-class Group(Base):
-	__tablename__ = "groups"
-
-	id = Column(Integer, primary_key=True)
-	course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
-	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	group_name = Column(String(10000), nullable=False)
-
-	user = relationship("User", backref=backref("groups", order_by=id))
-	course = relationship("Course", backref=backref("groups", order_by=id))
-	
-def main():
-	pass
 
 
 if __name__ == "__main__":

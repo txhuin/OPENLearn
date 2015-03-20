@@ -8,7 +8,7 @@ If users are interested in a course, but perhaps aren't interested in joining it
 
 A fun feature of the app is the Randomize tab. If users are unsure of what course they want to take, they can also hit the Randomize button resulting in a suggestion for a random course. 
 
-The app has real world applications as it attempts to reduce the high attrition rate af123``
+The app has real world applications as it attempts to reduce the high attrition rate of online course takers by adding a social networking dimension to online learning. 
 
 ## Technology Stack  
 Python  
@@ -21,29 +21,26 @@ Bootstrap
 JavaScript
 
 ## Features
-Querying for Courses: Visitors to the site are immediately greeted with a form that allows some complex querying to take place. Visitors 
+Querying for Courses: Visitors to the site are immediately greeted with a form that allows some complex querying to take place. Visitors can specify their preferences in the form  
 
 ![Alt text](/static/images/Homepage.jpg?raw=true "Homepage") 
+
+Courses are displayed below, and users can bookmark a course and also view the details of a particular course by clicking on Course Overview
 
 Login: Users can sign up and log in natively, but also have the option of logging in via Facebook. Facebook OAuth was integrated to achieve this. 
 
 Profile page: Each user has a profile page on which they can see which courses they took. 
 
-Bookmarking Courses: Users can bookmark courses
+**Bookmarking Courses**: Users can bookmark courses they are interested in
+![Alt text](/static/images/Homepage.jpg?raw=true "Homepage") 
 
-Rating courses: Users can rate their courses
-Review courses: Users can leave reviews for courses
+Rating a course: Users can rate their courses
+
+Writing a review: Users can submit reviews for courses
+
 Friendships: Users can send friend requests to other users, and view one another's bookmarked courses
-Randomize: The app returns a random course that users might be interested in if they have no idea what they want to take
 
-
-
-
-
-## 
-
-###Data Model
-OPENLearn uses a data model that allows it to 
+Randomize: The app also returns a random course suggestion to users if they aren't sure of what kind of courses are available
 
 
 
