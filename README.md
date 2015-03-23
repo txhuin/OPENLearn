@@ -12,33 +12,39 @@ The app has real world applications as it attempts to reduce the high attrition 
 
 ## Technology Stack  
 Python  
-Flask  
+Flask 
+Coursera API 
 Sqlite3  
 SqlAlchemy  
 HTML  
 CSS  
 Bootstrap
 JavaScript
+Jinja2 (Templating engine)
+
 
 ## Features
-Landing page: Visitors to the site are immediately greeted with a form that allows some complex querying to take place.
+Landing page 
+Visitors to the site are immediately greeted with a form that allows some complex querying to take place.
+
 ![Alt text](/static/images/Homepage.jpg?raw=true "Homepage") 
 
-**Login**: Users can sign up and log in natively, but also have the option of logging in via Facebook. Facebook OAuth was integrated to achieve this. 
+**Login**
+Users can sign up and log in natively, but also have the option of logging in via Facebook.Facebook OAuth was integrated to achieve this. 
 
 **Search results**
 Courses are displayed below. Users can view the details of a particular course by clicking on Course Overview. They can also bookmark a course, if they are logged in. 
 
 **Profile page**: Each user has a profile page on which they can see which courses they took, view a list of their friends, pending friend requests, and their bookmarked courses. 
 
-**About me** Users can add details about themselves that they wish to share. 
+**About me** Users can add details about themselves that they wish to share. They can also edit this information. 
 
-**Bookmarking Courses**: Users can bookmark courses they are interested in
+**Bookmarking Courses**: Users can bookmark courses they are interested in. Users can also delete bookmarks. 
 ![Alt text](/static/images/Homepage.jpg?raw=true "Homepage") 
 
 **Rating a course** Users can rate courses using the star rating system. Users can also update a rating for a particular course they have already taken. 
 
-**Writing a review** Users can submit reviews for courses
+**Writing a review** Users can submit reviews for courses. 
 
 **Friendships** Users can add one another as friends by sending friend requests. 
 

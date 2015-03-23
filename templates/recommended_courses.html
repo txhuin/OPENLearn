@@ -15,11 +15,6 @@
 			<td><div class="courseworkload">{{ c.course_workload }}</div></td>
 			<td><a class="btn btn-primary" href="/course/{{ c.id }}">Course Overview</a></td>
     	</tr>
-    	<script>
-    	$('#heartempty').hover(
-       function(){ $(this).addClass('glyphicon glyphicon-heart-empty') },
-       function(){ $(this).removeClass('glyphicon glyphicon-heart') }
-		</script>
     	{% endfor %}
     </table>
   	{% endblock %}  

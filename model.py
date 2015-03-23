@@ -131,7 +131,28 @@ class Review(Base):
 	user = relationship("User", backref=backref("reviews", order_by=id))
 	course = relationship("Course", backref=backref("reviews", order_by=id))
 
+class Activity(Base):
+	__tablename__ = "activities"
+
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey("users.id"))
+	activity_type = Column(String)
+	object_id = Column(Integer, ForeignKey("courses.id"))
+
+	# User activity types: rated a course, reviewed a course, bookmarked a course
+	# Object types: course
+
+class Comment(Base):
+	__tablename__ = "comments"
+
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	activity_id = Column(Integer, ForeignKey("activities.id"), nullable=False)
+	comment = Column(String(10000))
 
 
-if __name__ == "__main__":
-    main()
+
+
+
+
+

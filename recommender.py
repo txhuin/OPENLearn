@@ -177,6 +177,13 @@ def show_all_users():
     user_list = users.filter(model.User.email.isnot(None)).all()
     return render_template("all_users.html", users=user_list)
 
+@app.route("/feed")
+def display_activity_feed():
+    user_logged_in = session.get("user_id")
+    query_friendship = model.session.query(model.Friendship.user_id).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False )
+    query_user_as_sender = model.session.query(model.Friendship.friend_id).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False )
+    pass
+    
 @app.route("/user_profile", methods=["GET"])
 def show_user_profile():
     nickname = request.args.get("nickname")   
@@ -283,6 +290,9 @@ def bookmark_course(id):
         user_id = session.get("user_id")
         bookmarkedcourse = model.BookmarkedCourse(user_id = user_id, course_id=id)
         model.session.add(bookmarkedcourse)
+        model.session.commit()
+        activityofuser = model.Activity(user_id=user_id, activity_type="bookmarked", object_id=id)
+        model.session.add(activityofuser)
         model.session.commit()
         flash("Course successfully added")
         return redirect("/mybookmarkedcourses")
