@@ -37,10 +37,10 @@
         </div>
 	<div class="col-md-10" id="coursedetails">
         {% if rating %}
-        <h4>{{ course.course_name }} has {{ course.ratings|length }} ratings.<br>
-        The average rating is {{ '%0.2f' % ((course.ratings|sum(attribute='rating')) / (course.ratings|length)) }}.</h4></div>
+            <h4>{{ course.course_name }} has {{ course.ratings|length }} ratings.<br>
+            The average rating is {{ '%0.2f' % ((course.ratings|sum(attribute='rating')) / (course.ratings|length)) }}.</h4></div>
         {% else %}
-        <h4> This course does not have any ratings at the moment. </h4>
+            <h4> This course does not have any ratings at the moment. </h4>
         {% endif %}
     	<h3><i>Course Description:</i></h3> {{ course.course_description }}
     	<h3><i>Course Format:</i></h3> {{ course.course_format }}

@@ -158,5 +158,3 @@ if __name__ == '__main__':
 	get_course()
 	get_term_information()
 	get_category()
-	# seed_users()
-	# seed_ratings()

@@ -133,7 +133,7 @@ class Review(Base):
 
 class Activity(Base):
 	__tablename__ = "activities"
-
+	
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
 	activity_type = Column(String)

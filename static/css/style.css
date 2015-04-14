@@ -295,3 +295,8 @@ a:hover {
   padding: 20px;
   display: block;
 }
+
+.container {
+  position: relative;
+  padding: 8px;
+}

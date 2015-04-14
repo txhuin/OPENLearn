@@ -1,11 +1,12 @@
 # This is the controller file
-from flask import Flask, render_template, redirect, request, flash, session, redirect, url_for
+from flask import Flask, render_template, redirect, request, flash, session, redirect, url_for, jsonify
 from flask_oauth import OAuth
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy import update, distinct, or_
 from flask import g
 import json
+import redis
 import model
 import os
 import requests
@@ -19,6 +20,7 @@ sys.setdefaultencoding("utf-8")
 
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
+# app.redis = redis.StrictRedis(host=)
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
@@ -165,8 +167,6 @@ def display_my_profile():
 @app.route("/logout")
 def logout():
     """Logs user out, and clears session. User is returned to homepage.""" 
-    # session.pop('user_email')
-    # session.pop('user_id')
     session["__invalidate__"] = True
     session.clear()
     return redirect("/")
@@ -177,15 +177,13 @@ def show_all_users():
     user_list = users.filter(model.User.email.isnot(None)).all()
     return render_template("all_users.html", users=user_list)
 
-@app.route("/feed")
-def display_activity_feed():
-    user_logged_in = session.get("user_id")
-    query_friendship = model.session.query(model.Friendship.user_id).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False )
-    query_user_as_sender = model.session.query(model.Friendship.friend_id).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False )
-    pass
     
 @app.route("/user_profile", methods=["GET"])
 def show_user_profile():
+    user_in_session = session.get('user_id')
+    # user_id = model.session.query(User).filter(User.id == user_in_session).first()
+    #user logged in 
+
     nickname = request.args.get("nickname")   
     users = model.session.query(User)
     user = users.filter(User.nickname == nickname).one()
@@ -196,12 +194,20 @@ def show_user_profile():
 
     bookmarks = model.session.query(BookmarkedCourse)
     user_bookmarks = bookmarks.filter(BookmarkedCourse.user_id == user.id).all()
- 
 
+    friendship = model.session.query(model.Friendship).filter(model.Friendship.user_id == user_in_session, model.Friendship.pending==False).all()
+    friendship2 = model.session.query(model.Friendship).filter(model.Friendship.friend_id == user.id, model.Friendship.pending==False).all()
+    var = False
+    if friendship and friendship2:
+        var = True
+
+
+ 
     return render_template("user_profile.html", user=user, 
                                                 heading=heading,
                                                 ratings=user_ratings,
                                                 bookmarks=user_bookmarks,
+                                                var=var
                                             )
 
 
@@ -299,7 +305,7 @@ def bookmark_course(id):
 
     else:
         flash("You need to log in to do that")
-        return redirect("/")
+        return redirect("/mybookmarkedcourses")
 
     
 @app.route("/mybookmarkedcourses", methods = ['GET'])
@@ -320,6 +326,7 @@ def show_other_users_bookmarked_courses(id):
     # if a user and another user are friends allow user to view the other user's bookmarked courses. 
     query_friendship = model.session.query(model.Friendship).filter(model.Friendship.friend_id == session.get("user_id"), model.Friendship.pending == False, model.Friendship.user_id == id ).first()
     query_user_as_sender = model.session.query(model.Friendship).filter(model.Friendship.user_id == session.get("user_id"), model.Friendship.pending == False, model.Friendship.friend_id == id ).first()
+    user = model.session.query(model.User).filter(model.User.id == id).first()
 
     if query_friendship != None or query_user_as_sender != None:
         user =  model.session.query(User).filter(User.id == id).first()
@@ -330,7 +337,7 @@ def show_other_users_bookmarked_courses(id):
 
     else:
         flash("You are not this user's friend. Send them a friend request in order to view their bookmarked courses.")
-        return redirect('/')
+        return render_template("user_profile.html", user=user)
     
 
 @app.route("/removefrombookmarkedcourses/<int:id>", methods=['GET'])
@@ -493,6 +500,72 @@ def add_header(response):
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html'), 404
+
+@app.route('/api/v1.0/courses', methods=['GET'])
+def api_get_courses():
+    if request.method == 'GET':
+        results = model.session.query(Course).all()
+
+        json_results =[]
+        for result in results:
+            d = {'course_shortname': result.course_shortname,
+                 'course_name': result.course_name,
+                 'course_language': result.course_language,
+                 'course_instructor': result.course_instructor
+            }
+            json_results.append(d)
+
+        return jsonify(items=json_results)
+
+
+@app.route('/api/v1.0/courses/<int:course_id>', methods=['GET'])
+def api_get_course_by_id(course_id):
+    if request.method == 'GET':
+        result = model.session.query(Course).filter_by(id=course_id).first()
+        json_result = {
+                 'course_shortname': result.course_shortname,
+                 'course_name': result.course_name,
+                 'course_language': result.course_language,
+                 'course_instructor': result.course_instructor,
+                 'course_workload' : result.course_workload,
+                 'course_prerequisites': result.course_prerequisites
+            }
+
+        return jsonify(items=json_result)
+        
+
+
+@app.route('/api/v1.0/reviews/', methods=['GET'])
+def api_get_reviews():
+    if request.method == 'GET':
+
+        results = model.session.query(Review).all()
+        json_results = []
+        for result in results:
+            d = {
+            'course_id': result.course_id,
+            'user_id': result.user_id,
+            'review': result.review
+            }
+
+            json_results.append(d)
+
+        return jsonify(items=json_results)
+
+
+@app.route('/api/v1.0/reviews/<int:course_id>', methods=['GET'])
+def api_get_review_by_course(course_id):
+    if request.method == 'GET':
+        result = model.session.query(Review).filter_by(course_id=course_id).all()
+
+        json_result = {
+        'course_id': result.course_id,
+        'user_id': result.user_id,
+        'review': result.review
+        }
+
+        return jsonify(items=json_result)
+
 
                                                   
 if __name__ == "__main__":

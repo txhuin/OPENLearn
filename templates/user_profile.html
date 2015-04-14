@@ -10,7 +10,11 @@
 					<img src="{{ user.avatar(128) }}">
 				</div><br>
 				<a class="btn btn-success btn-lg" href="/send_friend_request/{{user.nickname}}"> <span class="glyphicon glyphicon-send"></span> Send Friend Request</a><br><br>
-				<a class="btn btn-warning btn-lg" href="/othersbookmarkedcourses/{{ user.id }}"><span class="glyphicon glyphicon-heart"></span> {{ user.nickname }}'s Bookmarked Courses</a>
+
+				{% if var %}
+					<a class="btn btn-warning btn-lg" href="/othersbookmarkedcourses/{{ user.id }}"><span class="glyphicon glyphicon-heart"></span> {{ user.nickname }}'s Bookmarked Courses</a>
+				{% endif %}
+
 			</div>
 		</div>
 		{% if user.about_me %}

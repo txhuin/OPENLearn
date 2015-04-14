@@ -13,7 +13,7 @@ The app has real world applications as it attempts to reduce the high attrition 
 ## Technology Stack  
 Python  
 Flask 
-Coursera API 
+Coursera Catalog API (RESTful API)
 Sqlite3  
 SqlAlchemy  
 HTML  
